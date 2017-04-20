@@ -13,7 +13,8 @@ class QuestionAdmin(admin.ModelAdmin):
     list_display = ('question_text', 'pub_date', 'was_published_recently')
     list_filter = ['pub_date']
     search_fields = ['question_text']
-    fieldsets = []  # finish me!!!!
+    list_per_page = 20
+    fieldsets = [  # finish me!!!!
         (None, {'fields': ['question_text']}),
         ('Date information', {'fields': ['pub_date'], 'classes': ['collapse']}),
     ]
