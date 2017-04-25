@@ -10,7 +10,7 @@ class NovelTable(models.Model):
     chapter = models.CharField(max_length=70)
     modified_time = models.DateTimeField()
     need_confirm = models.BooleanField(default=0)
-    content = models.CharField(max_length=15000)
+    content = models.CharField(max_length=15000)  # 以后直接同textfield
 
     def __str__(self):
         return self.chapter

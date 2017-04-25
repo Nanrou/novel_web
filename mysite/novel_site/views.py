@@ -1,8 +1,9 @@
 # -*- coding:utf-8 -*-
 
-from django.shortcuts import render, loader, get_object_or_404, _get_queryset
+from django.shortcuts import render, loader, get_object_or_404, redirect
 from django.http import HttpResponse
 from .models import NovelTable
+from django.core.exceptions import ObjectDoesNotExist
 
 # Create your views here.
 
@@ -22,5 +23,8 @@ def index(request):
 
 
 def detail(request, pk):
-    table = get_object_or_404(NovelTable, pk=pk)
-    return render(request, 'novel_site/detail.html', context={'table': table})
+    try:
+        table = NovelTable.objects.get(pk=pk)  # 在这里才实例化
+        return render(request, 'novel_site/detail.html', context={'table': table})
+    except ObjectDoesNotExist:
+        return index(request)
