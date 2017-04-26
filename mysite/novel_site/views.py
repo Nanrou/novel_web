@@ -1,7 +1,7 @@
 # -*- coding:utf-8 -*-
 
 from django.shortcuts import render, loader, get_object_or_404, redirect
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from .models import NovelTable
 from django.core.exceptions import ObjectDoesNotExist
 
@@ -27,4 +27,5 @@ def detail(request, pk):
         table = NovelTable.objects.get(pk=pk)  # 在这里才实例化
         return render(request, 'novel_site/detail.html', context={'table': table})
     except ObjectDoesNotExist:
-        return index(request)
+        return redirect('novel_site:index', permanent=True)  # 任何时候都应该用True，表示301
+        # return HttpResponseRedirect('/')  # 另外一种写法
