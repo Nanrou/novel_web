@@ -1,148 +1,68 @@
 <!DOCTYPE html>
-<html>
+<html class="gwd_">
 <head>
-    <title>Black &amp; White</title>
-
-    <!-- meta -->
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <!-- css -->
-    {% load static %}
-    <link rel="stylesheet" href="{% static 'novel_site/css/bootstrap.min.css' %}">
-    <link rel="stylesheet" href="http://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
-    <link rel="stylesheet" href="{% static 'novel_site/css/pace.css' %}">
-    <link rel="stylesheet" href="{% static 'novel_site/css/custom.css' %}">
-
-    <!-- js -->
-    <script src="{% static 'novel_site/js/jquery-2.1.3.min.js' %}"></script>
-    <script src="{% static 'novel_site/js/bootstrap.min.js' %}"></script>
-    <script src="{% static 'novel_site/js/pace.min.js' %}"></script>
-    <script src="{% static 'novel_site/js/modernizr.custom.js' %}"></script>
-    <script src="{% static 'novel_site/js/script.js' %}"></script>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+<meta http-equiv="Cache-Control" content="no-transform">
+{% block meta_description %}
+<!-- meta_description -->
+{% endblock meta_description %}
+<link rel="stylesheet" href="{% static '/novel_site/css/style.css' %}">
+<script src="http://apps.bdimg.com/libs/jquery/1.4.2/jquery.js"></script>
+<script src="{% static '/novel_site/js/m.js' %}"></script>
+<script src="{% static '/novel_site/js/header.js' %}"></script>
+{% block optional_script %}
+<!-- optional_script -->
+{% endblock optional_script %}
 </head>
 
 <body>
-<div class="container">
-    <header id="site-header">
-        <div class="row">
-            <div class="col-md-4 col-sm-5 col-xs-8">
-                <div class="logo">
-                    <h1><a href="/"><b>Black</b> &amp; White</a></h1>
-                </div>
-            </div><!-- col-md-4 -->
-            <div class="col-md-8 col-sm-7 col-xs-4">
-                <nav class="main-nav" role="navigation">
-                    <div class="navbar-header">
-                        <button type="button" id="trigger-overlay" class="navbar-toggle">
-                            <span class="ion-navicon"></span>
-                        </button>
-                    </div>
-
-                    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                        <ul class="nav navbar-nav navbar-right">
-                            <li class="cl-effect-11"><a href="/" data-hover="Home">Home</a></li>
-                            <li class="cl-effect-11"><a href="full-width.html" data-hover="Blog">Blog</a></li>
-                            <li class="cl-effect-11"><a href="about.html" data-hover="About">About</a></li>
-                            <li class="cl-effect-11"><a href="contact.html" data-hover="Contact">Contact</a></li>
-                        </ul>
-                    </div><!-- /.navbar-collapse -->
-                </nav>
-                <div id="header-search-box">
-                    <a id="search-menu" href="#"><span id="search-icon" class="ion-ios-search-strong"></span></a>
-                    <div id="search-form" class="search-form">
-                        <form role="search" method="get" id="searchform" action="#">
-                            <input type="search" placeholder="Search" required>
-                            <button type="submit"><span class="ion-ios-search-strong"></span></button>
-                        </form>
-                    </div>
-                </div>
-            </div><!-- col-md-8 -->
-        </div>
-    </header>
-</div>
-<div class="copyrights">Collect from <a href="http://www.cssmoban.com/" >网页模板</a></div>
-
-<div class="content-body">
-    <div class="container">
-        <div class="row">
-            <main class="col-md-8">
-                {% block main %}
-                {% endblock main %}
-            </main>
-            <aside class="col-md-4">
-                <div class="widget widget-recent-posts">
-                    <h3 class="widget-title">Recent Posts</h3>
-                    <ul>
-                        <li>
-                            <a href="#">Adaptive Vs. Responsive Layouts And Optimal Text Readability</a>
-                        </li>
-                        <li>
-                            <a href="#">Web Design is 95% Typography</a>
-                        </li>
-                        <li>
-                            <a href="#">Paper by FiftyThree</a>
-                        </li>
-                    </ul>
-                </div>
-                <div class="widget widget-archives">
-                    <h3 class="widget-title">Archives</h3>
-                    <ul>
-                        <li>
-                            <a href="#">November 2014</a>
-                        </li>
-                        <li>
-                            <a href="#">September 2014</a>
-                        </li>
-                        <li>
-                            <a href="#">January 2013</a>
-                        </li>
-                    </ul>
-                </div>
-
-                <div class="widget widget-category">
-                    <h3 class="widget-title">Category</h3>
-                    <ul>
-                        <li>
-                            <a href="#">Web Design</a>
-                        </li>
-                        <li>
-                            <a href="#">Web Development</a>
-                        </li>
-                        <li>
-                            <a href="#">SEO</a>
-                        </li>
-                    </ul>
-                </div>
-            </aside>
-        </div>
-    </div>
-</div>
-<footer id="site-footer">
-    <div class="container">
-        <div class="row">
-            <div class="col-md-12">
-                <p class="copyright">&copy; 2014 ThemeWagon.com -More Templates <a href="http://www.cssmoban.com/" target="_blank" title="模板之家">模板之家</a> - Collect from <a href="http://www.cssmoban.com/" title="网页模板" target="_blank">网页模板</a></p>
+<div id="wrapper"> 
+    <div class="ywtop">
+    <!-- 页眉 -->
+        <div class="ywtop_con">
+            <div class="ywtop_sethome">
+                <a onclick="this.style.behavior='url(#default#homepage)';this.setHomePage('http://www.superxiaoshuo.com');" href="#">将本站设为首页</a>
+            </div>
+            <div class="ywtop_addfavorite">
+                <a href="javascript:window.external.addFavorite('http://www.superxiaoshuo.com','爱看小说的都收藏了')">收藏超级小说</a>
             </div>
         </div>
     </div>
-</footer>
-
-<!-- Mobile Menu -->
-<div class="overlay overlay-hugeinc">
-    <button type="button" class="overlay-close"><span class="ion-ios-close-empty"></span></button>
-    <nav>
-        <ul>
-            <li><a href="index.html">Home</a></li>
-            <li><a href="full-width.html">Blog</a></li>
-            <li><a href="about.html">About</a></li>
-            <li><a href="contact.html">Contact</a></li>
+    <div class="header">
+    <!-- 头部 -->
+        <div class="header_logo">
+            <a href="http://www.superxiaoshuo.com/">>超级小说</a>
+        </div>
+        <form><!-- 以后增加站内搜 -->
+            <div class="search">
+                <input name="q" class="input" value="输入需要搜索的小说" onblur="if (value ==''){value='输入需要搜索的小说'}" onfocus="if (value =='输入需要搜索的小说'){value =''}" id="wd" type="text">
+                <span class="s_btn"><input value=" 搜 索 " class="button" type="submit"></span>
+            </div>
+        </form>
+    </div>
+    <div class="nav">
+    <!-- 导航栏 -->
+        <ul style="padding-left: 5px;">
+            {% for category in categories %}
+            <!-- 这里写死会比较好 -->
+            <li><a href="{{ category.get_absolute_url }}">{{category.name}}</a></li>
+            {% endfor %}
         </ul>
-    </nav>
+    </div>
+    {% block main %}
+    {% endblock main %}
+    <div class="footer">
+    {% block footer_link %}
+    {% endblock footer_link %}
+        <div class="footer_cont">
+            <p>本站所有小说为转载作品，所有章节均由网友上传，转载至本站只是为了宣传本书让更多读者欣赏。</p>
+            <p>Copyright &#169; 2017 超级小说 All Rights Reserved.
+                <a href="?????????????" target="_blank" title="站长统计">站长统计</a>
+            </p>
+        </div>
+    {% block move_widget %}
+    {% endblock move_widget%}
+    </div>
 </div>
-
-<script src="{% static 'novel_site/js/script.js' %}"></script>
-
-</body>
-</html>
-
+<div id="GWDANG_HAS_BUILT"></div></body></html>

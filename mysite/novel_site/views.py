@@ -1,30 +1,41 @@
 # -*- coding:utf-8 -*-
 
 from django.shortcuts import render, loader, get_object_or_404, redirect
+from django.urls import reverse
 from django.http import HttpResponse
-from .models import NovelTable
+from .models import CategoryTable, InfoTable, BookTableOne
 from django.core.exceptions import ObjectDoesNotExist
+from django.views.generic.detail import DetailView
 
 # Create your views here.
 
 
-def index(request):
-    chapter_list = NovelTable.objects.order_by('id')[:5]
+def category(request, pk):
+    pass
 
-    return render(request, 'novel_site/index.html', context={
-        'chapter_list': chapter_list,
-    })
 
-    # template = loader.get_template('novel_site/index.html')
-    # context = {
-    #     'title': 'home', 'welcome': 'hello world',
-    # }
-    # return HttpResponse(template.render(context, request))
+class InfoView(DetailView):
+
+    model = InfoTable
+    template_name = 'info.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(InfoView, self).get_context_data(**kwargs)
+        context['get_category_url'] = reverse('category', context['category'].cate)
+        return context
+
+# def info(request, pk):
+#     book_info = InfoTable.objects.get(pk=pk)
+#
+#     return render(request, 'novel_site/info.html', context={
+#         'objects': book_info,
+#     })
 
 
 def detail(request, pk):
-    try:
-        table = NovelTable.objects.get(pk=pk)  # 在这里才实例化
-        return render(request, 'novel_site/detail.html', context={'table': table})
-    except ObjectDoesNotExist:
-        return index(request)
+    pass
+    # try:
+    #     table = NovelTable.objects.get(pk=pk)  # 在这里才实例化
+    #     return render(request, 'novel_site/detail.html', context={'table': table})
+    # except ObjectDoesNotExist:
+    #     return index(request)

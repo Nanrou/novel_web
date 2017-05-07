@@ -5,31 +5,70 @@ from django.urls import reverse
 
 # Create your models here.
 
+MAP_DICT = {'1': 'One', '2': 'Two', '3': 'Three'}
 
-class NovelTable(models.Model):
-    chapter = models.CharField(max_length=70)
-    modified_time = models.DateTimeField()
-    need_confirm = models.BooleanField(default=0)
-    content = models.CharField(max_length=15000)  # 以后直接同textfield
+
+class AuthorTable(models.Model):
+    author = models.CharField(max_length=20, unique=True)
 
     def __str__(self):
-        return self.chapter
+        return self.author
+
+
+class CategoryTable(models.Model):
+    cate = models.CharField(max_length=30, null=True, unique=True)
+    category = models.CharField(max_length=20)
+
+    def __str__(self):
+        return self.category
+
+
+class InfoTable(models.Model):
+    title = models.CharField(max_length=70, unique=True)
+    category = models.ForeignKey(CategoryTable, verbose_name='category', on_delete=models.CASCADE,
+                                 to_field='id', related_name='cate_books')
+    author = models.ForeignKey(AuthorTable, verbose_name='author', on_delete=models.CASCADE,
+                               to_field='author', related_name='author_boos')
+    status = models.CharField(max_length=5)
+    update_time = models.DateTimeField()
+    store_des = models.IntegerField(verbose_name='book_table_index', null=True)
+
+    def __str__(self):
+        return self.title
+
+    # def get_absolute_url(self):
+    #     return reverse('info')
+    @property
+    def all_chapters(self):
+        if self.status == '1':
+            chapters = BookTableOne.objects.get(title=self.title)
+            return chapters
+
+
+class Book(models.Model):
+    title = models.ForeignKey(InfoTable, verbose_name='title', on_delete=models.CASCADE)
+    chapter = models.CharField(max_length=70, null=True)
+    content = models.TextField()
+    need_confirm = models.BooleanField(default=0)
 
     def get_absolute_url(self):
-        return reverse('novel_site:detail', kwargs={'pk': self.pk})
+        return reverse('detail', args=[self.title.pk, self.id])
 
-    def get_next_url(self):
-        try:
-            next_id = int(self.pk) + 1
-            return reverse('novel_site:detail', kwargs={'pk': next_id})
-        except ValueError:  # 增加跳回主页的异常处理
-            return '/'
+    class Meta:
+        abstract = True
 
-    def get_last_url(self):
-        try:
-            last_id = int(self.pk) - 1
-            if last_id < 0:
-                return '/'
-            return reverse('novel_site:detail', kwargs={'pk': last_id})
-        except ValueError:
-            return '/'
+
+class BookTableOne(Book):
+
+    def __str__(self):
+        return 'book table 01'
+
+
+class BookTableTwo(Book):
+    def __str__(self):
+        return 'book table 02'
+
+
+class BookTableThree(Book):
+    def __str__(self):
+        return 'book table 03'
