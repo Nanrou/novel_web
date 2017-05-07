@@ -7,9 +7,12 @@ from django.urls import reverse
 
 MAP_DICT = {'1': 'One', '2': 'Two', '3': 'Three'}
 
+<<<<<<< HEAD
 
 class AuthorTable(models.Model):
     author = models.CharField(max_length=20, unique=True)
+=======
+>>>>>>> b1796c0599ff70904ff7f14c4e7005c09987b491
 
     def __str__(self):
         return self.author
