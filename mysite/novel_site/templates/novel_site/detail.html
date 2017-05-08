@@ -1,28 +1,30 @@
-{% extends 'novel_site/base.html'%}
+{% extends 'novel_site/base.html' %}
 
 {% block meta_description %}
-<title>择天记 正文 {{ objects.chapter }}全文免费阅读 - 超级小说</title>
-<meta name="keywords" content="择天记 {{ objects.chapter }}全文阅读。">
-<meta name="description" content="超级小说免费为大家提供择天记 {{ objects.chapter }}全文阅读,如果你想第一时间观看下一章节,请留意以及收藏超级小说,方便你下次阅读择天记最新章节。">
-<meta http-equiv="mobile-agent" content="format=html5; url={{ objects.get_absolute_url_mobile }}">
-<meta http-equiv="mobile-agent" content="format=xhtml; url={{ objects.get_absolute_url_mobile }}">
+<title>择天记 正文 {{ object.chapter }}全文免费阅读 - 超级小说</title>
+<meta name="keywords" content="择天记 {{ object.chapter }}全文阅读。">
+<meta name="description" content="超级小说免费为大家提供择天记 {{ object.chapter }}全文阅读,如果你想第一时间观看下一章节,请留意以及收藏超级小说,方便你下次阅读择天记最新章节。">
+<!--
+<meta http-equiv="mobile-agent" content="format=html5; url={{ object.get_absolute_url_mobile }}">
+<meta http-equiv="mobile-agent" content="format=xhtml; url={{ object.get_absolute_url_mobile }}">
+-->
 {% endblock meta_description %}
 
 {% block optional_script %}
 <script src="{% static 'novel_site/js/reader.js' %}"></script>
 {% endblock optional_script %}
 
-{{ block main }}
+{% block main %}
 <div class="content_read">
 <!-- 正文 -->
     <div class="box_con">
         <div class="con_top">
             <a href="http://www.superxiaoshuo.com/">超级小说</a>
             &gt; 
-            <a href="{% objects.get_category_url %}">{{ objects.category }}</a>
+            <a href="{{ object.get_category_url }}">{{ object.category }}</a>
             &gt; 
-            <a href="{% objects.get_absolute_url %}">{{ objects.title }}</a>
-            &gt; {{ objects.chapter }}
+            <a href="{{ object.get_absolute_url }}">{{ object.title }}</a>
+            &gt; {{ object.chapter }}
             <div id="page_set">
                 <select onchange="javascript:setFont(this.options[this.selectedIndex].value);" id="bcolor" name="bcolor">
                     <option value="宋体" selected="selected">字体</option>
@@ -92,13 +94,13 @@
             </div>
         </div>
         <div class="bookname">
-            <h1>{{ objects.title }}</h1>
+            <h1>{{ object.title }}</h1>
             <div class="bottem1">
-                <a href="{% objects.next_page %}">上一章</a>
+                <a href="{{ object.next_page }}">上一章</a>
                 ← 
-                <a href="{% objects.index_page %}">章节列表</a>
+                <a href="{{ object.index_page }}">章节列表</a>
                 → 
-                <a href="{% objects.last_page %}">下一章</a> 
+                <a href="{{ object.last_page }}">下一章</a>
                 <a rel="nofollow" href="" target="_blank">加入书签</a> 
                 <a rel="nofollow" href="" target="_blank" style="color:red">错误举报</a>
             </div>
@@ -117,26 +119,26 @@
             </div>
         </div>
         <div id="content">
-        {{ objects.content }}
+        {{ object.content }}
 （我一直都很喜欢陈粒，始终认为奇妙能力歌应该用来做将夜的主题曲，也与影视公司认真地提议过，不知道能否成功。我也一直都很喜欢有容，因为篇幅的原因，
 很少有机会展现她存在于我想象里的美好，这一章写了点，我很高兴。另外刚才忽然发现，八年前的今天是间客开始的日子，时光真的是……很快就不见了，对我来
 说间客是一部非常特殊的作品，以文字论不及将夜和择天记，却是我个人最喜欢的故事，如果有朋友没有看过的，推荐您去看一下。）
         </div>
         <div class="bottem1">
         <!-- 这里看怎么复用 -->
-            <a href="{% objects.next_page %}">上一章</a>
+            <a href="{{ object.next_page }}">上一章</a>
             ← 
-            <a href="{% objects.index_page %}">章节列表</a>
+            <a href="{{ object.index_page }}">章节列表</a>
             → 
-            <a href="{% objects.last_page %}">下一章</a> 
+            <a href="{{ object.last_page }}">下一章</a>
             <a rel="nofollow" href="" target="_blank">加入书签</a> 
             <a rel="nofollow" href="" target="_blank" style="color:red">错误举报</a>
         </div>
     </div>
 </div>
-{{ endblock main}}
+{% endblock main %}
 
-{{ block footer_link }}
+{% block footer_link %}
 <div class="footer_link">完本推荐：
         <!-- 这里看一下怎么改 -->
             <a href="http://www.ranwen.org/files/article/5/5719/" target="_blank">九阴九阳</a>
@@ -151,13 +153,13 @@
             <a href="http://www.ranwen.org/files/article/1/1386/" target="_blank">星辰变</a>
             <a href="http://www.ranwen.org/files/article/5/5123/" target="_blank">刑名师爷</a>
         </div>
-{{ endblock footer_link}}
+{% endblock footer_link %}
 
-{{ block move_widget }}        
+{% block move_widget %}
 <div id="shangxia">
         <div id="shang" title="↑ 返回顶部"></div>
         <div id="comt" title="查看评论"></div>
         <div id="xia" title="↓ 移至底部"></div>
-        <div id="myrss" title="Hi!看点不一样的?" onclick="window.open(/);"></div>
+        <div id="myrss" title="Hi!看点不一样的?" onclick="window.open('/');"></div>
 </div>
-{{ endblock move_widget}}
+{% endblock move_widget%}

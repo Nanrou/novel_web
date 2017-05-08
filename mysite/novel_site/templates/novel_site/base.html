@@ -1,3 +1,4 @@
+{% load staticfiles %}
 <!DOCTYPE html>
 <html class="gwd_">
 <head>
@@ -7,10 +8,10 @@
 {% block meta_description %}
 <!-- meta_description -->
 {% endblock meta_description %}
-<link rel="stylesheet" href="{% static '/novel_site/css/style.css' %}">
+<link rel="stylesheet" href="{% static 'novel_site/css/style.css' %}"/>
 <script src="http://apps.bdimg.com/libs/jquery/1.4.2/jquery.js"></script>
-<script src="{% static '/novel_site/js/m.js' %}"></script>
-<script src="{% static '/novel_site/js/header.js' %}"></script>
+<script src="{% static 'novel_site/js/m.js' %}"></script>
+<script src="{% static 'novel_site/js/header.js' %}"></script>
 {% block optional_script %}
 <!-- optional_script -->
 {% endblock optional_script %}
@@ -36,7 +37,7 @@
         </div>
         <form><!-- 以后增加站内搜 -->
             <div class="search">
-                <input name="q" class="input" value="输入需要搜索的小说" onblur="if (value ==''){value='输入需要搜索的小说'}" onfocus="if (value =='输入需要搜索的小说'){value =''}" id="wd" type="text">
+                <input name="q" class="input" value="输入需要搜索的小说" onblur="if (value ==''){value='输入需要搜索的小说'}" onfocus="if (value =='输入需要搜索的小说'){value =''}" id="wd" type="text"/>
                 <span class="s_btn"><input value=" 搜 索 " class="button" type="submit"></span>
             </div>
         </form>
@@ -44,10 +45,18 @@
     <div class="nav">
     <!-- 导航栏 -->
         <ul style="padding-left: 5px;">
-            {% for category in categories %}
-            <!-- 这里写死会比较好 -->
-            <li><a href="{{ category.get_absolute_url }}">{{category.name}}</a></li>
-            {% endfor %}
+            <li><a href="http://www.superxiaoshuo.com/">首页</a></li>
+			<li><a href="http://www.superxiaoshuo.com/xuanhuan/">玄幻小说</a></li>
+			<li><a href="http://www.superxiaoshuo.com/xiuzhen/">修真小说</a></li>
+			<li><a href="http://www.superxiaoshuo.com/dushi/">都市小说</a></li>
+			<li><a href="http://www.superxiaoshuo.com/lishi/">历史小说</a></li>
+			<li><a href="http://www.superxiaoshuo.com/wangyou/">网游小说</a></li>
+			<li><a href="http://www.superxiaoshuo.com/kehuan/">科幻小说</a></li>
+			<li><a href="http://www.superxiaoshuo.com/kongbu/">恐怖小说</a></li>
+			<li><a href="http://www.superxiaoshuo.com/yanqing/">言情小说</a></li>
+			<li><a href="http://www.superxiaoshuo.com/qita/">其他小说</a></li>
+			<li><a href="http://www.superxiaoshuo.com/top/">排行榜单</a></li>
+			<li><a href="http://www.superxiaoshuo.com/quanben/">全本小说</a></li>
         </ul>
     </div>
     {% block main %}

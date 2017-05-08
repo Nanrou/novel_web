@@ -1,29 +1,30 @@
-{% extends 'novel_site/base.html'%}
+{% extends 'novel_site/base.html' %}
+{% load staticfiles %}
 
 {% block meta_description %}
-<meta name="keywords" content="{{ objects.title }},{{ objects.title }}最新章节,{{ objects.title }}无弹窗广告全文阅读,{{ objects.title }}超级小说。">
-<meta name="description" content="《{{ objects.title }}》是{{ objects.author }}的作品,超级小说提供{{ objects.title }}最新章节列表全文阅读,超级小说保证比同类网站更新更快,绝无弹窗广告保证无章节错误100%正确保证无广告,《{{ objects.title }}》无弹窗广告全文阅读就在超级小说。">
+<meta name="keywords" content="{{ object.title }},{{ object.title }}最新章节,{{ object.title }}无弹窗广告全文阅读,{{ object.title }}超级小说。">
+<meta name="description" content="《{{ object.title }}》是{{ object.author }}的作品,超级小说提供{{ object.title }}最新章节列表全文阅读,超级小说保证比同类网站更新更快,绝无弹窗广告保证无章节错误100%正确保证无广告,《{{ object.title }}》无弹窗广告全文阅读就在超级小说。">
 <!--
-<meta http-equiv="mobile-agent" content="format=html5; url={{ objects.get_absolute_url_mobile }}">
-<meta http-equiv="mobile-agent" content="format=xhtml; url={{ objects.get_absolute_url_mobile }}">
+<meta http-equiv="mobile-agent" content="format=html5; url={{ object.get_absolute_url_mobile }}">
+<meta http-equiv="mobile-agent" content="format=xhtml; url={{ object.get_absolute_url_mobile }}">
 -->
 <meta property="og:type" content="novel">
-<meta property="og:title" content="{{ objects.title }}">
-<meta property="og:description" content="{{ objects.title }}全文">
+<meta property="og:title" content="{{ object.title }}">
+<meta property="og:description" content="{{ object.title }}全文">
 <!--
-<meta property="og:image" content="{{ objects.image }}">
+<meta property="og:image" content="{{ object.image }}">
 -->
-<meta property="og:novel:category" content="{{ objects.category }}">
-<meta property="og:novel:author" content="{{ objects.author }}">
-<meta property="og:novel:book_name" content="{{ objects.title }}">
-<!--<meta property="og:novel:read_url" content="{{ objects.get_laster_url }}">-->
+<meta property="og:novel:category" content="{{ object.category }}">
+<meta property="og:novel:author" content="{{ object.author }}">
+<meta property="og:novel:book_name" content="{{ object.title }}">
+<!--<meta property="og:novel:read_url" content="{{ object.get_laster_url }}">-->
 <!--<meta property="og:url" content="http://www.ranwen.org/files/article/56/56048/">-->
-<meta property="og:novel:status" content="{{ objects.status }}">
+<meta property="og:novel:status" content="{{ object.status }}">
 <!--<meta property="og:novel:author_link" content="http://zhannei.baidu.com/cse/search?s=18402225725594290780&amp;q=猫腻">-->
-<meta property="og:novel:update_time" content="{{ objects.update_time }}">
+<meta property="og:novel:update_time" content="{{ object.update_time }}">
 <!--
-<meta property="og:novel:latest_chapter_name" content="{{ objects.latest_chapter_name }}">
-<meta property="og:novel:latest_chapter_url" content="{{ objects.latest_chapter_url }}">
+<meta property="og:novel:latest_chapter_name" content="{{ object.latest_chapter_name }}">
+<meta property="og:novel:latest_chapter_url" content="{{ object.latest_chapter_url }}">
 -->
 {% endblock meta_description %}
 
@@ -32,27 +33,27 @@
         <div class="con_top">
         <a href="http://www.superxiaoshuo.com/">超级小说</a>
         &gt;
-        <a href="{{ objects.get_category_url }}">{{ objects.category }}</a>
+        <a href="{{ object.get_category_url }}">{{ object.category }}</a>
         &gt;
-        {{ objects.title }}
+        {{ object.title }}
         </div>
         <div id="maininfo">
             <div id="info">
-                <h1>{{ objects.title }}</h1>
-                <p>作者：{{ objects.author }}</p>
-                <p>状态：{{ objects.status }},  <a rel="nofollow" href="http://www.ranwen.org/modules/article/addbookcase.php?bid=56048" target="_blank">加入收藏</a>, <a href="#footer">直达底部</a></p>
-                <p>最后更新：{{ objects.update_time }}</p>
-                <p>最新章节：<a href="{{ objects.latest_chapter_url }}" target="_blank">{{ objects.latest_chapter_name }}</a></p>
+                <h1>{{ object.title }}</h1>
+                <p>作者：{{ object.author }}</p>
+                <p>状态：{{ object.status }},  <a rel="nofollow" href="http://www.ranwen.org/modules/article/addbookcase.php?bid=56048" target="_blank">加入收藏</a>, <a href="#footer">直达底部</a></p>
+                <p>最后更新：{{ object.update_time|date:'Y-m-d H:i:s' }}</p>
+                <p>最新章节：<a href="{{ object.latest_chapter.get_absolute_url }}" target="_blank">{{ object.latest_chapter.chapter }}</a></p>
             </div>
             <div id="intro">
                 <p></p>
-                <p>各位书友要是觉得《{{ objects.title }}》还不错的话请不要忘记向您QQ群和微博里的朋友推荐哦！</p>
+                <p>各位书友要是觉得《{{ object.title }}》还不错的话请不要忘记向您QQ群和微博里的朋友推荐哦！</p>
             </div>
         </div>
         <div id="sidebar">
-            <div id="fmimg"><img alt="{{ objects.title }}" src="{{ objects.image }}" onerror="this.src='/modules/article/images/nocover.jpg'" width="120" height="150"></div>
+            <div id="fmimg"><img alt="{{ object.title }}" src="{% static object.image %}"  width="120" height="150"/></div>
         </div>
-        <div class="listtj">推荐阅读：
+        <div id="listtj">推荐阅读：
             <!-- 还没想好这里怎么推荐，这里也可以和下面合并 -->
                 <a href="http://www.ranwen.org/files/article/80/80203/" target="_blank">重生完美时代</a>
                 <a href="http://www.ranwen.org/files/article/77/77388/" target="_blank">系统之乡土懒人</a>
@@ -69,9 +70,9 @@
 <div class="box_con">
     <div id="list">
         <dl>
-            <dt>《{{ objects.title }}》正文</dt>
-            {%  for chapter in objects.all_chapters %}
-            <dd><a href="{{ chapter.url }}">{{ chapter.title }}</a></dd>
+            <dt>《{{ object.title }}》正文</dt>
+            {%  for chapter in object.all_chapters %}
+            <dd><a href="{{ chapter.get_absolute_url }}">{{ chapter.chapter}}</a></dd>
             {% endfor %}
         </dl>
     </div>

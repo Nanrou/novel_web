@@ -25,13 +25,13 @@ a:hover {text-decoration:underline; top:-1px;}
 .header .search{float:right; padding-top:15px;/*! display:inline */}
 .header .search .input{width:329px; font-size:14px; color:#c3c3c3; padding:0 10px; line-height:35px; height:35px; background:#fff; border:1px solid #d7d7d7; float:left; border-right:0;}
 .header .search .s_btn{width:85px;height:33px;display:inline-block;z-index:0;vertical-align:top;border:solid 1px #d7d7d7;}
-.header .search .button{width:85px; height:33px; padding-top:1px; border:0; font-size:14px; background-color: #f9f9f9; color: #999999; cursor:pointer; float:left;}
+.header .search .button{width:85px; height:35px; padding-top:1px; border:0; font-size:14px; background-color: #f9f9f9; color: #999999; cursor:pointer; float:left;}
 .header .srarchHot{ padding:17px 0 0; color:#666; width:750px; font-size:14px; float:left; overflow:hidden; text-align:right;}
 .header .srarchHot a{ color:#666; padding:0 2px;}
 .header .srarchHot a:hover{ color:#09c;}
 .nav{background:none repeat scroll 0 0 #88C6E5;height:40px;overflow:hidden;width:980px;margin:10px auto auto;}
 .nav ul li{float:left;line-height:44px;}
-.nav ul li a{color:#FFF;font-size:15px;font-weight:700;padding:8px;}
+.nav ul li a{color:#FFF;font-size:16px;font-weight:700;padding:0 10px;}
 #admin{ border:solid 2px #E1ECED; height:30px; line-height:30px; width:88%; text-align:center; margin:5px; padding:3px;}
 table.grid caption, .gridtop { background-color:#E1ECED; border:solid 2px #C3DFEA;border-bottom:0px; font-size: 14px; font-weight: bold; margin: auto; padding-bottom: 5px; padding-top: 5px; text-align: center; vertical-align: middle;}
 table.grid { border: 2px solid #C3DFEA; border-collapse: collapse; margin: auto; padding: 3px;}
@@ -145,7 +145,7 @@ table.grid td { background-color: #FFFFFF !important; border: 1px solid #C3DFEA;
 
 .dahengfu{overflow:hidden; width:976px; margin:10px auto;}
 .box_con{border:2px solid #88C6E5; overflow:hidden;width:976px;margin:10px auto;}
-.con_top {border-bottom: #88C6E5 1px solid; text-align:left; padding: 0px 10px; line-height:40px; height:40px; background-color:#E1ECED;}
+.con_top {font-size:14px; border-bottom: #88C6E5 1px solid; text-align:left; padding: 0px 10px; line-height:40px; height:40px; background-color:#E1ECED;}
 .con_top #bdshare{float:right;line-height:20px;padding-right:20px;padding-top:9px;text-align:right;}
 #sidebar{float:left;width:140px;text-align:left;}
 #maininfo{float:right;width:800px;}
@@ -167,9 +167,9 @@ table.grid td { background-color: #FFFFFF !important; border: 1px solid #C3DFEA;
 #listtj{width:960px;font-size:13px;padding:5px;float:left;text-align:center;}
 #listtj a{margin:0 5px;}
 #list{padding:2px;}
-#list dl{float:left;overflow:hidden;padding-bottom:1px;margin:auto;}
-#list dt{background:none repeat scroll 0 0 #C3DFEA;display:inline;float:left;font-size:14px;line-height:28px;overflow:hidden;text-align:center;vertical-align:middle;width:98%;margin:auto auto 5px;padding:5px 10px;}
-#list dd{border-bottom:1px dashed #CCC;display:inline;float:left;height:25px;line-height:200%;font-size:13px;margin-bottom:5px;overflow:hidden;text-align:left;text-indent:10px;vertical-align:middle;width:33%;}
+#list dl{float:left;overflow:hidden;padding-bottom:1px;margin:auto;width: 100%;}
+#list dt{background:none repeat scroll 0 0 #C3DFEA;display:inline;float:left;font-size:22px;line-height:28px;overflow:hidden;text-align:center;vertical-align:middle;width:98%;margin:auto auto 5px;padding:5px 10px;}
+#list dd{border-bottom:1px dashed #CCC;display:inline;float:left;height:25px;line-height:200%;font-size:15px;margin-bottom:5px;overflow:hidden;text-align:left;text-indent:10px;vertical-align:middle;width:33%;}
 #list dd a:link{color:#444;}
 #list .none{display:none;}
 .btnlinks{margin-top:11px;}
