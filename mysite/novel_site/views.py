@@ -19,7 +19,7 @@ def category(request, pk):
 #     model = InfoTable
 #     template_name = 'novel_site/info.html'
 #
-#     # def get(self, request, *args, **kwargs):
+#     def get(self, request, *args, **kwargs):
 #
 #     # def get_category_url(self):
 #     #     info = InfoTable.objects.get(pk=self.)
@@ -27,25 +27,22 @@ def category(request, pk):
 #
 #     def get_context_data(self, **kwargs):
 #         context = super(InfoView, self).get_context_data(**kwargs)
-#         context['get_category_url'] = 1111
 #         return context
 
 def info(request, pk):
-    while True:
-        if not pk.startswith('0'):
-            break
-        pk = pk[1:]
     book_info = InfoTable.objects.get(pk=pk)
 
     return render(request, 'novel_site/info.html', context={
-        'objects': book_info,
+        'object': book_info,
     })
 
 
-def detail(request, pk):
-    while True:
-        if not pk.startswith('0'):
-            break
-        pk = pk[1:]
+def detail(request, pk, index):
+    book = InfoTable.objects.get(pk=1)
+    chapter = book.all_chapters.get(pk=index)
+    # chapter = BookTableOne.objects.get(pk=index)
+    return render(request, 'novel_site/detail.html', context={
+        'object': chapter,
+    })
 
 

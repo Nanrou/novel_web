@@ -1,7 +1,7 @@
 # -*- coding:utf-8 -*-
 
 from django.db import models
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 
 # Create your models here.
 
@@ -16,6 +16,9 @@ class AuthorTable(models.Model):
 class CategoryTable(models.Model):
     cate = models.CharField(max_length=30, null=True, unique=True)
     category = models.CharField(max_length=20)
+
+    def get_absolute_url(self):
+        return reverse('novel_site:category', kwargs={'cate': self.cate})
 
     def __str__(self):
         return self.category
@@ -36,7 +39,7 @@ class InfoTable(models.Model):
         return self.title
 
     def get_absolute_url(self):
-        return reverse('info', self.pk)
+        return reverse('novel_site:info', kwargs={'pk': self.pk})
 
     @property
     def latest_chapter(self):

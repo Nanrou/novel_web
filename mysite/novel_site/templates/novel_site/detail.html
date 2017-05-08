@@ -1,4 +1,5 @@
 {% extends 'novel_site/base.html' %}
+{% load staticfiles %}
 
 {% block meta_description %}
 <title>择天记 正文 {{ object.chapter }}全文免费阅读 - 超级小说</title>
@@ -21,9 +22,9 @@
         <div class="con_top">
             <a href="http://www.superxiaoshuo.com/">超级小说</a>
             &gt; 
-            <a href="{{ object.get_category_url }}">{{ object.category }}</a>
+            <a href="{{ object.title.category.get_category_url }}">{{ object.title.category }}</a>
             &gt; 
-            <a href="{{ object.get_absolute_url }}">{{ object.title }}</a>
+            <a href="{{ object.title.get_absolute_url }}">{{ object.title.title }}</a>
             &gt; {{ object.chapter }}
             <div id="page_set">
                 <select onchange="javascript:setFont(this.options[this.selectedIndex].value);" id="bcolor" name="bcolor">
@@ -119,7 +120,7 @@
             </div>
         </div>
         <div id="content">
-        {{ object.content }}
+        {{ object.content|safe }}
 （我一直都很喜欢陈粒，始终认为奇妙能力歌应该用来做将夜的主题曲，也与影视公司认真地提议过，不知道能否成功。我也一直都很喜欢有容，因为篇幅的原因，
 很少有机会展现她存在于我想象里的美好，这一章写了点，我很高兴。另外刚才忽然发现，八年前的今天是间客开始的日子，时光真的是……很快就不见了，对我来
 说间客是一部非常特殊的作品，以文字论不及将夜和择天记，却是我个人最喜欢的故事，如果有朋友没有看过的，推荐您去看一下。）
@@ -162,4 +163,4 @@
         <div id="xia" title="↓ 移至底部"></div>
         <div id="myrss" title="Hi!看点不一样的?" onclick="window.open('/');"></div>
 </div>
-{% endblock move_widget%}
+{% endblock move_widget %}
