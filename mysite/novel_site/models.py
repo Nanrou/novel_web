@@ -43,7 +43,7 @@ class InfoTable(models.Model):
 
     @property
     def latest_chapter(self):
-        return MAP_DICT[str(self.store_des)].objects.latest('id')
+        return MAP_DICT[str(self.store_des)].objects.filter(title=self.pk).latest('id')
 
     @property
     def all_chapters(self):

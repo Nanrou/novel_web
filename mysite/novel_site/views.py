@@ -14,35 +14,58 @@ def category(request, pk):
     pass
 
 
-# class InfoView(DetailView):
-#
-#     model = InfoTable
-#     template_name = 'novel_site/info.html'
-#
-#     def get(self, request, *args, **kwargs):
-#
-#     # def get_category_url(self):
-#     #     info = InfoTable.objects.get(pk=self.)
-#     #     return reverse('category', info.category.cate)
-#
-#     def get_context_data(self, **kwargs):
-#         context = super(InfoView, self).get_context_data(**kwargs)
-#         return context
+class InfoView(DetailView):
 
-def info(request, pk):
-    book_info = InfoTable.objects.get(pk=pk)
+    model = InfoTable
+    template_name = 'novel_site/info.html'
 
-    return render(request, 'novel_site/info.html', context={
-        'object': book_info,
-    })
+    def get_context_data(self, **kwargs):
+        context = super(InfoView, self).get_context_data(**kwargs)
+        return context
 
 
-def detail(request, pk, index):
-    book = InfoTable.objects.get(pk=1)
-    chapter = book.all_chapters.get(pk=index)
-    # chapter = BookTableOne.objects.get(pk=index)
-    return render(request, 'novel_site/detail.html', context={
-        'object': chapter,
-    })
+class BookView(DetailView):
+
+    template_name = 'novel_site/detail.html'
+    pk_url_kwarg = 'index'
+
+    def next_page(self):
+        try:
+            return self.book_info.all_chapters.filter(id__lt=self.kwargs['index'])[0].get_absolute_url()
+        except IndexError:
+            return self.book_info.get_absolute_url
+
+    def last_page(self):
+        try:
+            return self.book_info.all_chapters.filter(id__gt=self.kwargs['index'])[0].get_absolute_url()
+        except IndexError:
+            return self.book_info.get_absolute_url
+
+    def get_context_data(self, **kwargs):
+        context = super(BookView, self).get_context_data(**kwargs)
+        context['next_page'] = self.next_page()
+        context['last_page'] = self.last_page()
+        return context
+
+    # def get(self, request, *args, **kwargs):
+    #     self.book_info = InfoTable.objects.get(pk=self.kwargs['pk'])
+    #     print('book_info type: ', type(self.book_info))
+    #     return super(BookView, self).get(request, *args, **kwargs)
+    #
+    # def get_object(self, queryset=None):
+    #     self.object = self.book_info.all_chapters.get(pk=self.kwargs['index'])
+    #     return self.object
+
+    def get_queryset(self):
+        self.book_info = InfoTable.objects.get(pk=self.kwargs['pk'])
+        return self.book_info.all_chapters
+
+
+
+    # def get_queryset(self):
+    #     chapters = InfoTable.objects.get(pk=self.kwargs['pk']).all_chapters
+    #     chapter = chapters.get(pk=self.kwargs['index'])
+    #     print(type(chapters), type(chapter))
+    #     return chapters
 
 

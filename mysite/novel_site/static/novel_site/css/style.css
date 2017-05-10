@@ -149,7 +149,7 @@ table.grid td { background-color: #FFFFFF !important; border: 1px solid #C3DFEA;
 .con_top #bdshare{float:right;line-height:20px;padding-right:20px;padding-top:9px;text-align:right;}
 #sidebar{float:left;width:140px;text-align:left;}
 #maininfo{float:right;width:800px;}
-#fmimg{background-color:#E1ECED;float:left;width:126px;margin:12px;padding:12px;position:relative;}
+#fmimg{background-color:#E1ECED;float:left;width:126px;margin:20px;padding:2px;position:relative;}
 #fmimg img{border:medium none;height:150px;width:120px;margin:3px;}
 #fmimg span{top:8px;right:8px;width:88px;height:88px;position:absolute;display:block;z-index:999;}
 #fmimg .a {background-position:0 -206px;}
