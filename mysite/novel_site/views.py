@@ -6,8 +6,9 @@ from django.http import HttpResponse
 from .models import CategoryTable, InfoTable, BookTableOne
 from django.core.exceptions import ObjectDoesNotExist
 from django.views.generic.detail import DetailView
+from django.views.generic.list import ListView
 from django.views.generic.base import TemplateView
-
+import csv
 # Create your views here.
 
 
@@ -19,13 +20,30 @@ class CategoryView(TemplateView):
     template_name = 'novel_site/category.html'
 
 
-class InfoView(DetailView):
+# class InfoView(DetailView):
+#
+#     model = InfoTable
+#     template_name = 'novel_site/info.html'
+#
+#     def get_context_data(self, **kwargs):
+#         context = super(InfoView, self).get_context_data(**kwargs)
+#         return context
 
-    model = InfoTable
+
+class InfoView(ListView):
+
+    # model = InfoTable
     template_name = 'novel_site/info.html'
+    context_object_name = 'all_chapters'
+
+    def get_queryset(self):
+        self.object = InfoTable.objects.select_related().get(pk=self.kwargs['pk'])
+        return self.object.all_chapters
 
     def get_context_data(self, **kwargs):
         context = super(InfoView, self).get_context_data(**kwargs)
+        context['object'] = self.object
+        context['latest_chapter'] = self.object_list.last()
         return context
 
 
@@ -54,7 +72,6 @@ class BookView(DetailView):
 
     # def get(self, request, *args, **kwargs):
     #     self.book_info = InfoTable.objects.get(pk=self.kwargs['pk'])
-    #     print('book_info type: ', type(self.book_info))
     #     return super(BookView, self).get(request, *args, **kwargs)
     #
     # def get_object(self, queryset=None):

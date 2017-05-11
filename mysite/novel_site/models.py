@@ -44,11 +44,11 @@ class InfoTable(models.Model):
 
     @property
     def latest_chapter(self):
-        return MAP_DICT[str(self.store_des)].objects.filter(title=self.pk).latest('id')
+        return MAP_DICT[str(self.store_des)].objects.filter(title=self.pk).defer('content', 'need_confirm').latest('id')
 
     @property
     def all_chapters(self):
-        return MAP_DICT[str(self.store_des)].objects.filter(title=self.pk)
+        return MAP_DICT[str(self.store_des)].objects.filter(title=self.pk).defer('content', 'need_confirm')
 
 
 class Book(models.Model):
