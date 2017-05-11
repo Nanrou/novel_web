@@ -3,12 +3,12 @@
 from django.shortcuts import render, loader, get_object_or_404, redirect
 from django.urls import reverse
 from django.http import HttpResponse
-from .models import CategoryTable, InfoTable, BookTableOne
+from .models import CategoryTable, InfoTable, BookTableOne, MAP_DICT
 from django.core.exceptions import ObjectDoesNotExist
-from django.views.generic.detail import DetailView
+from django.views.generic.detail import DetailView, SingleObjectMixin
 from django.views.generic.list import ListView
 from django.views.generic.base import TemplateView
-import csv
+
 # Create your views here.
 
 
@@ -32,9 +32,12 @@ class CategoryView(TemplateView):
 
 class InfoView(ListView):
 
-    # model = InfoTable
     template_name = 'novel_site/info.html'
     context_object_name = 'all_chapters'
+
+    # def get(self, request, *args, **kwargs):
+    #     self.object = self.get_object(queryset=InfoTable.objects.all())
+    #     return super(InfoView, self).get(request, *args, **kwargs)
 
     def get_queryset(self):
         self.object = InfoTable.objects.select_related().get(pk=self.kwargs['pk'])
@@ -56,13 +59,13 @@ class BookView(DetailView):
         try:
             return self.book_info.all_chapters.filter(id__lt=self.kwargs['index'])[0].get_absolute_url()
         except IndexError:
-            return self.book_info.get_absolute_url
+            return self.book_info.get_absolute_url()
 
     def last_page(self):
         try:
             return self.book_info.all_chapters.filter(id__gt=self.kwargs['index'])[0].get_absolute_url()
         except IndexError:
-            return self.book_info.get_absolute_url
+            return self.book_info.get_absolute_url()
 
     def get_context_data(self, **kwargs):
         context = super(BookView, self).get_context_data(**kwargs)
@@ -81,13 +84,4 @@ class BookView(DetailView):
     def get_queryset(self):
         self.book_info = InfoTable.objects.get(pk=self.kwargs['pk'])
         return self.book_info.all_chapters
-
-
-
-    # def get_queryset(self):
-    #     chapters = InfoTable.objects.get(pk=self.kwargs['pk']).all_chapters
-    #     chapter = chapters.get(pk=self.kwargs['index'])
-    #     print(type(chapters), type(chapter))
-    #     return chapters
-
 
