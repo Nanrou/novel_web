@@ -8,8 +8,8 @@
 {% block meta_description %}
 <!-- meta_description -->
 {% endblock meta_description %}
-<link rel="stylesheet" href="{% static 'novel_site/css/style.css' %}"/>
-<script src="http://apps.bdimg.com/libs/jquery/1.4.2/jquery.js"></script>
+<link rel="stylesheet" href={% static 'novel_site/css/style.css' %}>
+<script src="www.apps.bdimg.com/libs/jquery/1.4.2/jquery.js"></script>
 <script src="{% static 'novel_site/js/m.js' %}"></script>
 <script src="{% static 'novel_site/js/header.js' %}"></script>
 {% block optional_script %}
@@ -23,21 +23,21 @@
     <!-- 页眉 -->
         <div class="ywtop_con">
             <div class="ywtop_sethome">
-                <a onclick="this.style.behavior='url(#default#homepage)';this.setHomePage('http://www.superxiaoshuo.com');" href="#">将本站设为首页</a>
+                <a onclick="this.style.behavior='url(#default#homepage)';this.setHomePage('');" href=="#">将本站设为首页</a>
             </div>
             <div class="ywtop_addfavorite">
-                <a href="javascript:window.external.addFavorite('http://www.superxiaoshuo.com','爱看小说的都收藏了')">收藏超级小说</a>
+                <a href=="javascript:window.external.addFavorite('','爱看小说的都收藏了')">收藏超级小说</a>
             </div>
         </div>
     </div>
     <div class="header">
     <!-- 头部 -->
         <div class="header_logo">
-            <a href="http://www.superxiaoshuo.com/">>超级小说</a>
+            <a href="/">>超级小说</a>
         </div>
         <form><!-- 以后增加站内搜 -->
             <div class="search">
-                <input name="q" class="input" value="输入需要搜索的小说" onblur="if (value ==''){value='输入需要搜索的小说'}" onfocus="if (value =='输入需要搜索的小说'){value =''}" id="wd" type="text"/>
+                <input name="q" class="input" value="输入需要搜索的小说" onblur="if (value ==''){value='输入需要搜索的小说'}" onfocus="if (value =='输入需要搜索的小说'){value =''}" id="wd" type="text">
                 <span class="s_btn"><input value=" 搜 索 " class="button" type="submit"></span>
             </div>
         </form>
@@ -45,18 +45,18 @@
     <div class="nav">
     <!-- 导航栏 -->
         <ul style="padding-left: 5px;">
-            <li><a href="http://www.superxiaoshuo.com/">首页</a></li>
-			<li><a href="http://www.superxiaoshuo.com/xuanhuan/">玄幻小说</a></li>
-			<li><a href="http://www.superxiaoshuo.com/xiuzhen/">修真小说</a></li>
-			<li><a href="http://www.superxiaoshuo.com/dushi/">都市小说</a></li>
-			<li><a href="http://www.superxiaoshuo.com/lishi/">历史小说</a></li>
-			<li><a href="http://www.superxiaoshuo.com/wangyou/">网游小说</a></li>
-			<li><a href="http://www.superxiaoshuo.com/kehuan/">科幻小说</a></li>
-			<li><a href="http://www.superxiaoshuo.com/kongbu/">恐怖小说</a></li>
-			<li><a href="http://www.superxiaoshuo.com/yanqing/">言情小说</a></li>
-			<li><a href="http://www.superxiaoshuo.com/qita/">其他小说</a></li>
-			<li><a href="http://www.superxiaoshuo.com/top/">排行榜单</a></li>
-			<li><a href="http://www.superxiaoshuo.com/quanben/">全本小说</a></li>
+            <li><a href="/">首页</a></li>
+			<li><a href="/cate/xuanhuan/">玄幻小说</a></li>
+			<li><a href="/cate/xiuzhen/">修真小说</a></li>
+			<li><a href="/cate/dushi/">都市小说</a></li>
+			<li><a href="/cate/lishi/">历史小说</a></li>
+			<li><a href="/cate/wangyou/">网游小说</a></li>
+			<li><a href="/cate/kehuan/">科幻小说</a></li>
+			<li><a href="/cate/kongbu/">恐怖小说</a></li>
+			<li><a href="/cate/yanqing/">言情小说</a></li>
+			<li><a href="/cate/qita/">其他小说</a></li>
+			<li><a href="/cate/top/">排行榜单</a></li>
+			<li><a href="/cate/quanben/">全本小说</a></li>
         </ul>
     </div>
     {% block main %}

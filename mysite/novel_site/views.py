@@ -6,12 +6,17 @@ from django.http import HttpResponse
 from .models import CategoryTable, InfoTable, BookTableOne
 from django.core.exceptions import ObjectDoesNotExist
 from django.views.generic.detail import DetailView
+from django.views.generic.base import TemplateView
 
 # Create your views here.
 
 
-def category(request, pk):
-    pass
+class HomeView(TemplateView):
+    template_name = 'novel_site/home.html'
+
+
+class CategoryView(TemplateView):
+    template_name = 'novel_site/category.html'
 
 
 class InfoView(DetailView):

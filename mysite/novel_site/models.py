@@ -34,6 +34,7 @@ class InfoTable(models.Model):
     update_time = models.DateTimeField()
     store_des = models.IntegerField(verbose_name='book_table_index', null=True)
     image = models.CharField(max_length=70, verbose_name='image_des', null=True)
+    resume = models.CharField(max_length=300, null=True)
 
     def __str__(self):
         return self.title

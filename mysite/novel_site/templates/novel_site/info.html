@@ -31,9 +31,9 @@
 {%  block main %}
 <div class="box_con">
         <div class="con_top">
-        <a href="http://www.superxiaoshuo.com/">超级小说</a>
+        <a href="/">超级小说</a>
         &gt;
-        <a href="{{ object.get_category_url }}">{{ object.category }}</a>
+        <a href="{{ object.category.get_absolute_url }}">{{ object.category }}</a>
         &gt;
         {{ object.title }}
         </div>
