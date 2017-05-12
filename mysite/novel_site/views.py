@@ -30,23 +30,27 @@ class CategoryView(TemplateView):
 #         return context
 
 
-class InfoView(ListView):
+class InfoView(DetailView):
 
     template_name = 'novel_site/info.html'
-    context_object_name = 'all_chapters'
+    # context_object_name = 'all_chapters'
 
     # def get(self, request, *args, **kwargs):
     #     self.object = self.get_object(queryset=InfoTable.objects.all())
     #     return super(InfoView, self).get(request, *args, **kwargs)
-
     def get_queryset(self):
-        self.object = InfoTable.objects.select_related().get(pk=self.kwargs['pk'])
-        return self.object.all_chapters
+        return InfoTable.objects.select_related()
+
+    # def get_queryset(self):
+    #     self.object = InfoTable.objects.select_related().get(pk=self.kwargs['pk'])
+    #     return self.object.all_chapters
 
     def get_context_data(self, **kwargs):
         context = super(InfoView, self).get_context_data(**kwargs)
-        context['object'] = self.object
-        context['latest_chapter'] = self.object_list.last()
+        # context['object'] = self.object
+        # context['latest_chapter'] = self.object.last()
+        # context['all_chapters'] = self.object.all_chapters
+        context['latest_chapter'] = self.object.all_chapters.last()
         return context
 
 

@@ -56,9 +56,10 @@ class Book(models.Model):
     chapter = models.CharField(max_length=70, null=True)
     content = models.TextField()
     need_confirm = models.BooleanField(default=0)
+    book_id = models.IntegerField(verbose_name='book_id', null=True)
 
     def get_absolute_url(self):
-        return reverse('novel_site:detail', kwargs={'pk': self.title.pk, 'index': self.pk})
+        return reverse('novel_site:detail', kwargs={'pk': self.book_id, 'index': self.pk})
 
     class Meta:
         abstract = True

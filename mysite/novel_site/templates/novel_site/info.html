@@ -33,14 +33,14 @@
         <div class="con_top">
         <a href="/">超级小说</a>
         &gt;
-        <a href="{{ object.category.get_absolute_url }}">{{ object.category.category }}</a>
+        <a href="{{ object.category.get_absolute_url }}">{{ object.category }}</a>
         &gt;
         {{ object.title }}
         </div>
         <div id="maininfo">
             <div id="info">
                 <h1>{{ object.title }}</h1>
-                <p>作者：{{ object.author.author }}</p>
+                <p>作者：{{ object.author }}</p>
                 <p>状态：{{ object.status }},  <a rel="nofollow" href="http://www.ranwen.org/modules/article/addbookcase.php?bid=56048" target="_blank">加入收藏</a>, <a href="#footer">直达底部</a></p>
                 <p>最后更新：{{ object.update_time|date:'Y-m-d H:i:s' }}</p>
                 <p>最新章节：<a href="{{ latest_chapter.get_absolute_url }}" target="_blank">{{ latest_chapter.chapter }}</a></p>
@@ -71,14 +71,14 @@
     <div id="list">
         <dl>
             <dt>《{{ object.title }}》正文</dt>
-        {% comment %}
             {%  for chapter in object.all_chapters %}
             <dd><a href="{{ chapter.get_absolute_url }}">{{ chapter.chapter}}</a></dd>
             {% endfor %}
-        {% endcomment %}
+{% comment %}
             {%  for chapter in all_chapters %}
                 <dd><a href="{{ chapter.get_absolute_url }}">{{ chapter.chapter}}</a></dd>
             {% endfor %}
+            {% endcomment %}
         </dl>
     </div>
 </div>
