@@ -15,7 +15,7 @@ logging.basicConfig(
     format='%(levelname)7s: %(message)s',
 )
 
-LOGGER = logging.getLogger('')
+LOGGER = logging.getLogger('')  # 改成持久化
 
 
 class Crawler(object):
@@ -27,8 +27,11 @@ class Crawler(object):
         self.max_tasks = max_tasks
         self.session = aiohttp.ClientSession(loop=self.loop, headers=HEADERS)
         self.q = Queue(loop=self.loop)
-        for url in url_lists:
-            self.add_url(url)
+        if isinstance(url_lists, list):
+            for url in url_lists:
+                self.add_url(url)
+        else:
+            self.add_url(url_lists)
 
     def __setattr__(self, key, value):
         return object.__setattr__(self, key, value)
@@ -43,7 +46,8 @@ class Crawler(object):
                 res = await self.fetch(url)
                 self.q.task_done()
                 LOGGER.debug('done with {}'.format(url))
-                return res  # 看怎么返回数据
+                # return res  # 看怎么返回数据
+                print(res)
         except asyncio.CancelledError:
             pass
 
@@ -62,11 +66,23 @@ class Crawler(object):
             page_body = etree.HTML(page_body)
             res = {}
             for k, v in self.parse_rule.items():
-                try:
-                    res[k] = etree.tounicode(page_body.xpath(v)[0])
-                except IndexError:
+                _keep_html = False
+                _value_list = []
+                if isinstance(v, list):  # 如果需要带html标签
+                    _keep_html = True
+                    v = v[0]
+                for ele in page_body.xpath(v):
+                    if _keep_html:
+                        _value_list.append(etree.tounicode(ele))
+                    else:
+                        _value_list.append(ele)
+                if len(_value_list) == 0:
                     LOGGER.debug('wrong xpath in {}'.format(url))
-            return res
+                elif len(_value_list) == 1:
+                    res[k] = _value_list[0]
+                else:
+                    res[k] = _value_list
+            return res  # 增加一个去除头尾标签的功，不要只取一个，取成list
         else:
             LOGGER.debug('invalid page body in {}'.format(url))
             return
@@ -87,16 +103,29 @@ class Crawler(object):
         self.session.close()
 
 
-if __name__ == '__main__':
-    RULE = {
-        'chapter': '//div[@class="bookname"]/h1',
-        'content': '//div[@id="content"]',
-    }
-    URLS = ['http://www.ranwen.org/files/article/56/56048/10973525.html',]
-
+def run_crawler(url, rule):
     loop = asyncio.get_event_loop()
-    crawler = Crawler(url_lists=URLS)
-    crawler.parse_rule = RULE
+    crawler = Crawler(url_lists=url,)
+    crawler.parse_rule = rule
     loop.run_until_complete(crawler.crawl())
     crawler.close()
     loop.close()
+
+
+if __name__ == '__main__':
+    from threading import Thread, Event
+    from queue import Queue as Thread_queue
+    from multiprocessing import Process, Queue as P_queue, Pipe, Event
+
+    # RULE = {
+    #     'chapter': '//div[@class="bookname"]/h1/text()',
+    #     'content': ['//div[@id="content"]', ],
+    # }
+    # URLS = ['http://www.ranwen.org/files/article/56/56048/10973525.html',
+    #         'http://www.ranwen.org/files/article/56/56048/11281440.html',]
+
+    URLS = 'http://www.ranwen.org/files/article/56/56048/'
+    RULE = {'urls': '//div[@class="box_con"]/div[@id="list"]/dl/dd/a/@href'}
+
+    # t_q = Thread_queue()
+    run_crawler(URLS, RULE)
