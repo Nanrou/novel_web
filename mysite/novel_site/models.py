@@ -47,12 +47,16 @@ class InfoTable(models.Model):
         return MAP_DICT[str(self.store_des)].objects.filter(title=self.pk).defer('content', 'need_confirm').latest('id')
 
     @property
-    def all_chapters(self):
+    def all_chapters(self):  # 看是否要放到view中去
         return MAP_DICT[str(self.store_des)].objects.filter(title=self.pk).defer('content', 'need_confirm')
 
     @property
     def all_chapters_detail(self):
         return MAP_DICT[str(self.store_des)].objects.filter(title=self.pk)
+
+    @property
+    def all_chapters_id_only(self):
+        return MAP_DICT[str(self.store_des)].objects.filter(title=self.pk).only('id', 'book_id')
 
 
 class Book(models.Model):

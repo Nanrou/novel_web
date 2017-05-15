@@ -97,11 +97,11 @@
         <div class="bookname">
             <h1>{{ object.chapter }}</h1>
             <div class="bottem1">
-                <a href="{{ next_page }}">上一章</a>
+                <a href="{{ last_page }}">上一章</a>
                 ← 
                 <a href="{{ book_info.get_absolute_url }}">章节列表</a>
                 →
-                <a href="{{ last_page }}">下一章</a>
+                <a href="{{ next_page }}">下一章</a>
                 <a rel="nofollow" href="" target="_blank">加入书签</a> 
                 <a rel="nofollow" href="" target="_blank" style="color:red">错误举报</a>
             </div>
@@ -127,11 +127,11 @@
         </div>
         <div class="bottem1">
         <!-- 这里看怎么复用 -->
-            <a href="{{ next_page }}">上一章</a>
+            <a href="{{ last_page }}">上一章</a>
             ← 
             <a href="{{ book_info.get_absolute_url }}">章节列表</a>
             → 
-            <a href="{{ last_page }}">下一章</a>
+            <a href="{{ next_page }}">下一章</a>
             <a rel="nofollow" href="" target="_blank">加入书签</a> 
             <a rel="nofollow" href="" target="_blank" style="color:red">错误举报</a>
         </div>
