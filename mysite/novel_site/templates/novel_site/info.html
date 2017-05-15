@@ -71,14 +71,14 @@
     <div id="list">
         <dl>
             <dt>《{{ object.title }}》正文</dt>
+            {% comment %}
             {%  for chapter in object.all_chapters %}
             <dd><a href="{{ chapter.get_absolute_url }}">{{ chapter.chapter}}</a></dd>
             {% endfor %}
-{% comment %}
+            {% endcomment %}
             {%  for chapter in all_chapters %}
                 <dd><a href="{{ chapter.get_absolute_url }}">{{ chapter.chapter}}</a></dd>
             {% endfor %}
-            {% endcomment %}
         </dl>
     </div>
 </div>

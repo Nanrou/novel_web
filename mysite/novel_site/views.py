@@ -20,16 +20,6 @@ class CategoryView(TemplateView):
     template_name = 'novel_site/category.html'
 
 
-# class InfoView(DetailView):
-#
-#     model = InfoTable
-#     template_name = 'novel_site/info.html'
-#
-#     def get_context_data(self, **kwargs):
-#         context = super(InfoView, self).get_context_data(**kwargs)
-#         return context
-
-
 class InfoView(DetailView):
 
     template_name = 'novel_site/info.html'
@@ -41,16 +31,11 @@ class InfoView(DetailView):
     def get_queryset(self):
         return InfoTable.objects.select_related()
 
-    # def get_queryset(self):
-    #     self.object = InfoTable.objects.select_related().get(pk=self.kwargs['pk'])
-    #     return self.object.all_chapters
-
     def get_context_data(self, **kwargs):
         context = super(InfoView, self).get_context_data(**kwargs)
-        # context['object'] = self.object
-        # context['latest_chapter'] = self.object.last()
-        # context['all_chapters'] = self.object.all_chapters
-        context['latest_chapter'] = self.object.all_chapters.last()
+        all_chapters = list(self.object.all_chapters)
+        context['all_chapters'] = all_chapters
+        context['latest_chapter'] = all_chapters[-1]
         return context
 
 
@@ -59,33 +44,42 @@ class BookView(DetailView):
     template_name = 'novel_site/detail.html'
     pk_url_kwarg = 'index'
 
-    def next_page(self):
-        try:
-            return self.book_info.all_chapters.filter(id__lt=self.kwargs['index'])[0].get_absolute_url()
-        except IndexError:
-            return self.book_info.get_absolute_url()
-
-    def last_page(self):
-        try:
-            return self.book_info.all_chapters.filter(id__gt=self.kwargs['index'])[0].get_absolute_url()
-        except IndexError:
-            return self.book_info.get_absolute_url()
+    def get_adjacent_page(self):  # ??????????
+        ll = list(self.all_chapters.only('id', 'book_id'))
+        print('-'*20, ll, type(ll))
+        index = ll.index(self.object)
+        print(index)
+        if index - 1 < 0:
+            last_page_url = self.book_info.get_absolute_url()
+        else:
+            last_page_url = ll[index-1].get_absolute_url()
+        if index + 1 < len(ll):
+            next_page_url = self.del_url_tail(self.object.get_absolute_url()) + str(index+1) + '/'
+        else:
+            next_page_url = self.book_info.get_absolute_url()
+        return last_page_url, next_page_url
 
     def get_context_data(self, **kwargs):
         context = super(BookView, self).get_context_data(**kwargs)
-        context['next_page'] = self.next_page()
-        context['last_page'] = self.last_page()
+        context['book_info'] = self.book_info
+        # context['last_page'], context['next_page'] = self.get_adjacent_page()
         return context
 
-    # def get(self, request, *args, **kwargs):
-    #     self.book_info = InfoTable.objects.get(pk=self.kwargs['pk'])
-    #     return super(BookView, self).get(request, *args, **kwargs)
-    #
-    # def get_object(self, queryset=None):
-    #     self.object = self.book_info.all_chapters.get(pk=self.kwargs['index'])
-    #     return self.object
+    # def get_object(self):
+    #     self.book_info = InfoTable.objects.select_related.get(pk=self.kwargs['pk'])
+    #     return self.book_info.all_chapters
 
     def get_queryset(self):
-        self.book_info = InfoTable.objects.get(pk=self.kwargs['pk'])
-        return self.book_info.all_chapters
+        self.book_info = InfoTable.objects.defer('resume', 'image', 'update_time', 'status').select_related().get(pk=self.kwargs['pk'])
+        self.all_chapters = self.book_info.all_chapters_detail
+        return self.all_chapters  # 传给父类的get object，再寻找对应的条目
+
+    @staticmethod
+    def del_url_tail(url):
+        url = url[:-1]
+        while True:
+            if url[-1] == '/':
+                break
+            url = url[:-1]
+        return url
 

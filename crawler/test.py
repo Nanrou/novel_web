@@ -52,18 +52,14 @@ def gf(p, e):
         e.clear()
 
 
+def producte_cate():
+    category = ['玄幻修仙', '科幻网游', '都市重生', '架空历史', '恐怖言情', '全本小说']
+    cate = ['xuanhuan', 'kehuan', 'dushi', 'jiakong', 'kongbu', 'quanben']
+    res = []
+    for i in range(len(cate)):
+        res.append({'id': i+1, 'category': category[i], 'cate': cate[i]})
+    return res
+
+
 if __name__ == '__main__':
-    ps, pr = Pipe()
-    eee = Event()
-    #
-    # def sl():
-    #     loop = asyncio.get_event_loop()
-    #     bbb = loop.run_until_complete(sf())
-    #     loop.close()
-    #     return bbb
-    #
-    # print(sl())
-    # loop = asyncio.get_event_loop()
-    # loop.run_until_complete(test())
-    # loop.close()
-    from . import my_request
+    pass

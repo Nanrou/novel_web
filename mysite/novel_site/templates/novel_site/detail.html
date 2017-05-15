@@ -22,9 +22,9 @@
         <div class="con_top">
             <a href="/">超级小说</a>
             &gt; 
-            <a href="{{ object.title.category.get_category_url }}">{{ object.title.category }}</a>
+            <a href="{{ book_info.category.get_category_url }}">{{ book_info.category }}</a>
             &gt; 
-            <a href="{{ object.title.get_absolute_url }}">{{ object.title.title }}</a>
+            <a href="{{ book_info.get_absolute_url }}">{{ book_info }}</a>
             &gt; {{ object.chapter }}
             <div id="page_set">
                 <select onchange="javascript:setFont(this.options[this.selectedIndex].value);" id="bcolor" name="bcolor">
@@ -99,7 +99,7 @@
             <div class="bottem1">
                 <a href="{{ next_page }}">上一章</a>
                 ← 
-                <a href="{{ object.title.get_absolute_url }}">章节列表</a>
+                <a href="{{ book_info.get_absolute_url }}">章节列表</a>
                 →
                 <a href="{{ last_page }}">下一章</a>
                 <a rel="nofollow" href="" target="_blank">加入书签</a> 
@@ -129,7 +129,7 @@
         <!-- 这里看怎么复用 -->
             <a href="{{ next_page }}">上一章</a>
             ← 
-            <a href="{{ object.title.get_absolute_url }}">章节列表</a>
+            <a href="{{ book_info.get_absolute_url }}">章节列表</a>
             → 
             <a href="{{ last_page }}">下一章</a>
             <a rel="nofollow" href="" target="_blank">加入书签</a> 

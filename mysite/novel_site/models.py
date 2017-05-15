@@ -50,6 +50,10 @@ class InfoTable(models.Model):
     def all_chapters(self):
         return MAP_DICT[str(self.store_des)].objects.filter(title=self.pk).defer('content', 'need_confirm')
 
+    @property
+    def all_chapters_detail(self):
+        return MAP_DICT[str(self.store_des)].objects.filter(title=self.pk)
+
 
 class Book(models.Model):
     title = models.ForeignKey(InfoTable, verbose_name='title', on_delete=models.CASCADE,)
