@@ -1,12 +1,15 @@
-import os
-from django.conf import Settings
-from mysite.mysite import settings as setting
+# -*- coding:utf-8 -*-
 
-# settings.configure()
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'mysite.mysite.settings')
-# Settings(settings_module='mysite.mysite.settings')
+import os, sys
+
+sys.path.append('../mysite/')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'mysite.settings')
 
 import django
 django.setup()
 
-from mysite.novel_site import models
+try:
+    from mysite.novel_site import models
+except ImportError:
+    from novel_site import models
+
