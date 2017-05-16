@@ -27,11 +27,11 @@ class CategoryTable(models.Model):
 class InfoTable(models.Model):
     title = models.CharField(max_length=70, unique=True)
     category = models.ForeignKey(CategoryTable, verbose_name='category', on_delete=models.CASCADE,
-                                 related_name='cate_books')
+                                 related_name='cate_books', null=True)
     author = models.ForeignKey(AuthorTable, verbose_name='author', on_delete=models.CASCADE,
-                               related_name='author_boos')
-    status = models.CharField(max_length=5)
-    update_time = models.DateTimeField()
+                               related_name='author_boos', null=True)
+    status = models.CharField(max_length=5, null=True)
+    update_time = models.DateTimeField(null=True)
     store_des = models.IntegerField(verbose_name='book_table_index', null=True)
     image = models.CharField(max_length=70, verbose_name='image_des', null=True)
     resume = models.CharField(max_length=300, null=True)

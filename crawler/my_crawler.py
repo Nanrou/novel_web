@@ -67,7 +67,7 @@ class Crawler(object):  # 父类只提供爬取的逻辑，子类自己定义储
                 res = {}
                 if self.index_url_flag:
                     index, url = await self.q.get()
-                    res['index'] = index
+                    res['id'] = index
                 else:
                     url = await self.q.get()
                 res = res.update(await self.fetch(url))
@@ -169,8 +169,8 @@ class DetailCrawler(Crawler):  # 传入的url形式必须是[index, url]
 
     def store(self, res):  # 按index的名字,保存正文和章节名到本地
         if isinstance(res, dict):
-            if 'index' in res:
-                _file_path = self.store_path + str(res['index'])
+            if 'id' in res:
+                _file_path = self.store_path + str(res['id'])
             else:
                 _file_path = self.store_path + 'tmp'
             with open(_file_path, 'wb') as wf:
@@ -188,7 +188,7 @@ def run_crawler(crawler):
 
 if __name__ == '__main__':
 
-    # RULE = {
+    # DETAIL_RULE = {
     #     'chapter': '//div[@class="bookname"]/h1/text()',
     #     'content': ['//div[@id="content"]', ],
     # }
