@@ -1,8 +1,13 @@
 # -*- coding:utf-8 -*-
 """
 协程爬虫模块
+这个模块就为了两个功能
+1 处理info页面：接收一个url，去该页面收集所有url，将url带上index传入redis
+2 处理detail页面：接收[index, url]，去该页面采集内容，然后按index的名字存到本地
 
-
+对于parse rule来讲，如果存入的是list形式，就代表要将其爬取部分转换了带html标签的
+--------------------------------------
+模块功能细化，将两个功能独立成不同的子模块
 
 """
 import os.path
@@ -27,40 +32,28 @@ logging.basicConfig(
 LOGGER = logging.getLogger('')  # 改成持久化
 
 
-class Crawler(object):
+class Crawler(object):  # 父类只提供爬取的逻辑，子类自己定义储存方式
 
-    def __init__(self, urls, parse_rule, loop=None, max_tasks=5,
-                 stone_in_redis=False, doc_id=0, stone_path='./'):
+    def __init__(self, urls, parse_rule, loop=None, max_tasks=5, store_path='./'):
         self.loop = loop or asyncio.get_event_loop()
         self.parse_rule = parse_rule
-        self.url_lists = urls
+        self.urls = urls
         self.max_tasks = max_tasks
         self.session = aiohttp.ClientSession(loop=self.loop, headers=HEADERS)
         self.q = Queue(loop=self.loop)
         self.index_url_flag = False
-        if isinstance(urls, list):
-            for url in urls:
-                if isinstance(url, list):
+
+        if isinstance(self.urls, list):
+            for url in self.urls:
+                if isinstance(url, list):  # 传入要求格式是[index, url]
                     self.index_url_flag = True   # 判断url是否带index
                 self.add_url(url)
         else:
-            self.add_url(urls)
+            self.add_url(self.urls)
 
-        self.stone_in_redis = stone_in_redis
-        if self.stone_in_redis:
-            self.redis = redis.StrictRedis()
-
-        if doc_id:  # 应该设计为计数
-            assert isinstance(doc_id, int) is True
-            self.doc_id = doc_id
-        elif os.path.exists('my.ini'):
-            with open('my.ini', 'rb') as rf:
-                ff = pickle.load(rf)
-                self.doc_id = ff['doc_id']
-        else:
-            self.doc_id = doc_id
-
-        self.stone_path = stone_path
+        self.store_path = store_path
+        if not os.path.exists(self.store_path):
+            os.mkdir(self.store_path)
 
     def __setattr__(self, key, value):
         return object.__setattr__(self, key, value)
@@ -79,14 +72,13 @@ class Crawler(object):
                     url = await self.q.get()
                 res = res.update(await self.fetch(url))
                 self.q.task_done()
+                self.store(res)
                 LOGGER.debug('done with {}'.format(url))
-                # return res  # 看怎么返回数据
-                if self.stone_in_redis:
-                    self.stone_to_redis(res)
-                else:
-                    self.serialization(res)
         except asyncio.CancelledError:
             pass
+
+    def store(self, res):  # 子类重写这个方法就行了
+        pass
 
     async def crawl(self):
         workers = [asyncio.Task(self.work(), loop=self.loop)
@@ -142,33 +134,53 @@ class Crawler(object):
         #     pickle.dump(dd, wf)
         self.session.close()
 
-    def serialization(self, res):  # 增加分类文件夹
+
+class InfoCrawler(Crawler):  # 普通信息保存到本地，然后url保存到redis
+
+    def __init__(self, urls, parse_rule, loop=None, max_tasks=5, store_path='./', url_index=None):
+        super(InfoCrawler, self).__init__(urls, parse_rule, loop, max_tasks, store_path=store_path)
+        self.redis = redis.StrictRedis()
+        self.url_index = url_index
+
+    def store(self, res):  # 因为现在这一步只会用在info页面
+        _url_list = {}
+        _file_name = res['title']
+        _url_list[_file_name] = res['urls']
+        res.pop('urls')
+
+        with open(self.store_path + _file_name, 'wb') as wf:  # 保存info信息到本地
+            pickle.dump(res, wf)
+
+        if self.url_index is None:
+            raise RuntimeError('url index is none')
+        for k, v in _url_list.items():  # 存url进redis
+            if isinstance(v, list):
+                for item in v:  # 可以直接在这里为url添加序号
+                    item = str(self.url_index) + '!' + item  # 这样在取出的时候直接split就可以得到序号和url了
+                    self.redis.rpush(k, item)
+            else:
+                self.redis.rpush(k, v)
+
+
+class DetailCrawler(Crawler):  # 传入的url形式必须是[index, url]
+
+    def __init__(self, urls, parse_rule, loop=None, max_tasks=5, store_path='./'):
+        super(DetailCrawler, self).__init__(urls, parse_rule, loop, max_tasks, store_path)
+
+    def store(self, res):  # 按index的名字,保存正文和章节名到本地
         if isinstance(res, dict):
             if 'index' in res:
-                _file_path = self.stone_path + str(res['index'])
-                res.pop('index')
+                _file_path = self.store_path + str(res['index'])
             else:
-                _file_path = self.stone_path + str(self.doc_id)
-            with open(_file_path, 'wb') as pf:
-                pickle.dump(res, pf)
+                _file_path = self.store_path + 'tmp'
+            with open(_file_path, 'wb') as wf:
+                pickle.dump(res, wf)
         else:
             LOGGER.warning('wrong type in serialization')
 
-    def stone_to_redis(self, res):
-        if isinstance(res, dict):
-            for k, v in res.items():
-                if isinstance(v, list):
-                    for item in v:
-                        self.redis.rpush(k, item)
-                else:
-                    self.redis.rpush(k, v)
-        else:
-            LOGGER.warning('wrong type in stone_to_redis')
 
-
-def run_crawler(urls, parse_rule, loop=None, *args, **kwargs):
-    loop = loop or asyncio.get_event_loop()
-    crawler = Crawler(urls, parse_rule, loop, *args, **kwargs)
+def run_crawler(crawler):
+    loop = asyncio.get_event_loop()
     loop.run_until_complete(crawler.crawl())
     crawler.close()
     loop.close()
@@ -187,4 +199,3 @@ if __name__ == '__main__':
     RULE = {'urls': '//div[@class="box_con"]/div[@id="list"]/dl/dd/a/@href'}
 
     # t_q = Thread_queue()
-    run_crawler(URLS, RULE)
