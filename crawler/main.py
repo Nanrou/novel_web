@@ -3,5 +3,3 @@
 from crawler.my_crawler import InfoCrawler, DetailCrawler
 
 
-def main():
-    pass

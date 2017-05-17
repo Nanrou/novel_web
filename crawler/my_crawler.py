@@ -19,6 +19,7 @@ from asyncio import Queue
 
 import aiohttp
 from lxml import etree
+from lxml.etree import XPathError
 import redis
 
 
@@ -51,7 +52,7 @@ class Crawler(object):  # 父类只提供爬取的逻辑，子类自己定义储
         else:
             self.add_url(self.urls)
 
-        self.store_path = store_path
+        self.store_path = store_path if store_path.endswith('/') else store_path + '/'
         if not os.path.exists(self.store_path):
             os.mkdir(self.store_path)
 
@@ -64,13 +65,14 @@ class Crawler(object):  # 父类只提供爬取的逻辑，子类自己定义储
     async def work(self):
         try:
             while True:
-                res = {}
+                # res = {}
                 if self.index_url_flag:
                     index, url = await self.q.get()
+                    res = await self.fetch(url)
                     res['id'] = index
                 else:
                     url = await self.q.get()
-                res = res.update(await self.fetch(url))
+                    res = await self.fetch(url)
                 self.q.task_done()
                 self.store(res)
                 LOGGER.debug('done with {}'.format(url))
@@ -88,8 +90,8 @@ class Crawler(object):  # 父类只提供爬取的逻辑，子类自己定义储
             w.cancel()
 
     async def fetch(self, url):
-        if isinstance(self.parse_rule, dict):
-            raise Exception('must input parse_rule in dict')
+        # if not isinstance(self.parse_rule, dict):
+        #     raise Exception('must input parse_rule in dict')  # 异步怎么捕捉异常
         page_body = await self.my_request(url)
         if page_body:
             page_body = etree.HTML(page_body)
@@ -100,11 +102,14 @@ class Crawler(object):  # 父类只提供爬取的逻辑，子类自己定义储
                 if isinstance(v, list):  # 如果需要保持文本内的html标签
                     _keep_html_flag = True
                     v = v[0]  # 因为传进来的就是一个元素的list
-                for ele in page_body.xpath(v):
-                    if _keep_html_flag:
-                        _value_list.append(etree.tounicode(ele))
-                    else:
-                        _value_list.append(ele)
+                try:
+                    for ele in page_body.xpath(v):
+                        if _keep_html_flag:
+                            _value_list.append(etree.tounicode(ele))
+                        else:
+                            _value_list.append(ele)
+                except XPathError:
+                    LOGGER.warning('wrong xpath syntax in {}'.format(k))
                 if len(_value_list) == 0:
                     LOGGER.warning('wrong xpath in {}'.format(url))
                 elif len(_value_list) == 1:
@@ -137,14 +142,15 @@ class Crawler(object):  # 父类只提供爬取的逻辑，子类自己定义储
 
 class InfoCrawler(Crawler):  # 普通信息保存到本地，然后url保存到redis
 
-    def __init__(self, urls, parse_rule, loop=None, max_tasks=5, store_path='./', url_index=None):
+    def __init__(self, urls, parse_rule, loop=None, max_tasks=5, store_path='./', url_index=0, book_index=0):
         super(InfoCrawler, self).__init__(urls, parse_rule, loop, max_tasks, store_path=store_path)
         self.redis = redis.StrictRedis()
         self.url_index = url_index
+        self.book_index = str(book_index)
 
     def store(self, res):  # 因为现在这一步只会用在info页面
         _url_list = {}
-        _file_name = res['title']
+        _file_name = self.book_index
         _url_list[_file_name] = res['urls']
         res.pop('urls')
 
@@ -158,6 +164,7 @@ class InfoCrawler(Crawler):  # 普通信息保存到本地，然后url保存到r
                 for item in v:  # 可以直接在这里为url添加序号
                     item = str(self.url_index) + '!' + item  # 这样在取出的时候直接split就可以得到序号和url了
                     self.redis.rpush(k, item)
+                    self.url_index += 1
             else:
                 self.redis.rpush(k, v)
 
@@ -188,14 +195,27 @@ def run_crawler(crawler):
 
 if __name__ == '__main__':
 
-    # DETAIL_RULE = {
-    #     'chapter': '//div[@class="bookname"]/h1/text()',
-    #     'content': ['//div[@id="content"]', ],
-    # }
-    # URLS = ['http://www.ranwen.org/files/article/56/56048/10973525.html',
-    #         'http://www.ranwen.org/files/article/56/56048/11281440.html',]
+    DETAIL_RULE = {
+        'title': '//div[@class="con_top"]/a[3]/text()',
+        'chapter': '//div[@class="bookname"]/h1/text()',
+        'content': ['//div[@id="content"]', ],
+    }
+    DETAIL_URLS = [[0, 'http://www.ranwen.org/files/article/56/56048/10973525.html'],
+                   [1, 'http://www.ranwen.org/files/article/56/56048/11281440.html'],]
 
-    URLS = 'http://www.ranwen.org/files/article/56/56048/'
-    RULE = {'urls': '//div[@class="box_con"]/div[@id="list"]/dl/dd/a/@href'}
+    INFO_URLS = 'http://www.ranwen.org/files/article/19/19388/'
+    INFO_RULE = {
+        'urls': '//div[@class="box_con"]/div[@id="list"]/dl/dd/a/@href',
+        'title': '//div[@id="maininfo"]/div[@id="info"]/h1/text()',
+        'author': '//div[@id="maininfo"]/div[@id="info"]/p[1]/text()',
+        'status': '//div[@id="maininfo"]/div[@id="info"]/p[2]/text()',
+        'category': '//div[@class="con_top"]/a[2]/text()',
+        'resume': '//div[@id="maininfo"]/div[@id="intro"]/p[1]/text()',
+    }
 
-    # t_q = Thread_queue()
+    # infoc = InfoCrawler(urls=INFO_URLS, parse_rule=INFO_RULE, store_path='./bbb/')
+    # run_crawler(infoc)
+
+    detailc = DetailCrawler(urls=DETAIL_URLS, parse_rule=DETAIL_RULE, store_path = './ccc')
+    run_crawler(detailc)
+
