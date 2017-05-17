@@ -16,6 +16,7 @@ import logging
 import asyncio
 from async_timeout import timeout
 from asyncio import Queue
+from functools import wraps
 
 import aiohttp
 from lxml import etree
@@ -42,12 +43,13 @@ class Crawler(object):  # 父类只提供爬取的逻辑，子类自己定义储
         self.max_tasks = max_tasks
         self.session = aiohttp.ClientSession(loop=self.loop, headers=HEADERS)
         self.q = Queue(loop=self.loop)
-        self.index_url_flag = False
+        self.redis = redis.StrictRedis()
+        # self.index_url_flag = False
 
         if isinstance(self.urls, list):
             for url in self.urls:
-                if isinstance(url, list):  # 传入要求格式是[index, url]
-                    self.index_url_flag = True   # 判断url是否带index
+                # if isinstance(url, list):  # 传入要求格式是[index, url]
+                #     self.index_url_flag = True   # 判断url是否带index
                 self.add_url(url)
         else:
             self.add_url(self.urls)
@@ -59,6 +61,9 @@ class Crawler(object):  # 父类只提供爬取的逻辑，子类自己定义储
     def __setattr__(self, key, value):
         return object.__setattr__(self, key, value)
 
+    def __getattr__(self, item):
+        return object.__getattribute__(item)
+
     def add_url(self, url):
         self.q.put_nowait(url)
 
@@ -66,13 +71,14 @@ class Crawler(object):  # 父类只提供爬取的逻辑，子类自己定义储
         try:
             while True:
                 # res = {}
-                if self.index_url_flag:
-                    index, url = await self.q.get()
-                    res = await self.fetch(url)
-                    res['id'] = index
-                else:
-                    url = await self.q.get()
-                    res = await self.fetch(url)
+                # if self.index_url_flag:  # 都不需要这样判断，在最后接收参数的时候判断就行了
+                                        # 因为最主要的目的就是，最终的数据中带index就可以了
+                    # index, url = await self.q.get()
+                    # res = await self.fetch([index, url])
+                    # res['id'] = index
+                # else:
+                url = await self.q.get()
+                res = await self.fetch(url)
                 self.q.task_done()
                 self.store(res)
                 LOGGER.debug('done with {}'.format(url))
@@ -92,10 +98,13 @@ class Crawler(object):  # 父类只提供爬取的逻辑，子类自己定义储
     async def fetch(self, url):
         # if not isinstance(self.parse_rule, dict):
         #     raise Exception('must input parse_rule in dict')  # 异步怎么捕捉异常
+        res = {}
+        if isinstance(url, list):  # 如果带index就赋值到res里去
+            index, url = url
+            res['id'] = index
         page_body = await self.my_request(url)
         if page_body:
             page_body = etree.HTML(page_body)
-            res = {}
             for k, v in self.parse_rule.items():
                 _keep_html_flag = False
                 _value_list = []
@@ -142,31 +151,57 @@ class Crawler(object):  # 父类只提供爬取的逻辑，子类自己定义储
 
 class InfoCrawler(Crawler):  # 普通信息保存到本地，然后url保存到redis
 
-    def __init__(self, urls, parse_rule, loop=None, max_tasks=5, store_path='./', url_index=0, book_index=0):
+    def __init__(self, urls, parse_rule, loop=None, max_tasks=5, store_path='./', book_index=None):
         super(InfoCrawler, self).__init__(urls, parse_rule, loop, max_tasks, store_path=store_path)
-        self.redis = redis.StrictRedis()
-        self.url_index = url_index
-        self.book_index = str(book_index)
+
+        if book_index is not None:
+            assert book_index is int
+            self.book_index = book_index
+        elif os.path.exists('my.ini'):
+            with open('my.ini', 'rb') as rf:
+                r = pickle.load(rf)
+                self.book_index = r['book_index']
+        else:
+            self.book_index = 0
 
     def store(self, res):  # 因为现在这一步只会用在info页面
         _url_list = {}
-        _file_name = self.book_index
+        _file_name = str(self.book_index)
         _url_list[_file_name] = res['urls']
         res.pop('urls')
 
         with open(self.store_path + _file_name, 'wb') as wf:  # 保存info信息到本地
             pickle.dump(res, wf)
 
-        if self.url_index is None:
-            raise RuntimeError('url index is none')
+        url_index = self.book_index * 10000
+
         for k, v in _url_list.items():  # 存url进redis
             if isinstance(v, list):
                 for item in v:  # 可以直接在这里为url添加序号
-                    item = str(self.url_index) + '!' + item  # 这样在取出的时候直接split就可以得到序号和url了
+                    item = str(url_index) + '!' + item  # 这样在取出的时候直接split就可以得到序号和url了
                     self.redis.rpush(k, item)
-                    self.url_index += 1
+                    url_index += 1
             else:
                 self.redis.rpush(k, v)
+
+        self.book_index += 1
+
+    def close(self):
+        with open('my.ini', 'wb') as wf:
+            r = {'book_index': self.book_index}
+            pickle.dump(r, wf)
+        super(InfoCrawler, self).close()
+
+
+def confirm_request(func):  # 再次确认爬取是否成功
+    @wraps(func)
+    def wrapper(self, url):
+        index, url = url
+        self.redis.sadd('tmp', index + '!' + url)
+        res = func(self, url)
+        self.redis.spop('tmp', index + '!' + url)
+        return res
+    return wrapper
 
 
 class DetailCrawler(Crawler):  # 传入的url形式必须是[index, url]
@@ -175,15 +210,23 @@ class DetailCrawler(Crawler):  # 传入的url形式必须是[index, url]
         super(DetailCrawler, self).__init__(urls, parse_rule, loop, max_tasks, store_path)
 
     def store(self, res):  # 按index的名字,保存正文和章节名到本地
-        if isinstance(res, dict):
-            if 'id' in res:
-                _file_path = self.store_path + str(res['id'])
-            else:
-                _file_path = self.store_path + 'tmp'
-            with open(_file_path, 'wb') as wf:
-                pickle.dump(res, wf)
+        try:
+            store_path = self.store_path + res['title'] + '/'
+            if not os.path.exists(store_path):
+                os.mkdir(store_path)
+        except KeyError:
+            LOGGER.debug('title not found')
+            store_path = self.store_path
+        if 'id' in res:
+            _file_path = store_path + str(res['id'])
         else:
-            LOGGER.warning('wrong type in serialization')
+            _file_path = self.store_path + 'tmp'
+        with open(_file_path, 'wb') as wf:
+            pickle.dump(res, wf)  # res里面是带id的
+
+    @confirm_request
+    def fetch(self, url):
+        super(DetailCrawler, self).fetch(url)
 
 
 def run_crawler(crawler):
@@ -218,4 +261,4 @@ if __name__ == '__main__':
 
     detailc = DetailCrawler(urls=DETAIL_URLS, parse_rule=DETAIL_RULE, store_path = './ccc')
     run_crawler(detailc)
-
+    # print(detailc.store_path)

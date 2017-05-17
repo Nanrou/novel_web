@@ -62,4 +62,25 @@ def producte_cate():
 
 
 if __name__ == '__main__':
-    pass
+
+    from functools import wraps
+
+    def confirm(func):
+        @wraps(func)
+        def wrapper(self, *args, **kwargs):
+            print('i am wrapper')
+            return func(self, *args, **kwargs)
+        return wrapper
+
+
+    class Test(object):
+        def __init__(self, a, b):
+            self.a = a
+            self.b = b
+
+        @confirm
+        def run(self):
+            print(self.a + self.b)
+
+    t = Test(1, 2)
+    t.run()
