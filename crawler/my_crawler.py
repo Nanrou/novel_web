@@ -68,6 +68,7 @@ class Crawler(object):  # 父类只提供爬取的逻辑，子类自己定义储
     async def work(self):
         try:
             while True:
+                asyncio.sleep(random.randint(1,3))
                 url = await self.q.get()
                 res = await self.fetch(url)
                 self.q.task_done()
@@ -210,7 +211,6 @@ class DetailCrawler(Crawler):  # 传入的url形式必须是[index, url]
         super(DetailCrawler, self).__init__(urls, parse_rule, loop, max_tasks, store_path)
 
     def store(self, res):  # 按index的名字,保存正文和章节名到本地
-        print(self.store_path, res['title'])
         try:
             store_path = self.store_path + res['title'] + '/'
             if not os.path.exists(store_path):
@@ -260,6 +260,6 @@ if __name__ == '__main__':
     # infoc = InfoCrawler(urls=INFO_URLS, parse_rule=INFO_RULE, store_path='./bbb/')
     # run_crawler(infoc)
 
-    detailc = DetailCrawler(urls=DETAIL_URLS, parse_rule=DETAIL_RULE, store_path = './ccc')
+    detailc = DetailCrawler(urls=DETAIL_URLS, parse_rule=DETAIL_RULE, store_path = './test')
     run_crawler(detailc)
     # print(detailc.store_path)

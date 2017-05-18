@@ -31,16 +31,17 @@ INFO_RULE = {
     }
 
 
-def part_one(info_urls):
+def download_info(info_urls):
+
     infoc = InfoCrawler(urls=info_urls, parse_rule=INFO_RULE, store_path='./info')
     run_crawler(infoc)
 
     info_list = os.listdir(infoc.store_path)
     for info in info_list:
-        insert_to_info(infoc.store_path + info)
+        insert_to_info(infoc.store_path + info, pk=int(info)+1)
 
 
-def part_two(detail_urls):
+def download_detail(detail_urls):
 
     detailc = DetailCrawler(urls=detail_urls, parse_rule=DETAIL_RULE, store_path='./book')
     run_crawler(detailc)
@@ -54,19 +55,27 @@ def part_two(detail_urls):
         detail_list = [folder_path + '/' + i for i in detail_name_list]
         insert_to_detail(detail_list)
 
-if __name__ == '__main__':
 
-    info_urls = ['http://www.ranwen.org/files/article/19/19388/']
-
-    # part_one(info_urls)
+def get_url_from_redis(table_index):
 
     conn = redis.StrictRedis()
-    items = conn.lrange('1', 0, 10)
+    length = conn.llen(table_index)
+    items = conn.lrange(table_index, 0, length-1)
     detail_urls = []
     for item in items:
         index, url = str(item).split('!')
         detail_urls.append([index[2:], url[:-1]])
-    # print(detail_urls)
-    part_two(detail_urls)
+    download_detail(detail_urls)
+
+
+if __name__ == '__main__':
+
+    info_urls = [
+        'http://www.ranwen.org/files/article/19/19388/',
+        'http://www.ranwen.org/files/article/76/76945/',
+        'http://www.ranwen.org/files/article/77/77081/',
+                 ]
+
+    download_info(info_urls)
 
 

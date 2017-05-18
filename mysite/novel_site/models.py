@@ -14,7 +14,7 @@ class AuthorTable(models.Model):
 
 
 class CategoryTable(models.Model):
-    cate = models.CharField(max_length=30, null=True, unique=True)
+    cate = models.CharField(max_length=30, unique=True)
     category = models.CharField(max_length=20)
 
     def get_absolute_url(self):
