@@ -33,43 +33,72 @@ def producte_cate():
     return res
 
 
-def insert_to_info(file, store_des=1, pk=None):
-    with open(file, 'rb') as rf:
-        res = pickle.load(rf)
-
-        if pk:
-            res['id'] = pk
-
-        res['status'] = res['status'][0].split('：')[-1][:3]
-        res['store_des'] = store_des
-
-        name = res['author']
-        res['author_id'] = get_author_id(name)
-        res.pop('author')
-
-        category = res['category']
-        res['category_id'] = get_category_id(category)
-        res.pop('category')
-
-        models.InfoTable.objects.create(**res)
+def insert_to_info(files, store_des=1, pk=None):
+    if isinstance(files, list):
+        info_list = []
+        for file in files:
+            with open(file, 'rb') as rf:
+                res = operate_info_res(pickle.load(rf), store_des, pk)
+                info_list.append(models.InfoTable(**res))
+        models.InfoTable.objects.bulk_create(info_list)
+    else:
+        with open(files, 'rb') as rf:
+            res = operate_info_res(pickle.load(rf), store_des, pk)
+            models.InfoTable.objects.create(**res)
 
 
-def insert_to_detail(file, **kwargs):  # 准备改成bulk create
-    with open(file, 'rb') as rf:
-        res = pickle.load(rf)
+def operate_info_res(res, store_des, pk):
+    if pk:
+        res['id'] = pk
 
-        while True:
-            if '\u4e00' <= res['chapter'] <= '\u9fff':
-                break
-            res['chapter'] = res['chapter'][1:]
+    res['status'] = res['status'][0].split('：')[-1][:3]
+    res['store_des'] = store_des
 
-        res['content'], res['need_confirm'] = filter_content(res['content'])
+    name = res['author']
+    res['author_id'] = get_author_id(name)
+    res.pop('author')
 
-        res.update(get_title_id(res['title']))
-        res.pop('title')
+    category = res['category']
+    res['category_id'] = get_category_id(category)
+    res.pop('category')
 
-        res.update(kwargs)
-        models.BookTableOne.objects.create(**res)
+    return res
+
+
+def insert_to_detail(files, **kwargs):
+    if isinstance(files, list):
+        part_list = []
+        if len(files) > 50:  # 以50次为单位插入
+            part_list = [files[i:i+50] for i in range(0, len(files), 50)]
+        else:
+            part_list.append(files)
+        for file_list in part_list:
+            detail_list = []
+            for file in file_list:
+                with open(file, 'rb') as rf:
+                    res = operate_detail_res(pickle.load(rf))
+                    res.update(kwargs)
+                    detail_list.append(models.BookTableOne(**res))  # 创建实例，放到list里
+            models.BookTableOne.objects.bulk_create(detail_list)  # 一次插入list里的所有实例
+
+    else:
+        with open(files, 'rb') as rf:
+            res = operate_detail_res(pickle.load(rf))
+            res.update(kwargs)
+            models.BookTableOne.objects.create(**res)
+
+
+def operate_detail_res(res):
+    while True:
+        if '\u4e00' <= res['chapter'][0] <= '\u9fff':  # 只是过滤章节名前的空格
+            break
+        res['chapter'] = res['chapter'][1:]
+
+    res['content'], res['need_confirm'] = filter_content(res['content'])
+
+    res.update(get_title_id(res['title']))
+    res.pop('title')
+    return res
 
 
 def get_author_id(name):
