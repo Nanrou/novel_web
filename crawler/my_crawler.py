@@ -12,8 +12,8 @@
 """
 import os.path
 import pickle
-import logging
 import asyncio
+import random
 from async_timeout import timeout
 from asyncio import Queue
 from functools import wraps
@@ -23,15 +23,12 @@ from lxml import etree
 from lxml.etree import XPathError
 import redis
 
+from crawler.my_logger import MyLogger
+
 
 HEADERS = {'user-agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:51.0) Gecko/20100101 Firefox/51.0 '}
 
-logging.basicConfig(
-    level=logging.DEBUG,
-    format='%(levelname)7s: %(message)s',
-)
-
-LOGGER = logging.getLogger('')  # 改成持久化
+LOGGER = MyLogger('crawler_log')
 
 
 class Crawler(object):  # 父类只提供爬取的逻辑，子类自己定义储存方式
@@ -66,21 +63,16 @@ class Crawler(object):  # 父类只提供爬取的逻辑，子类自己定义储
 
     def add_url(self, url):
         self.q.put_nowait(url)
+        self.redis.sadd('tmp', url)
 
     async def work(self):
         try:
             while True:
-                # res = {}
-                # if self.index_url_flag:  # 都不需要这样判断，在最后接收参数的时候判断就行了
-                                        # 因为最主要的目的就是，最终的数据中带index就可以了
-                    # index, url = await self.q.get()
-                    # res = await self.fetch([index, url])
-                    # res['id'] = index
-                # else:
                 url = await self.q.get()
                 res = await self.fetch(url)
                 self.q.task_done()
                 self.store(res)
+                self.redis.srem('tmp', url)
                 LOGGER.debug('done with {}'.format(url))
         except asyncio.CancelledError:
             pass
@@ -152,8 +144,15 @@ class Crawler(object):  # 父类只提供爬取的逻辑，子类自己定义储
 class InfoCrawler(Crawler):  # 普通信息保存到本地，然后url保存到redis
 
     def __init__(self, urls, parse_rule, loop=None, max_tasks=5, store_path='./', book_index=None):
+        """
+        :param urls:
+        :param parse_rule:
+        :param loop:
+        :param max_tasks:
+        :param store_path:
+        :param book_index: 用于指定info的id
+        """
         super(InfoCrawler, self).__init__(urls, parse_rule, loop, max_tasks, store_path=store_path)
-
         if book_index is not None:
             assert book_index is int
             self.book_index = book_index
@@ -193,12 +192,13 @@ class InfoCrawler(Crawler):  # 普通信息保存到本地，然后url保存到r
         super(InfoCrawler, self).close()
 
 
-def confirm_request(func):  # 再次确认爬取是否成功
-    @wraps(func)
-    def wrapper(self, url):
+async def confirm_request(func):  # 再次确认爬取是否成功
+    # @wraps(func)
+    async def wrapper(self, url):
         index, url = url
         self.redis.sadd('tmp', index + '!' + url)
-        res = func(self, url)
+        print('i in decorate')
+        res = await func(self, url)
         self.redis.spop('tmp', index + '!' + url)
         return res
     return wrapper
@@ -210,6 +210,7 @@ class DetailCrawler(Crawler):  # 传入的url形式必须是[index, url]
         super(DetailCrawler, self).__init__(urls, parse_rule, loop, max_tasks, store_path)
 
     def store(self, res):  # 按index的名字,保存正文和章节名到本地
+        print(self.store_path, res['title'])
         try:
             store_path = self.store_path + res['title'] + '/'
             if not os.path.exists(store_path):
@@ -224,9 +225,9 @@ class DetailCrawler(Crawler):  # 传入的url形式必须是[index, url]
         with open(_file_path, 'wb') as wf:
             pickle.dump(res, wf)  # res里面是带id的
 
-    @confirm_request
-    def fetch(self, url):
-        super(DetailCrawler, self).fetch(url)
+    # @confirm_request  # 异步的装饰器如何构造
+    # async def fetch(self, url):
+        # await super(DetailCrawler, self).fetch(url)  # 继承父类会出错
 
 
 def run_crawler(crawler):

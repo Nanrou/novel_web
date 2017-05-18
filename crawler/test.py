@@ -61,6 +61,20 @@ def producte_cate():
     return res
 
 
+class Parent(object):
+    def __init__(self, a):
+        self.a = a
+
+    async def run(self, b):
+        self.a += b
+        print(self.a)
+
+    async def work(self):
+        asyncio.sleep(2)
+        await self.run(2)
+
+
+
 if __name__ == '__main__':
 
     from functools import wraps

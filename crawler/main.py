@@ -7,6 +7,9 @@ import redis
 
 from crawler.my_crawler import InfoCrawler, DetailCrawler, run_crawler
 from crawler.operateDB import insert_to_detail, insert_to_info
+from crawler.my_logger import MyLogger
+
+Logger = MyLogger('main')
 
 
 DETAIL_RULE = {
@@ -27,8 +30,6 @@ INFO_RULE = {
     'resume': '//div[@id="maininfo"]/div[@id="intro"]/p[1]/text()',
     }
 
-info_urls = []
-
 
 def part_one(info_urls):
     infoc = InfoCrawler(urls=info_urls, parse_rule=INFO_RULE, store_path='./info')
@@ -39,21 +40,33 @@ def part_one(info_urls):
         insert_to_info(infoc.store_path + info)
 
 
-detail_urls = []
 def part_two(detail_urls):
-    conn = redis.StrictRedis()  # 将取出的url放到tmp，爬完了再删掉
 
     detailc = DetailCrawler(urls=detail_urls, parse_rule=DETAIL_RULE, store_path='./book')
     run_crawler(detailc)
-
+    print('end crawler')
     folder_list = os.listdir(detailc.store_path)
     for folder in folder_list:
         folder_path = detailc.store_path + folder
         detail_name_list = os.listdir(folder_path)
         # for detail in detail_list:  # 一个文件夹里可能有1000+的文件，不要逐个存入，要一次存入多个
         #     insert_to_detail(folder_path + detail)
-        detail_list = [folder_path + i for i in detail_name_list]
+        detail_list = [folder_path + '/' + i for i in detail_name_list]
         insert_to_detail(detail_list)
 
 if __name__ == '__main__':
-    
+
+    info_urls = ['http://www.ranwen.org/files/article/19/19388/']
+
+    # part_one(info_urls)
+
+    conn = redis.StrictRedis()
+    items = conn.lrange('1', 0, 10)
+    detail_urls = []
+    for item in items:
+        index, url = str(item).split('!')
+        detail_urls.append([index[2:], url[:-1]])
+    # print(detail_urls)
+    part_two(detail_urls)
+
+
