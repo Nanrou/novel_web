@@ -15,6 +15,10 @@ except ImportError:
 
 import pickle
 import re
+from crawler.my_crawler import image_download
+from crawler.my_logger import MyLogger
+
+Logger = MyLogger('DB_log')
 
 MODIFIED_TEXT = [r'一秒记住.*?。', r'(看书.*?)', r'纯文字.*?问', r'热门.*?>', r'最新章节.*?新',
                  r'は防§.*?e',
@@ -33,21 +37,29 @@ def producte_cate():
     return res
 
 
+def insert_to_category():
+    res = producte_cate()
+    for r in res:
+        models.CategoryTable.objects.create(**r)
+
+
 def insert_to_info(files, store_des=1, pk=None):
-    if isinstance(files, list):
+    if isinstance(files, list):  # 判断传入是单个还是多个
         info_list = []
         for file in files:
             with open(file, 'rb') as rf:
                 res = operate_info_res(pickle.load(rf), store_des, pk)
                 info_list.append(models.InfoTable(**res))
+            Logger.debug('insert {}'.format(file))
         models.InfoTable.objects.bulk_create(info_list)
     else:
         with open(files, 'rb') as rf:
             res = operate_info_res(pickle.load(rf), store_des, pk)
             models.InfoTable.objects.create(**res)
+            Logger.debug('insert {}'.format(files))
 
 
-def operate_info_res(res, store_des, pk):
+def operate_info_res(res, store_des, pk):  # 修正res中的内容
     if pk:
         res['id'] = pk
 
@@ -61,6 +73,12 @@ def operate_info_res(res, store_des, pk):
     category = res['category']
     res['category_id'] = get_category_id(category)
     res.pop('category')
+
+    img_url = res['img_url']
+    index = res.get('id', 'tmp')
+    img_path = image_download(index, img_url)
+    res['image'] = img_path
+    res.pop('img_url')
 
     return res
 
@@ -80,12 +98,13 @@ def insert_to_detail(files, **kwargs):
                     res.update(kwargs)
                     detail_list.append(models.BookTableOne(**res))  # 创建实例，放到list里
             models.BookTableOne.objects.bulk_create(detail_list)  # 一次插入list里的所有实例
-
+            Logger.debug('insert {} - {}'.format(file_list[0], file_list[-1]))
     else:
         with open(files, 'rb') as rf:
             res = operate_detail_res(pickle.load(rf))
             res.update(kwargs)
             models.BookTableOne.objects.create(**res)
+        Logger.debug('insert {}'.format(files))
 
 
 def operate_detail_res(res):
@@ -141,5 +160,7 @@ if __name__ == '__main__':
     # file_name = './bbb/0'
     # insert_to_info(file_name)
 
-    file_name = './ccc/0'
-    insert_to_detail(file_name)
+    # file_name = './ccc/0'
+    # insert_to_detail(file_name)
+
+    insert_to_category()

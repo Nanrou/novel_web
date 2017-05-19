@@ -75,10 +75,10 @@ class TestCrawler(unittest.TestCase):
         self.addCleanup(srv.close)
         return app
 
-    def add_handler(self, url, handler):
+    def add_handler(self, url, handler):  # 绑定handle到router
         self.app.router.add_route('GET', url, handler)
 
-    def add_page(self, url='/', links=None, body=None, content_type=None):
+    def add_page(self, url='/', links=None, body=None, content_type=None):  # 按需求添加page
         if not body:
             text = ''.join('<a href="{}"></a>'.format(link) for link in links or [])
             body = text.encode('utf-8')

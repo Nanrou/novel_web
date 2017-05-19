@@ -8,7 +8,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.views.generic.detail import DetailView, SingleObjectMixin
 from django.views.generic.list import ListView
 from django.views.generic.base import TemplateView
-
+from django.http import Http404
 # Create your views here.
 
 
@@ -16,8 +16,20 @@ class HomeView(TemplateView):
     template_name = 'novel_site/home.html'
 
 
-class CategoryView(TemplateView):
+class CategoryView(DetailView):
     template_name = 'novel_site/category.html'
+    context_object_name = 'cate'
+
+    def get_object(self, queryset=None):
+        self.obj = CategoryTable.objects.get(cate=self.kwargs['cate'])
+        return self.obj
+
+    def get_context_data(self, **kwargs):
+        context = super(CategoryView, self).get_context_data(**kwargs)
+        # cate_books = self.obj.cate_books.all()
+        context['cate_books'] = self.obj.cate_books.all()
+        return context
+
 
 
 class InfoView(DetailView):
@@ -35,7 +47,10 @@ class InfoView(DetailView):
         context = super(InfoView, self).get_context_data(**kwargs)
         all_chapters = list(self.object.all_chapters)
         context['all_chapters'] = all_chapters
-        context['latest_chapter'] = all_chapters[-1]
+        try:
+            context['latest_chapter'] = all_chapters[-1]
+        except IndexError:
+            pass
         return context
 
 

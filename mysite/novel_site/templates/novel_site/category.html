@@ -2,80 +2,35 @@
 {% load staticfiles %}
 
 {% block meta_description %}
-<title>玄幻小说 好看的玄幻小说_2015玄幻小说排行榜_燃文小说</title>
-<meta name="keywords" content="燃文小说,玄幻小说,小说阅读网,小说">
-<meta name="description" content="燃文小说是广大书友最值得收藏的玄幻小说阅读网，网站收录了当前最火热的玄幻小说，免费提供高质量的小说最新章节，是广大网络小说爱好者必备的小说阅读网。">
+<title>{{ cate }}小说 好看的{{ cate }}小说_2017{{ cate }}小说排行榜_超级小说</title>
+<meta name="keywords" content="超级小说,{{ cate }}小说,小说阅读网,小说">
+<meta name="description" content="超级小说是广大书友最值得收藏的{{ cate }}小说阅读网，网站收录了当前最火热的{{ cate }}小说，免费提供高质量的小说最新章节，是广大网络小说爱好者必备的小说阅读网。">
 {% endblock meta_description %}
 
 {% block main %}
 <div id="main">
             <div id="hotcontent">
         <div class="ll">
-
+            {% for book in cate_books %}
             <div class="item">
-                <div class="image"><a href="http://www.ranwen.org/files/article/76/76945/" target="_blank"><img src="%E7%8E%84%E5%B9%BB%E5%B0%8F%E8%AF%B4%20%E5%A5%BD%E7%9C%8B%E7%9A%84%E7%8E%84%E5%B9%BB%E5%B0%8F%E8%AF%B4_2015%E7%8E%84%E5%B9%BB%E5%B0%8F%E8%AF%B4%E6%8E%92%E8%A1%8C%E6%A6%9C_%E7%87%83%E6%96%87%E5%B0%8F%E8%AF%B4_files/76945s.jpg" alt="龙纹战神" width="120" height="150"></a></div>
+                <div class="image"><a href="{{ book.get_absolute_url }}" target="_blank"><img src="{% static book.image %}" alt="{{ book.title }}" width="120" height="150"></a></div>
                 <dl>
-                    <dt><span>苏月夕</span><a href="http://www.ranwen.org/files/article/76/76945/" target="_blank">龙纹战神</a></dt>
-                    <dd>    百年重生，只为重踏巅峰，剑斩苍穹，找回曾经属于自己的传说。
-天下第一圣重生百年后，修无上神功，五尺青锋披荆斩棘，争霸天下。
-纵死无悔修行路，战血永久不灭，让老苏带你走进璀璨瑰丽的玄幻世界，和主角一起踏上争霸之路，挥洒战血和汗水。
-【订...</dd>
+                    <dt><span>{{ book.author }}</span><a href="{{ book.get_absolute_url }}" target="_blank">{{ book.title }}</a></dt>
+                    <dd><a href="{{ book.get_absolute_url }}">{{ book.resume|truncatechars:90 }}</a></dd>
                 </dl>
                 <div class="clear"></div>
             </div>
-            <div class="item">
-                <div class="image"><a href="http://www.ranwen.org/files/article/16/16866/" target="_blank"><img src="%E7%8E%84%E5%B9%BB%E5%B0%8F%E8%AF%B4%20%E5%A5%BD%E7%9C%8B%E7%9A%84%E7%8E%84%E5%B9%BB%E5%B0%8F%E8%AF%B4_2015%E7%8E%84%E5%B9%BB%E5%B0%8F%E8%AF%B4%E6%8E%92%E8%A1%8C%E6%A6%9C_%E7%87%83%E6%96%87%E5%B0%8F%E8%AF%B4_files/16866s.jpg" alt="武炼巅峰" width="120" height="150"></a></div>
-                <dl>
-                    <dt><span>莫默</span><a href="http://www.ranwen.org/files/article/16/16866/" target="_blank">武炼巅峰</a></dt>
-                    <dd>    武之巅峰，是孤独，是寂寞，是漫漫求索，是高处不胜寒
-逆境中成长，绝地里求生，不屈不饶，才能堪破武之极道。
-凌霄阁试炼弟子兼扫地小厮杨开偶获一本无字黑书，从此踏上漫漫武道。
-******************
-感谢书友那不是爱、是依赖提供的打油诗一首...</dd>
-                </dl>
-                <div class="clear"></div>
-            </div>
-            <div class="item">
-                <div class="image"><a href="http://www.ranwen.org/files/article/77/77081/" target="_blank"><img src="%E7%8E%84%E5%B9%BB%E5%B0%8F%E8%AF%B4%20%E5%A5%BD%E7%9C%8B%E7%9A%84%E7%8E%84%E5%B9%BB%E5%B0%8F%E8%AF%B4_2015%E7%8E%84%E5%B9%BB%E5%B0%8F%E8%AF%B4%E6%8E%92%E8%A1%8C%E6%A6%9C_%E7%87%83%E6%96%87%E5%B0%8F%E8%AF%B4_files/77081s.jpg" alt="雪鹰领主" width="120" height="150"></a></div>
-                <dl>
-                    <dt><span>我吃西红柿</span><a href="http://www.ranwen.org/files/article/77/77081/" target="_blank">雪鹰领主</a></dt>
-                    <dd>    深海魔兽的呼吸形成永不停息的风暴……
-熔岩巨人的脚步毁灭一座座城池……
-深渊恶魔想要侵入这座世界……
-而神灵降临，行走人间传播他的光辉……
-然而整个世界由夏族帝国‘龙山帝国’统治，这是人类的帝国，知识渊博的法师们埋首于法师塔中百年千...</dd>
-                </dl>
-                <div class="clear"></div>
-            </div>
-            <div class="item">
-                <div class="image"><a href="http://www.ranwen.org/files/article/56/56048/" target="_blank"><img src="%E7%8E%84%E5%B9%BB%E5%B0%8F%E8%AF%B4%20%E5%A5%BD%E7%9C%8B%E7%9A%84%E7%8E%84%E5%B9%BB%E5%B0%8F%E8%AF%B4_2015%E7%8E%84%E5%B9%BB%E5%B0%8F%E8%AF%B4%E6%8E%92%E8%A1%8C%E6%A6%9C_%E7%87%83%E6%96%87%E5%B0%8F%E8%AF%B4_files/56048s.jpg" alt="择天记" width="120" height="150"></a></div>
-                <dl>
-                    <dt><span>猫腻</span><a href="/info/1/" target="_blank">择天记</a></dt>
-                    <dd></dd>
-                </dl>
-                <div class="clear"></div>
-            </div>
-            <div class="item">
-                <div class="image"><a href="http://www.ranwen.org/files/article/19/19040/" target="_blank"><img src="%E7%8E%84%E5%B9%BB%E5%B0%8F%E8%AF%B4%20%E5%A5%BD%E7%9C%8B%E7%9A%84%E7%8E%84%E5%B9%BB%E5%B0%8F%E8%AF%B4_2015%E7%8E%84%E5%B9%BB%E5%B0%8F%E8%AF%B4%E6%8E%92%E8%A1%8C%E6%A6%9C_%E7%87%83%E6%96%87%E5%B0%8F%E8%AF%B4_files/19040s.jpg" alt="修罗武神" width="120" height="150"></a></div>
-                <dl>
-                    <dt><span>善良的蜜蜂</span><a href="http://www.ranwen.org/files/article/19/19040/" target="_blank">修罗武神</a></dt>
-                    <dd>    论潜力，不算天才，可玄功武技，皆可无师自通。
-论魅力，千金小姐算什么，妖女圣女，都爱我欲罢不能。
-论实力，任凭你有万千至宝，但定不敌我界灵大军。
-我是谁？天下众生视我为修罗，却不知，我以修罗成武神。
-等级：灵武，元武，玄武，天武，武...</dd>
-                </dl>
-                <div class="clear"></div>
-            </div>
-            <div class="item">
-                <div class="image"><a href="http://www.ranwen.org/files/article/68/68895/" target="_blank"><img src="%E7%8E%84%E5%B9%BB%E5%B0%8F%E8%AF%B4%20%E5%A5%BD%E7%9C%8B%E7%9A%84%E7%8E%84%E5%B9%BB%E5%B0%8F%E8%AF%B4_2015%E7%8E%84%E5%B9%BB%E5%B0%8F%E8%AF%B4%E6%8E%92%E8%A1%8C%E6%A6%9C_%E7%87%83%E6%96%87%E5%B0%8F%E8%AF%B4_files/68895s.jpg" alt="逆天邪神" width="120" height="150"></a></div>
-                <dl>
-                    <dt><span>火星引力</span><a href="http://www.ranwen.org/files/article/68/68895/" target="_blank">逆天邪神</a></dt>
-                    <dd>    掌天毒之珠，承邪神之血，修逆天之力，一代邪神，君临天下！【添加微信公众号：火星引力】【我们的YY频道：49554】
-</dd>
-                </dl>
-                <div class="clear"></div>
-            </div>
+            {% endfor %}
+            {% for book in cate_books %}
+                <div class="item">
+                    <div class="image"><a href="{{ book.get_absolute_url }}" target="_blank"><img src="{% static book.image %}" alt="{{ book.title }}" width="120" height="150"></a></div>
+                    <dl>
+                        <dt><span>{{ book.author }}</span><a href="{{ book.get_absolute_url }}" target="_blank">{{ book.title }}</a></dt>
+                        <dd><a href="{{ book.get_absolute_url }}">{{ book.resume|truncatechars:90 }}</a></dd>
+                    </dl>
+                    <div class="clear"></div>
+                </div>
+            {% endfor %}
         </div>
     </div>
     <div id="newscontent">

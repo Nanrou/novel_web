@@ -1,6 +1,8 @@
 # -*- coding:utf-8 -*-
 
 import os
+import time
+from functools import wraps
 
 import redis
 
@@ -28,13 +30,27 @@ INFO_RULE = {
     'status': '//div[@id="maininfo"]/div[@id="info"]/p[2]/text()',
     'category': '//div[@class="con_top"]/a[2]/text()',
     'resume': '//div[@id="maininfo"]/div[@id="intro"]/p[1]/text()',
+    'img_url': '//div[@id="fmimg"]/img/@src',
     }
 
 
+def time_clock(func):
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        print('start {}'.format(func.__name__))
+        start_time = time.time()
+        res = func(*args, **kwargs)
+        print('all done, it cost {} s'.format(time.time() - start_time))
+        return res
+    return wrapper
+
+
+@time_clock
 def download_info(info_urls):
 
     infoc = InfoCrawler(urls=info_urls, parse_rule=INFO_RULE, store_path='./info')
-    run_crawler(infoc)
+    # run_crawler(infoc)
+    infoc.close()
 
     info_list = os.listdir(infoc.store_path)
     for info in info_list:

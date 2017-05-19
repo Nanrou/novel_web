@@ -7,8 +7,12 @@
 
 对于parse rule来讲，如果存入的是list形式，就代表要将其爬取部分转换了带html标签的
 --------------------------------------
+5.17
 模块功能细化，将两个功能独立成不同的子模块
-
+--------------------------------------
+5.19
+针对detail模块，添加一个confirm request的装饰器
+但是想了想，这个确认应该包在保存后
 """
 import os.path
 import pickle
@@ -22,6 +26,7 @@ import aiohttp
 from lxml import etree
 from lxml.etree import XPathError
 import redis
+import requests
 
 from crawler.my_logger import MyLogger
 
@@ -67,7 +72,7 @@ class Crawler(object):  # 父类只提供爬取的逻辑，子类自己定义储
 
     def add_url(self, url):
         self.q.put_nowait(url)
-        # self.redis.sadd('tmp', url)
+        self.redis.sadd('tmp', url)
 
     async def work(self):
         try:
@@ -77,7 +82,7 @@ class Crawler(object):  # 父类只提供爬取的逻辑，子类自己定义储
                 res = await self.fetch(url)
                 self.q.task_done()
                 self.store(res)
-                # self.redis.srem('tmp', url)
+                self.redis.srem('tmp', url)
                 LOGGER.debug('done with {}'.format(url))
         except asyncio.CancelledError:
             pass
@@ -228,9 +233,9 @@ class DetailCrawler(Crawler):  # 传入的url形式必须是[index, url]，不�
         with open(_file_path, 'wb') as wf:
             pickle.dump(res, wf)  # res里面是带id的
 
-    @confirm_request  # 异步的装饰器和普通的一样
-    async def fetch(self, url):
-        return await super(DetailCrawler, self).fetch(url)  # 调用要记得返回
+    # @confirm_request  # 异步的装饰器和普通的一样
+    # async def fetch(self, url):
+    #     return await super(DetailCrawler, self).fetch(url)  # 调用要记得返回
 
 
 def run_crawler(crawler):
@@ -239,6 +244,21 @@ def run_crawler(crawler):
     crawler.close()
     loop.close()
 
+
+class ImageDownload(Crawler):
+    pass
+
+
+def image_download(index, url, store_path='/novel_site/images/'):
+    if not store_path.endswith('/'):
+        store_path += '/'
+    if not os.path.exists(store_path):
+        os.mkdir(store_path)
+    res = requests.get(url)
+    filename = store_path + str(index) + 's.jpg'
+    with open(filename, 'wb') as wf:
+        wf.write(res.content)
+    return filename
 
 if __name__ == '__main__':
 
