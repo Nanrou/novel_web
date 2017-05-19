@@ -55,6 +55,7 @@ coverage.xml
 local_settings.py
 *.out
 db.sqlite3
+my.ini
 
 
 # Flask stuff:
