@@ -41,7 +41,11 @@ class Crawler(object):  # 父类只提供爬取的逻辑，子类自己定义储
         self.session = aiohttp.ClientSession(loop=self.loop, headers=HEADERS)
         self.q = Queue(loop=self.loop)
         self.redis = redis.StrictRedis()
-        # self.index_url_flag = False
+
+        tmp_urls = self.redis.smembers('tmp')
+        for tmp_url in tmp_urls:
+            self.add_url(tmp_url)
+        self.redis.delete('tmp')
 
         if isinstance(self.urls, list):
             for url in self.urls:
@@ -63,17 +67,17 @@ class Crawler(object):  # 父类只提供爬取的逻辑，子类自己定义储
 
     def add_url(self, url):
         self.q.put_nowait(url)
-        self.redis.sadd('tmp', url)
+        # self.redis.sadd('tmp', url)
 
     async def work(self):
         try:
             while True:
-                asyncio.sleep(random.randint(1,3))
+                asyncio.sleep(random.randint(1, 3))
                 url = await self.q.get()
                 res = await self.fetch(url)
                 self.q.task_done()
                 self.store(res)
-                self.redis.srem('tmp', url)
+                # self.redis.srem('tmp', url)
                 LOGGER.debug('done with {}'.format(url))
         except asyncio.CancelledError:
             pass
@@ -193,19 +197,18 @@ class InfoCrawler(Crawler):  # 普通信息保存到本地，然后url保存到r
         super(InfoCrawler, self).close()
 
 
-async def confirm_request(func):  # 再次确认爬取是否成功
-    # @wraps(func)
-    async def wrapper(self, url):
-        index, url = url
-        self.redis.sadd('tmp', index + '!' + url)
-        print('i in decorate')
-        res = await func(self, url)
-        self.redis.spop('tmp', index + '!' + url)
+def confirm_request(func):  # 再次确认爬取是否成功
+    @wraps(func)
+    def wrapper(self, url):
+        index, u = url
+        self.redis.sadd('tmp', str(index) + '!' + u)
+        res = func(self, url)
+        self.redis.srem('tmp', str(index) + '!' + u)
         return res
     return wrapper
 
 
-class DetailCrawler(Crawler):  # 传入的url形式必须是[index, url]
+class DetailCrawler(Crawler):  # 传入的url形式必须是[index, url]，不带index的话，则保存为tmp
 
     def __init__(self, urls, parse_rule, loop=None, max_tasks=5, store_path='./'):
         super(DetailCrawler, self).__init__(urls, parse_rule, loop, max_tasks, store_path)
@@ -225,9 +228,9 @@ class DetailCrawler(Crawler):  # 传入的url形式必须是[index, url]
         with open(_file_path, 'wb') as wf:
             pickle.dump(res, wf)  # res里面是带id的
 
-    # @confirm_request  # 异步的装饰器如何构造
-    # async def fetch(self, url):
-        # await super(DetailCrawler, self).fetch(url)  # 继承父类会出错
+    @confirm_request  # 异步的装饰器和普通的一样
+    async def fetch(self, url):
+        return await super(DetailCrawler, self).fetch(url)  # 调用要记得返回
 
 
 def run_crawler(crawler):
