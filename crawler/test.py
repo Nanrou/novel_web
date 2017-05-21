@@ -1,3 +1,6 @@
+# -*- coding:utf-8 -*-
+
+
 import aiohttp
 import asyncio
 from lxml import etree
@@ -74,27 +77,31 @@ class Parent(object):
         await self.run(2)
 
 
-
 if __name__ == '__main__':
+    import re
+    import codecs
 
-    from functools import wraps
+    title_rule = re.compile(r'    第*?章')
 
-    def confirm(func):
-        @wraps(func)
-        def wrapper(self, *args, **kwargs):
-            print('i am wrapper')
-            return func(self, *args, **kwargs)
-        return wrapper
+    with codecs.open('test/test/test.txt', 'r', encoding='utf-8') as f:
+        ls = f.readlines()
+        w_flag = True
+        for index, line in enumerate(ls):
+            if re.match(r'    第.?章', line):
+                if w_flag:
+                    start_index = index
+                    chapter_title = line.strip()
+                    w_flag = False
+                else:
+                    end_index = index - 2
+                    with open(chapter_title + '.txt', 'w') as wf:
+                        wf.write(''.join(ls[start_index:end_index]).replace('\r\n\r\n', '<br/>'))
+                    # print(''.join(ls[start_index:end_index]))
+                    w_flag = True
+
+            if index > 150:
+                break
 
 
-    class Test(object):
-        def __init__(self, a, b):
-            self.a = a
-            self.b = b
 
-        @confirm
-        def run(self):
-            print(self.a + self.b)
 
-    t = Test(1, 2)
-    t.run()

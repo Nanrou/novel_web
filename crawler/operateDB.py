@@ -15,8 +15,8 @@ except ImportError:
 
 import pickle
 import re
-from crawler.my_crawler import image_download
-from crawler.my_logger import MyLogger
+from my_crawler import image_download
+from my_logger import MyLogger
 
 Logger = MyLogger('DB_log')
 

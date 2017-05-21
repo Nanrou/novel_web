@@ -13,6 +13,11 @@
 5.19
 针对detail模块，添加一个confirm request的装饰器
 但是想了想，这个确认应该包在保存后
+--------------------------------------
+5.20
+更正了超时的异常捕捉
+修正了work中对爬取失败的处理
+
 """
 import os.path
 import pickle
@@ -21,6 +26,7 @@ import random
 from async_timeout import timeout
 from asyncio import Queue
 from functools import wraps
+import time
 
 import aiohttp
 from lxml import etree
@@ -28,7 +34,7 @@ from lxml.etree import XPathError
 import redis
 import requests
 
-from crawler.my_logger import MyLogger
+from my_logger import MyLogger
 
 
 HEADERS = {'user-agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:51.0) Gecko/20100101 Firefox/51.0 '}
@@ -39,7 +45,9 @@ LOGGER = MyLogger('crawler_log')
 class Crawler(object):  # 父类只提供爬取的逻辑，子类自己定义储存方式
 
     def __init__(self, urls, parse_rule, loop=None, max_tasks=5, store_path='./'):
-        self.loop = loop or asyncio.get_event_loop()
+        if loop is None:
+            loop = asyncio.get_event_loop()
+        self.loop = loop
         self.parse_rule = parse_rule
         self.urls = urls
         self.max_tasks = max_tasks
@@ -47,9 +55,9 @@ class Crawler(object):  # 父类只提供爬取的逻辑，子类自己定义储
         self.q = Queue(loop=self.loop)
         self.redis = redis.StrictRedis()
 
-        tmp_urls = self.redis.smembers('tmp')
-        for tmp_url in tmp_urls:
-            self.add_url(tmp_url)
+        # tmp_urls = self.redis.smembers('tmp')
+        # for tmp_url in tmp_urls:
+        #     self.add_url(tmp_url)
         self.redis.delete('tmp')
 
         if isinstance(self.urls, list):
@@ -81,6 +89,9 @@ class Crawler(object):  # 父类只提供爬取的逻辑，子类自己定义储
                 url = await self.q.get()
                 res = await self.fetch(url)
                 self.q.task_done()
+                if not res:  # res为空或者None，则不存
+                    LOGGER.warning('wrong in {}'.format(url))
+                    continue
                 self.store(res)
                 self.redis.srem('tmp', url)
                 LOGGER.debug('done with {}'.format(url))
@@ -120,29 +131,31 @@ class Crawler(object):  # 父类只提供爬取的逻辑，子类自己定义储
                         else:
                             _value_list.append(ele)
                 except XPathError:
-                    LOGGER.warning('wrong xpath syntax in {}'.format(k))
+                    LOGGER.warning('wrong xpath syntax {} in {}'.format(k, url))
                 if len(_value_list) == 0:
-                    LOGGER.warning('wrong xpath in {}'.format(url))
+                    LOGGER.warning('wrong xpath {} in {}'.format(k, url))
                 elif len(_value_list) == 1:
                     res[k] = _value_list[0]
                 else:
                     res[k] = _value_list
             return res  # 增加一个去除头尾标签的功能
         else:
-            LOGGER.warning('invalid page body in {}'.format(url))
+            # LOGGER.warning('invalid page body in {}'.format(url))
+            # return res.update({'title': 'error', 'chapter': 'error', 'content': 'error'})
             return
 
     async def my_request(self, url):
         try:
-            with timeout(5, loop=self.loop):
+            with timeout(3, loop=self.loop):
                 async with self.session.get(url) as resp:
                     if resp.status != 200:
                         LOGGER.warning('get an invalid response in {}'.format(url))
                         return
                     return await resp.text()
-        except RuntimeError:
+        except asyncio.TimeoutError:  # 注意捕捉的类别
             LOGGER.warning('timeout in {}'.format(url))
-        return
+        finally:
+            return
 
     def close(self):
         # with open('my.ini', 'ab') as wf:
@@ -171,7 +184,7 @@ class InfoCrawler(Crawler):  # 普通信息保存到本地，然后url保存到r
                 r = pickle.load(rf)
                 self.book_index = r['book_index']
         else:
-            self.book_index = 0
+            self.book_index = 1
 
     def store(self, res):  # 因为现在这一步只会用在info页面
         _url_list = {}
@@ -217,12 +230,14 @@ class DetailCrawler(Crawler):  # 传入的url形式必须是[index, url]，不�
 
     def __init__(self, urls, parse_rule, loop=None, max_tasks=5, store_path='./'):
         super(DetailCrawler, self).__init__(urls, parse_rule, loop, max_tasks, store_path)
+        self.final_store_path = None
 
     def store(self, res):  # 按index的名字,保存正文和章节名到本地
         try:
             store_path = self.store_path + res['title'] + '/'
             if not os.path.exists(store_path):
                 os.mkdir(store_path)
+                self.final_store_path = store_path
         except KeyError:
             LOGGER.debug('title not found')
             store_path = self.store_path
@@ -231,7 +246,7 @@ class DetailCrawler(Crawler):  # 传入的url形式必须是[index, url]，不�
         else:
             _file_path = self.store_path + 'tmp'
         with open(_file_path, 'wb') as wf:
-            pickle.dump(res, wf)  # res里面是带id的
+            pickle.dump(res, wf)  # res里面是有带id的url
 
     # @confirm_request  # 异步的装饰器和普通的一样
     # async def fetch(self, url):
@@ -249,7 +264,7 @@ class ImageDownload(Crawler):
     pass
 
 
-def image_download(index, url, store_path='/novel_site/images/'):
+def image_download(index, url, store_path='./novel_site/images/'):
     if not store_path.endswith('/'):
         store_path += '/'
     if not os.path.exists(store_path):
@@ -258,7 +273,7 @@ def image_download(index, url, store_path='/novel_site/images/'):
     filename = store_path + str(index) + 's.jpg'
     with open(filename, 'wb') as wf:
         wf.write(res.content)
-    return filename
+    return filename[2:]
 
 if __name__ == '__main__':
 

@@ -31,7 +31,6 @@ class CategoryView(DetailView):
         return context
 
 
-
 class InfoView(DetailView):
 
     template_name = 'novel_site/info.html'
