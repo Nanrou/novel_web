@@ -56,6 +56,11 @@ local_settings.py
 *.out
 db.sqlite3
 my.ini
+test/
+book/
+info/
+crawler/novel_site/
+
 
 
 # Flask stuff:
