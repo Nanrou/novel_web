@@ -7,6 +7,11 @@ import pickle
 import random
 import re
 
+from lxml import etree
+import codecs
+import time
+import requests
+
 
 URL = 'http://www.ranwen.org/files/article/56/56048/10973525.html'
 # URL = 'http://www.ranwen.org/files/article/56/56048/'
@@ -70,8 +75,6 @@ class Parent(object):
 
 
 def split_txt(txt_path, title_rule=None, stone_path='./', chapter_index=None):
-
-
     """
     t_rule = r'第一篇'
     t_path = 'test/xue.txt'
@@ -137,11 +140,7 @@ def split_txt(txt_path, title_rule=None, stone_path='./', chapter_index=None):
                 pickle.dump(res, wf)
 
 
-from lxml import etree
-import codecs
-import time
-
-if __name__ == '__main__':
+def get_urls():
     from my_crawler import search_novel
 
     SEARCH_URL = 'http://www.ranwenw.com/modules/article/search.php'
@@ -159,7 +158,38 @@ if __name__ == '__main__':
             time.sleep(12)
 
             with codecs.open('download_url', 'a', encoding='utf-8') as wf:
-                wf.write(title + ',' + url)
+                wf.write(title + ',' + url + '\n')
 
 
+def get_img(index, title):
+    HEADERS = {'user-agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:51.0) Gecko/20100101 Firefox/51.0 '}
+    # res = requests.post(url, data=var, headers=HEADERS)
+    res = requests.get('http://so.ranwen.org/cse/search?q={}&click=1&s=18402225725594290780&nsid='.format(title), headers=HEADERS)
+    # with open('bb.html', 'w') as f:
+    #     f.write(res.content.decode(encoding='utf-8'))
+    body = etree.HTML(res.content)
+    try:
+        img_url = body.xpath('//img[@class="result-game-item-pic-link-img"]/@src')[0]
+    except IndexError:
+        print('{} wrong in {}'.format(index, title))
+        return
+    img_req = requests.get(img_url)
+    with open('./images/' + str(index) + 's.jpg', 'wb') as wf:
+        wf.write(img_req.content)
+    print('{} done {}'.format(index, title))
 
+
+if __name__ == '__main__':
+    with codecs.open('download_url', 'r', encoding='utf-8') as rf:
+        title_list = []
+        tls = rf.readlines()
+        for tl in tls:
+            title, url = tl.split(',')
+            if len(url) > 2:
+                title_list.append(title)
+
+    # for index, title in enumerate(title_list, start=1):
+    #     get_img(index, title)
+    #     time.sleep(random.randint(0, 12))
+    with open('./images/title_list.txt', 'w') as wf:
+        wf.write('\n'.join(title_list))
