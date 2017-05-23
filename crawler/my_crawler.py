@@ -283,7 +283,7 @@ def search_novel(index, title, url, stone_path='./'):
 
     header = {'user-agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:51.0) Gecko/20100101 Firefox/51.0 '}
 
-    payload = {"searchkey": title.encode(encoding = 'gbk'), "ct": "2097152", "si": "ranwenw.com",
+    payload = {"searchkey": title.encode(encoding='gbk'), "ct": "2097152", "si": "ranwenw.com",
                "sts": "ranwenw.com"}
     rule = {
         'download_url': '//div[@id="maininfo"]/div[@id="info"]/p[last()]/a/@href',
@@ -295,12 +295,21 @@ def search_novel(index, title, url, stone_path='./'):
         # 'img_url': '//div[@id="fmimg"]//img/@src',
     }
     try:
-        r = requests.post(url, data = payload, headers = header)
+        r = requests.post(url, data=payload, headers=header)
     except requests.exceptions.ConnectionError:
         LOGGER.warning('out try in {}'.format(title))
         return
+
     body = etree.HTML(r.content)
     res = {}
+
+    try:
+        tmp = body.xpath('//div[@id="content"]/table[@class="grid"]/caption/text()')
+        if tmp:
+            LOGGER.debug('search failed: {}'.format(title))
+            return
+    except XPathError:
+        pass
 
     try:
         for k, v in rule.items():

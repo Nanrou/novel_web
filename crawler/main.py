@@ -14,13 +14,13 @@ from functools import wraps
 import asyncio
 import collections
 
-sys.path.append('./')
+# sys.path.append('./')
 import redis
-
 
 from my_crawler import InfoCrawler, DetailCrawler, run_crawler
 from operateDB import insert_to_detail, insert_to_info
 from my_logger import MyLogger
+from my_decorate import time_clock
 
 
 Logger = MyLogger('main')
@@ -46,17 +46,6 @@ INFO_RULE = {
     }
 
 
-def time_clock(func):
-    @wraps(func)
-    def wrapper(*args, **kwargs):
-        print('start {}'.format(func.__name__))
-        start_time = time.time()
-        res = func(*args, **kwargs)
-        print('all done, it cost {} s'.format(time.time() - start_time))
-        return res
-    return wrapper
-
-
 @time_clock
 def download_info(info_urls):
     # loop = asyncio.get_event_loop()
@@ -77,21 +66,25 @@ def download_detail(detail_urls):
     return detailc.store_path
 
 
+@time_clock
 def insert_info(store_path):
-    info_list = os.listdir(store_path)
-    for info in info_list:
-        insert_to_info(store_path + info, pk=int(info))
+    info_list = sorted(map(int, os.listdir(store_path)))
+    for index, info in enumerate(info_list, start=1):
+        insert_to_info(store_path + str(info), pk=int(index))
 
 
-def insert_detail(store_path):
-    folder_list = os.listdir(store_path)
-    for folder in folder_list:  # 这里的逻辑已经是下载完全部一次存完
-        folder_path = store_path + folder
-        detail_name_list = sorted(os.listdir(folder_path))
+@time_clock
+def insert_detail(store_path):  # 这里逻辑改一下，每次只导入一本书
+    if not store_path.endswith('/'):
+        store_path += '/'
+    detail_list = sorted(map(int, os.listdir(store_path)))
+    # for detail in folder_list:  # 这里的逻辑已经是下载完全部一次存完
+    #     folder_path = store_path + folder
+    #     detail_name_list = os.listdir(folder_path)
         # for detail in detail_list:  # 一个文件夹里可能有1000+的文件，不要逐个存入，要一次存入多个
         #     insert_to_detail(folder_path + detail)
-        detail_list = [folder_path + '/' + i for i in detail_name_list]
-        insert_to_detail(detail_list)
+    detail_list = [store_path + str(i) for i in detail_list]
+    insert_to_detail(detail_list)
 
 
 @time_clock
@@ -123,4 +116,8 @@ if __name__ == '__main__':
     # t.start()
     # t.join()
 
-    insert_detail('book/')
+    # insert_detail('book/chapter/02')
+    # insert_info('./info/')
+    for i in range(3, 9):
+        s = 'book/chapter/0{}'.format(i)
+        insert_detail(s)
