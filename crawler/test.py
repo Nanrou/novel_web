@@ -3,7 +3,10 @@
 
 import aiohttp
 import asyncio
-from lxml import etree
+import pickle
+import random
+import re
+
 
 URL = 'http://www.ranwen.org/files/article/56/56048/10973525.html'
 # URL = 'http://www.ranwen.org/files/article/56/56048/'
@@ -20,17 +23,6 @@ async def test():
             for c in content:
                 # print(etree.tounicode(c))
                 print(c)
-
-import pickle
-import pprint
-
-import os
-from multiprocessing import Process, Pipe, Event
-from threading import Event, Thread
-import queue
-import asyncio
-import time
-import random
 
 
 async def sf():
@@ -77,31 +69,97 @@ class Parent(object):
         await self.run(2)
 
 
-if __name__ == '__main__':
-    import re
-    import codecs
+def split_txt(txt_path, title_rule=None, stone_path='./', chapter_index=None):
 
-    title_rule = re.compile(r'    第*?章')
 
-    with codecs.open('test/test/test.txt', 'r', encoding='utf-8') as f:
+    """
+    t_rule = r'第一篇'
+    t_path = 'test/xue.txt'
+    split_txt(t_path, title_rule=t_rule, stone_path='./book/01')
+
+    :param txt_path:
+    :param title_rule:
+    :param stone_path:
+    :param chapter_index:
+    :return:
+    """
+    if not stone_path.endswith('/'):
+        stone_path += '/'
+    assert isinstance(chapter_index, int) is True, 'require index'
+    chapter_index = chapter_index * 10000 + 1
+
+    with codecs.open(txt_path, 'r', encoding='utf-8') as f:
         ls = f.readlines()
-        w_flag = True
+        start_index = None
         for index, line in enumerate(ls):
-            if re.match(r'    第.?章', line):
-                if w_flag:
-                    start_index = index
-                    chapter_title = line.strip()
-                    w_flag = False
-                else:
-                    end_index = index - 2
-                    with open(chapter_title + '.txt', 'w') as wf:
-                        wf.write(''.join(ls[start_index:end_index]).replace('\r\n\r\n', '<br/>'))
-                    # print(''.join(ls[start_index:end_index]))
-                    w_flag = True
+            if re.match(title_rule, line):
 
-            if index > 150:
-                break
+                    if start_index is None:
+                        start_index = index
+                        tmp_ll = line.strip().split(' ')
+                        if len(tmp_ll) == 4:
+                            chapter_title = ' '.join(tmp_ll[-2:])
+                        elif len(tmp_ll) == 5:
+                            chapter_title = ' '.join(tmp_ll[-3:])
+                        else:
+                            chapter_title = ' '.join(tmp_ll[-4:])
+                        continue  # 跳过第一次
 
+                    end_index = index
+                    res = {
+                        'id': chapter_index,
+                        'title': '雪鹰领主',
+                        'chapter': chapter_title,
+                        'content': ''.join(ls[start_index + 1:end_index-2]).replace('\r\n\r\n', '<br/>').replace('  ', '　'),
+                        # 'content': ''.join(ls[start_index + 1:end_index-2]),
+                    }
+                    with open(stone_path + str(chapter_index), 'wb') as wf:
+                        pickle.dump(res, wf)
+                    chapter_index += 1
+                    start_index = end_index
+                    tmp_ll = line.strip().split(' ')
+                    if len(tmp_ll) == 4:
+                        chapter_title = ' '.join(tmp_ll[-2:])
+                    elif len(tmp_ll) == 5:
+                        chapter_title = ' '.join(tmp_ll[-3:])
+                    else:
+                        chapter_title = ' '.join(tmp_ll[-4:])
+
+        else:
+            res = {
+                'id': chapter_index,
+                'title': '雪鹰领主',
+                'chapter': chapter_title,
+                'content': ''.join(ls[start_index + 1:end_index-2]).replace('\r\n\r\n', '<br/>').replace('  ', '　'),
+                # 'content': ''.join(ls[start_index + 1:end_index-2]),
+            }
+            with open(stone_path + str(chapter_index), 'wb') as wf:
+                pickle.dump(res, wf)
+
+
+from lxml import etree
+import codecs
+import time
+
+if __name__ == '__main__':
+    from my_crawler import search_novel
+
+    SEARCH_URL = 'http://www.ranwenw.com/modules/article/search.php'
+    download_url = {}
+    with codecs.open('titles_list.txt', 'r', encoding='utf-8') as rf:
+        for index, title in enumerate(rf.readlines()):
+
+            title = title.strip()
+            url = search_novel(index+1, title, url=SEARCH_URL, stone_path='./info/')
+            if url:
+                print('done {}'.format(title))
+            else:
+                url = ''
+                print('not found {}'.format(title))
+            time.sleep(12)
+
+            with codecs.open('download_url', 'a', encoding='utf-8') as wf:
+                wf.write(title + ',' + url)
 
 
 

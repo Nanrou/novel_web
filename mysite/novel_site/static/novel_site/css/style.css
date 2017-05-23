@@ -24,7 +24,7 @@ a:hover {text-decoration:underline; top:-1px;}
 .header_logo a{display:block;float:left;height:78px;text-indent:-9999px;width:300px;margin-top:10px;background-image:url('logo.png');}
 .header .search{float:right; padding-top:25px;display:inline;}
 .header .search .input{width:329px; font-size:14px; color:#c3c3c3; padding:0 10px; line-height:35px; height:35px; background:#fff; border:1px solid #d7d7d7; float:left; border-right:0;}
-.header .search .s_btn{width:85px;height:33px;display:inline-block;z-index:0;vertical-align:top;border:solid 1px #d7d7d7;}
+.header .search .s_btn{width:85px;height:35px;display:inline-block;z-index:0;vertical-align:top;border:solid 1px #d7d7d7;}
 .header .search .button{width:85px; height:35px; padding-top:1px; border:0; font-size:14px; background-color: #f9f9f9; color: #999999; cursor:pointer; float:left;}
 .header .srarchHot{ padding:17px 0 0; color:#666; width:750px; font-size:14px; float:left; overflow:hidden; text-align:right;}
 .header .srarchHot a{ color:#666; padding:0 2px;}

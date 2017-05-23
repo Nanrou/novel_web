@@ -2,9 +2,9 @@
 {% load staticfiles %}
 
 {% block meta_description %}
-<title>择天记 正文 {{ object.chapter }}全文免费阅读 - 超级小说</title>
-<meta name="keywords" content="择天记 {{ object.chapter }}全文阅读。">
-<meta name="description" content="超级小说免费为大家提供择天记 {{ object.chapter }}全文阅读,如果你想第一时间观看下一章节,请留意以及收藏超级小说,方便你下次阅读择天记最新章节。">
+<title>{{ object.chapter }} 正文 {{ object.chapter }}全文免费阅读 - 超级小说</title>
+<meta name="keywords" content="{{ object.chapter }}全文阅读。">
+<meta name="description" content="超级小说免费为大家提供{{ object.chapter }}全文阅读,如果你想第一时间观看下一章节,请留意以及收藏超级小说,方便你下次阅读择天记最新章节。">
 {% comment %}
 <meta http-equiv="mobile-agent" content="format=html5; url={{ object.get_absolute_url_mobile }}">
 <meta http-equiv="mobile-agent" content="format=xhtml; url={{ object.get_absolute_url_mobile }}">
@@ -22,10 +22,10 @@
         <div class="con_top">
             <a href="/">超级小说</a>
             &gt; 
-            <a href="{{ book_info.category.get_category_url }}">{{ book_info.category }}</a>
+            <a href="{{ book_info.category.get_absolute_url }}">{{ book_info.category }}</a>
             &gt; 
             <a href="{{ book_info.get_absolute_url }}">{{ book_info }}</a>
-            &gt; {{ object.chapter }}
+            &gt; {{ object.chapter|truncatechars:18 }}
             <div id="page_set">
                 <select onchange="javascript:setFont(this.options[this.selectedIndex].value);" id="bcolor" name="bcolor">
                     <option value="宋体" selected="selected">字体</option>
@@ -121,9 +121,6 @@
         </div>
         <div id="content">
         {{ object.content|safe }}
-（我一直都很喜欢陈粒，始终认为奇妙能力歌应该用来做将夜的主题曲，也与影视公司认真地提议过，不知道能否成功。我也一直都很喜欢有容，因为篇幅的原因，
-很少有机会展现她存在于我想象里的美好，这一章写了点，我很高兴。另外刚才忽然发现，八年前的今天是间客开始的日子，时光真的是……很快就不见了，对我来
-说间客是一部非常特殊的作品，以文字论不及将夜和择天记，却是我个人最喜欢的故事，如果有朋友没有看过的，推荐您去看一下。）
         </div>
         <div class="bottem1">
         <!-- 这里看怎么复用 -->

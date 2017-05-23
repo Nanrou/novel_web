@@ -17,7 +17,9 @@
 5.20
 更正了超时的异常捕捉
 修正了work中对爬取失败的处理
-
+--------------------------------------
+5.23
+新增对应网站的爬取方式
 """
 import os.path
 import pickle
@@ -27,6 +29,7 @@ from async_timeout import timeout
 from asyncio import Queue
 from functools import wraps
 import time
+import codecs
 
 import aiohttp
 from lxml import etree
@@ -275,6 +278,69 @@ def image_download(index, url, store_path='./novel_site/images/'):
         wf.write(res.content)
     return filename[2:]
 
+
+def search_novel(index, title, url, stone_path='./'):
+
+    header = {'user-agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:51.0) Gecko/20100101 Firefox/51.0 '}
+
+    payload = {"searchkey": title.encode(encoding = 'gbk'), "ct": "2097152", "si": "ranwenw.com",
+               "sts": "ranwenw.com"}
+    rule = {
+        'download_url': '//div[@id="maininfo"]/div[@id="info"]/p[last()]/a/@href',
+        'title': '//div[@id="maininfo"]/div[@id="info"]/h1/text()',
+        'author': '//div[@id="maininfo"]/div[@id="info"]/p[1]/text()',
+        # 'status': '//div[@id="maininfo"]/div[@id="info"]/p[2]/text()',
+        'category': '//div[@class="con_top"]/a[2]/text()',
+        'resume': '//div[@id="maininfo"]/div[@id="intro"]/p[1]/text()',
+        # 'img_url': '//div[@id="fmimg"]//img/@src',
+    }
+    try:
+        r = requests.post(url, data = payload, headers = header)
+    except requests.exceptions.ConnectionError:
+        LOGGER.warning('out try in {}'.format(title))
+        return
+    body = etree.HTML(r.content)
+    res = {}
+
+    try:
+        for k, v in rule.items():
+            _value_list = body.xpath(v)
+            if len(_value_list) == 0:
+                LOGGER.warning('wrong xpath {} in {}'.format(k, title))
+            elif len(_value_list) == 1:
+                res[k] = _value_list[0]
+            else:
+                LOGGER.warning('too many item {} in {}'.format(k, title))
+
+    except XPathError:
+        LOGGER.debug('{} not found'.format(title))
+        return
+
+    else:
+        try:
+            download_url = res['download_url']
+        except KeyError:
+            LOGGER.debug('{} not found'.format(title))
+            return
+
+        res.pop('download_url')
+
+        res['status'] = '连载中'
+        res['img_url'] = ''
+
+        with codecs.open(stone_path + str(index), 'wb') as wf:
+            pickle.dump(res, wf)
+
+        if not download_url.startswith('http://'):
+            download_url = 'http://www.ranwenw.com' + download_url
+        return download_url
+
+
+# res = requests.get('http://www.ranwenw.com/modules/article/txtarticle.php?id=52', headers=HEADER)
+# with codecs.open('nilin.txt', 'w', encoding='utf-8') as f:
+#     f.write(res.text)
+
+
 if __name__ == '__main__':
 
     DETAIL_RULE = {
@@ -293,11 +359,13 @@ if __name__ == '__main__':
         'status': '//div[@id="maininfo"]/div[@id="info"]/p[2]/text()',
         'category': '//div[@class="con_top"]/a[2]/text()',
         'resume': '//div[@id="maininfo"]/div[@id="intro"]/p[1]/text()',
+        'img_url': '//div[@id="fmimg"]/img/@src',
     }
 
     # infoc = InfoCrawler(urls=INFO_URLS, parse_rule=INFO_RULE, store_path='./bbb/')
     # run_crawler(infoc)
 
-    detailc = DetailCrawler(urls=DETAIL_URLS, parse_rule=DETAIL_RULE, store_path = './test')
-    run_crawler(detailc)
+    # detailc = DetailCrawler(urls=DETAIL_URLS, parse_rule=DETAIL_RULE, store_path = './test')
+    # run_crawler(detailc)
     # print(detailc.store_path)
+    SEARCH_URL = 'http://www.ranwenw.com/modules/article/search.php'

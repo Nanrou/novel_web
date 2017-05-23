@@ -44,6 +44,15 @@ def insert_to_category():
 
 
 def insert_to_info(files, store_des=1, pk=None):
+    """
+    col: id | title | status | update_time | store_des | image | resume | author_id | category_id
+
+
+    :param files:
+    :param store_des:
+    :param pk:
+    :return:
+    """
     if isinstance(files, list):  # 判断传入是单个还是多个
         info_list = []
         for file in files:
@@ -63,7 +72,9 @@ def operate_info_res(res, store_des, pk):  # 修正res中的内容
     if pk:
         res['id'] = pk
 
-    res['status'] = res['status'][0].split('：')[-1][:3]
+    if '：' in res['status']:
+        res['status'] = res['status'][0].split('：')[-1][:3]
+
     res['store_des'] = store_des
 
     name = res['author']
@@ -75,8 +86,10 @@ def operate_info_res(res, store_des, pk):  # 修正res中的内容
     res.pop('category')
 
     img_url = res['img_url']
-    index = res.get('id', 'tmp')
-    img_path = image_download(index, img_url)
+    img_path = 'miss'
+    if img_url:
+        index = res.get('id', 'tmp')
+        img_path = image_download(index, img_url)
     res['image'] = img_path
     res.pop('img_url')
 
@@ -108,6 +121,13 @@ def insert_to_detail(files, **kwargs):
 
 
 def operate_detail_res(res):
+    """
+    col: id | chapter | content | nedd_confirm | book_id | title_id
+
+    """
+
+    attr_list = ['id', 'chapter', 'content']
+
     while True:
         if '\u4e00' <= res['chapter'][0] <= '\u9fff':  # 只是过滤章节名前的空格
             break

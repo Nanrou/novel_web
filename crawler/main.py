@@ -3,12 +3,16 @@
 5.20
 降耦合，把功能重新细分出来
 
+5.22
+listdir 的顺序是随机的，所以要order
+
 """
 import os
 import sys
 import time
 from functools import wraps
 import asyncio
+import collections
 
 sys.path.append('./')
 import redis
@@ -17,7 +21,6 @@ import redis
 from my_crawler import InfoCrawler, DetailCrawler, run_crawler
 from operateDB import insert_to_detail, insert_to_info
 from my_logger import MyLogger
-
 
 
 Logger = MyLogger('main')
@@ -84,7 +87,7 @@ def insert_detail(store_path):
     folder_list = os.listdir(store_path)
     for folder in folder_list:  # 这里的逻辑已经是下载完全部一次存完
         folder_path = store_path + folder
-        detail_name_list = os.listdir(folder_path)
+        detail_name_list = sorted(os.listdir(folder_path))
         # for detail in detail_list:  # 一个文件夹里可能有1000+的文件，不要逐个存入，要一次存入多个
         #     insert_to_detail(folder_path + detail)
         detail_list = [folder_path + '/' + i for i in detail_name_list]
@@ -107,8 +110,6 @@ def get_url_from_redis(table_index):  # 这里的逻辑是一次只下载一本
 
 
 if __name__ == '__main__':
-    import threading
-
     info_urls = [
         'http://www.ranwen.org/files/article/19/19388/',
         'http://www.ranwen.org/files/article/76/76945/',
@@ -122,4 +123,4 @@ if __name__ == '__main__':
     # t.start()
     # t.join()
 
-    get_url_from_redis('1')
+    insert_detail('book/')
