@@ -1,6 +1,7 @@
 # -*- coding:utf-8 -*-
 
 import os, sys
+import datetime
 
 sys.path.append('../mysite/')
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'mysite.settings')
@@ -109,10 +110,14 @@ def insert_to_detail(files, **kwargs):
             detail_list = []
             for file in file_list:
                 with open(file, 'rb') as rf:
-                    res = operate_detail_res(pickle.load(rf))
+                    try:
+                        res = operate_detail_res(pickle.load(rf))
+                    except RuntimeError:
+                        with open('miss_chapter.txt', 'a') as wf:
+                            wf.write('wrong in {}'.format(file))  # res会使用上次的
                     res['id'] = file.split('/')[-1]
                     res.update(kwargs)
-                    detail_list.append(models.BookTableOne(**res))# 创建实例，放到list里
+                    detail_list.append(models.BookTableOne(**res))  # 创建实例，放到list里
             models.BookTableOne.objects.bulk_create(detail_list)  # 一次插入list里的所有实例
             Logger.debug('insert {} - {}'.format(file_list[0], file_list[-1]))
     else:
@@ -165,18 +170,51 @@ def filter_content(txt):
     need_confirm = 0
     if 'div' in txt:  # 去头尾标签
         txt = txt.split('<div id="content">')[-1].split('</div>')[0]
-    if len(txt) > 0:  # 去头乱码
+    if len(txt.strip()) > 0:  # 去头乱码
         while True:
             if txt.startswith(' ') or txt.startswith('　'):
                 break
-            if '\u4e00' <= txt[0] <= '\u9fff':
-                break
+            try:
+                if '\u4e00' <= txt[0] <= '\u9fff':
+                    break
+            except IndexError:
+                raise RuntimeError(' i m here')
             txt = txt[1:]
-    for ccc in MODIFIED_TEXT:  # 正则去广告
-        txt = re.sub(ccc, '', txt)
+        for ccc in MODIFIED_TEXT:  # 正则去广告
+            txt = re.sub(ccc, '', txt)
     if '\\' in txt or len(txt) < 100:
         need_confirm = 1
     return txt, need_confirm
+
+
+def update_img_path(start=None, end=None):
+    """
+    批量插入图片路径，若图片不存在则为miss
+    :param start:
+    :param end:
+    :return:
+    """
+    t_list = models.InfoTable.objects.all()[start: end].only('id', 'image')
+    for ins in t_list:
+        index = str(ins.id)
+        if os.path.exists('../mysite/novel_site/static/novel_site/images/{}s.jpg'.format(index)):
+            ins.image = 'novel_site/images/{}s.jpg'.format(index)
+        else:
+            ins.image = 'novel_site/images/miss.jpg'
+        ins.save()
+
+
+def update_update_time(start=None, end=None):
+    """
+    批量参入更新时间
+    :param start:
+    :param end:
+    :return:
+    """
+    t_list = models.InfoTable.objects.all()[start: end].only('update_time')
+    for ins in t_list:
+        ins.update_time = datetime.datetime.now().isoformat(' ', 'seconds')
+        ins.save()
 
 
 if __name__ == '__main__':
@@ -187,4 +225,7 @@ if __name__ == '__main__':
     # file_name = './ccc/0'
     # insert_to_detail(file_name)
 
-    insert_to_category()
+    # insert_to_category()
+    print('i am in ORM')
+    # update_img_path()
+    # update_update_time()

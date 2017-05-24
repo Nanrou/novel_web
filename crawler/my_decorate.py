@@ -22,7 +22,7 @@ def my_round(num):
             return 'biu~'
         return '{} s'.format(n)
     elif num < 3600:
-        return '{} min {} s'.format(int(num/60), num % 60)
+        return '{} min {} s'.format(int(num/60), round(num % 60, 2))
 
 
 if __name__ == '__main__':

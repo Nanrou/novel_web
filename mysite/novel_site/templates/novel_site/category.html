@@ -9,7 +9,7 @@
 
 {% block main %}
 <div id="main">
-            <div id="hotcontent">
+    <div id="hotcontent">
         <div class="ll">
             {% for book in cate_books %}
             <div class="item">
@@ -20,16 +20,6 @@
                 </dl>
                 <div class="clear"></div>
             </div>
-            {% endfor %}
-            {% for book in cate_books %}
-                <div class="item">
-                    <div class="image"><a href="{{ book.get_absolute_url }}" target="_blank"><img src="{% static book.image %}" alt="{{ book.title }}" width="120" height="150"></a></div>
-                    <dl>
-                        <dt><span>{{ book.author }}</span><a href="{{ book.get_absolute_url }}" target="_blank">{{ book.title }}</a></dt>
-                        <dd><a href="{{ book.get_absolute_url }}">{{ book.resume|truncatechars:90 }}</a></dd>
-                    </dl>
-                    <div class="clear"></div>
-                </div>
             {% endfor %}
         </div>
     </div>

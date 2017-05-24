@@ -6,6 +6,7 @@ import asyncio
 import pickle
 import random
 import re
+from contextlib import contextmanager
 
 from lxml import etree
 import codecs
@@ -34,22 +35,24 @@ async def test():
 
 
 @time_clock
-def split_txt(txt_path, title, chapter_index, stone_path='./', title_split=' ', title_rule=None):
+def split_txt(txt_path, title, chapter_index, store_path='./', title_split=' ', title_rule=None):
     """
     将全本小说分割成独立章节，然后放到一个文件夹里
     t_rule = r'第一篇'  #  如果有多种方式，则传入list形式的rule
     t_path = 'test/xue.txt'
     title = book_name
-    split_txt(t_path, title, t_rule, 1, stone_path='./book/01')
+    split_txt(t_path, title, t_rule, 1, store_path='./book/01')
 
     目前发现，正文部分前面都是有四个空格的，所以对首字判断
     """
-    if not stone_path.endswith('/'):  # 保证路径的存在
-        stone_path += '/'
-    if not os.path.exists(stone_path):
-        os.mkdir(stone_path)
-
-    assert isinstance(chapter_index, int) is True, 'require index'
+    if not store_path.endswith('/'):  # 保证路径的存在
+        store_path += '/'
+    if not os.path.exists(store_path):
+        os.mkdir(store_path)
+    try:
+        chapter_index = int(chapter_index)
+    except TypeError:
+        print('index require num')
     chapter_index = chapter_index * 10000 + 1
 
     with codecs.open(txt_path, 'r', encoding='utf-8') as f:
@@ -94,7 +97,7 @@ def split_txt(txt_path, title, chapter_index, stone_path='./', title_split=' ', 
                         'content': ''.join(ls[start_index + 1:end_index-2]).replace('\r\n\r\n', '<br/>').replace('  ', '　'),
                         # 'content': ''.join(ls[start_index + 1:end_index-2]),
                     }
-                    with open(stone_path + str(chapter_index), 'wb') as wf:
+                    with open(store_path + str(chapter_index), 'wb') as wf:
                         pickle.dump(res, wf)
                     chapter_index += 1
                     start_index = end_index
@@ -110,7 +113,7 @@ def split_txt(txt_path, title, chapter_index, stone_path='./', title_split=' ', 
                     else:
                         chapter_title = ' '.join(tmp_ll[2:])
 
-        else:
+        else:  # 最后一章
             res = {
                 'id': chapter_index,
                 'title': title,
@@ -118,7 +121,7 @@ def split_txt(txt_path, title, chapter_index, stone_path='./', title_split=' ', 
                 'content': ''.join(ls[start_index + 1:end_index-2]).replace('\r\n\r\n', '<br/>').replace('  ', '　'),
                 # 'content': ''.join(ls[start_index + 1:end_index-2]),
             }
-            with open(stone_path + str(chapter_index), 'wb') as wf:
+            with open(store_path + str(chapter_index), 'wb') as wf:
                 pickle.dump(res, wf)
 
 
@@ -222,10 +225,23 @@ def product_txt_split_rule(start=None, end=None, file_path='./'):
     for i, file_name in enumerate(file_list[start:end], start=1):
         with open(file_name, 'rb') as rf:
             title = pickle.load(rf)['title']
-        s = "'./book/{i}.txt', '{title}', {i}, './book/chapter/{i:0>2}', r' '".format(i=i, title=title)
+        s = "./book/{i}.txt,{title},{i},./book/chapter/{i:0>2}, ".format(i=i, title=title)
         rule_list.append(s)
     with open('txt_split_rule.txt', 'w') as wf:
         wf.write('\n'.join(rule_list))
+
+
+@time_clock
+def bbb(file):
+    with open(file, 'r') as rf:
+        # res_list = rf.readlines()
+        for line in rf.readlines():
+            var_list = line.strip('\n').split(',')
+            print(var_list)
+            split_txt(*var_list)
+
+            # res_list = res_list[1:]
+        # rf.write('\n'.join(res_list))
 
 
 if __name__ == '__main__':
@@ -251,5 +267,5 @@ if __name__ == '__main__':
 
     # for t in tt_ll:
     #     split_txt(*t)
-    product_txt_split_rule(file_path='./info/')
-
+    # product_txt_split_rule(file_path='./info/')
+    bbb('./txt_split_rule.txt')

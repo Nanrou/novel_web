@@ -27,7 +27,7 @@ class CategoryView(DetailView):
     def get_context_data(self, **kwargs):
         context = super(CategoryView, self).get_context_data(**kwargs)
         # cate_books = self.obj.cate_books.all()
-        context['cate_books'] = self.obj.cate_books.all()
+        context['cate_books'] = self.obj.cate_books.all()[0:6]
         return context
 
 
