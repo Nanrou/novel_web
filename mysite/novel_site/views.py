@@ -12,8 +12,19 @@ from django.http import Http404
 # Create your views here.
 
 
-class HomeView(TemplateView):
+class HomeView(DetailView):
     template_name = 'novel_site/home.html'
+
+    def get_object(self, queryset=None):
+        self.obj = InfoTable.objects.all()
+        return self.obj
+
+    def get_context_data(self, **kwargs):
+        context = super(HomeView, self).get_context_data(**kwargs)
+        context['top_four'] = self.obj[0:4]
+        context['xuanhuan_books'] = CategoryTable.objects.get(id=1).get_random_ele(6)
+
+        return context
 
 
 class CategoryView(DetailView):

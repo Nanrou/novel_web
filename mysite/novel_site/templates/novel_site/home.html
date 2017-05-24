@@ -9,453 +9,394 @@
 {# 主页是可以写死的 #}
 {% block main %}
 <div id="main">
-		<div id="hotcontent">
-			<div class="l">
+        <div id="hotcontent">
+            <div class="l">
                 {% for book in top_four %}
-				<div class="item">
-					<div class="image"><a href="http://www.superxiaoshuo.com.org/files/article/79/79871/" target="_blank"><img src="%E7%87%83%E6%96%87%E5%B0%8F%E8%AF%B4_%E4%B9%A6%E5%8F%8B%E6%9C%80%E5%80%BC%E5%BE%97%E6%94%B6%E8%97%8F%E7%9A%84%E7%BD%91%E7%BB%9C%E5%B0%8F%E8%AF%B4%E9%98%85%E8%AF%BB%E7%BD%91_files/79871s.jpg" alt="龙王传说" width="120" height="150"></a></div>
-					<dl>
-						<dt><span>唐家三少</span><a href="http://www.superxiaoshuo.com.org/files/article/79/79871/" target="_blank">龙王传说</a></dt>
-						<dd>    伴随着魂导科技的进步，斗罗大陆上的人类征服了海洋，又发现了两片大陆。魂兽也随着人类魂师的猎杀无度走向灭亡，沉睡无数年的魂兽之王在星斗大森林最后的净土苏醒，它要带领仅存的族人，向人类复仇！
-    唐舞麟立志要成为一名强大的魂师，可当武魂觉醒时，苏醒...</dd>
-					</dl>
-					<div class="clear"></div>
-				</div>
+                <div class="item">
+                    <div class="image"><a href="{{ book.get_absolute_url }}" target="_blank"><img src="{% static book.image %}" alt="{{ book.title }}" width="120" height="150"></a></div>
+                    <dl>
+                        <dt><span>{{ book.author }}</span><a href="{{ book.get_absolute_url }}" target="_blank">{{ book.title }}</a></dt>
+                        <dd>{{ book.resume }}</dd>
+                    </dl>
+                    <div class="clear"></div>
+                </div>
                 {% endfor %}
-            {% comment %}
-				<div class="item">
-					<div class="image"><a href="http://www.superxiaoshuo.com.org/files/article/79/79776/" target="_blank"><img src="%E7%87%83%E6%96%87%E5%B0%8F%E8%AF%B4_%E4%B9%A6%E5%8F%8B%E6%9C%80%E5%80%BC%E5%BE%97%E6%94%B6%E8%97%8F%E7%9A%84%E7%BD%91%E7%BB%9C%E5%B0%8F%E8%AF%B4%E9%98%85%E8%AF%BB%E7%BD%91_files/79776s.jpg" alt="玄界之门" width="120" height="150"></a></div>
-					<dl>
-						<dt><span>忘语</span><a href="http://www.superxiaoshuo.com.org/files/article/79/79776/" target="_blank">玄界之门</a></dt>
-						<dd>    天降神物！异血附体！
-    群仙惊惧！万魔退避！
-    一名从东洲大陆走出的少年。
-    一具生死相依的红粉骷髅。
-    一个立志成为至强者的故事。
-    一段叱咤星河，大闹三界的传说。
-</dd>
-					</dl>
-					<div class="clear"></div>
-				</div>
-				<div class="item">
-					<div class="image"><a href="http://www.superxiaoshuo.com.org/files/article/27/27615/" target="_blank"><img src="%E7%87%83%E6%96%87%E5%B0%8F%E8%AF%B4_%E4%B9%A6%E5%8F%8B%E6%9C%80%E5%80%BC%E5%BE%97%E6%94%B6%E8%97%8F%E7%9A%84%E7%BD%91%E7%BB%9C%E5%B0%8F%E8%AF%B4%E9%98%85%E8%AF%BB%E7%BD%91_files/27615s.jpg" alt="完美世界" width="120" height="150"></a></div>
-					<dl>
-						<dt><span>辰东</span><a href="http://www.superxiaoshuo.com.org/files/article/27/27615/" target="_blank">完美世界</a></dt>
-						<dd>    一粒尘可填海，一根草斩尽日月星辰，弹指间天翻地覆。
-    群雄并起，万族林立，诸圣争霸，乱天动地。问苍茫大地，谁主沉浮？！
-    一个少年从大荒中走出，一切从这里开始……
-</dd>
-					</dl>
-					<div class="clear"></div>
-				</div>
-				<div class="item">
-					<div class="image"><a href="http://www.superxiaoshuo.com.org/files/article/19/19388/" target="_blank"><img src="%E7%87%83%E6%96%87%E5%B0%8F%E8%AF%B4_%E4%B9%A6%E5%8F%8B%E6%9C%80%E5%80%BC%E5%BE%97%E6%94%B6%E8%97%8F%E7%9A%84%E7%BD%91%E7%BB%9C%E5%B0%8F%E8%AF%B4%E9%98%85%E8%AF%BB%E7%BD%91_files/19388s.jpg" alt="大主宰" width="120" height="150"></a></div>
-					<dl>
-						<dt><span>天蚕土豆</span><a href="http://www.superxiaoshuo.com.org/files/article/19/19388/" target="_blank">大主宰</a></dt>
-						<dd>    大千世界，位面交汇，万族林立，群雄荟萃，一位位来自下位面的天之至尊，在这无尽世界，演绎着令人向往的传奇，追求着那主宰之路。
-    无尽火域，炎帝执掌，万火焚苍穹。
-    武境之内，武祖之威，震慑乾坤。
-    西天之殿，百战之皇，战威无可敌。
-    北荒之丘...</dd>
-					</dl>
-					<div class="clear"></div>
-				</div>
-			{% endcomment %}
-			</div>
-			<div class="r">
-				<h2>公告牌</h2>
-				<ul><li><span class="s1">[公告]</span><span class="s2">超级小说永久域名www.superxiaoshuo.com</span></li></ul>
-				<h2>上期强推</h2>
-				<ul>
+            </div>
+            <div class="r">
+                <h2>公告牌</h2>
+                <ul><li><span class="s1">[公告]</span><span class="s2">超级小说永久域名www.superxiaoshuo.com</span></li></ul>
+                <h2>上期强推</h2>
+                <ul>
                     {# 这里可以考虑写死 #}
-					<li><span class="s1">[玄幻]</span><span class="s2"><a href="http://www.superxiaoshuo.com.org/files/article/56/56048/" target="_blank">择天记</a></span><span class="s5">猫腻</span></li>
-					<li><span class="s1">[玄幻]</span><span class="s2"><a href="http://www.superxiaoshuo.com.org/files/article/77/77081/" target="_blank">雪鹰领主</a></span><span class="s5">我吃西红柿</span></li>
-					<li><span class="s1">[玄幻]</span><span class="s2"><a href="http://www.superxiaoshuo.com.org/files/article/41/41211/" target="_blank">永夜君王</a></span><span class="s5">烟雨江南</span></li>
-					<li><span class="s1">[玄幻]</span><span class="s2"><a href="http://www.superxiaoshuo.com.org/files/article/16/16866/" target="_blank">武炼巅峰</a></span><span class="s5">莫默</span></li>
-					<li><span class="s1">[玄幻]</span><span class="s2"><a href="http://www.superxiaoshuo.com.org/files/article/71/71638/" target="_blank">天域苍穹</a></span><span class="s5">风凌天下</span></li>
-					<li><span class="s1">[玄幻]</span><span class="s2"><a href="http://www.superxiaoshuo.com.org/files/article/75/75172/" target="_blank">太古神王</a></span><span class="s5">净无痕</span></li>
-				</ul>
-			</div>
-			<div class="clear"></div>
-		</div>
+                    <li><span class="s1">[玄幻]</span><span class="s2"><a href="http://www.superxiaoshuo.com.org/files/article/56/56048/" target="_blank">择天记</a></span><span class="s5">猫腻</span></li>
+                    <li><span class="s1">[玄幻]</span><span class="s2"><a href="http://www.superxiaoshuo.com.org/files/article/77/77081/" target="_blank">雪鹰领主</a></span><span class="s5">我吃西红柿</span></li>
+                    <li><span class="s1">[玄幻]</span><span class="s2"><a href="http://www.superxiaoshuo.com.org/files/article/41/41211/" target="_blank">永夜君王</a></span><span class="s5">烟雨江南</span></li>
+                    <li><span class="s1">[玄幻]</span><span class="s2"><a href="http://www.superxiaoshuo.com.org/files/article/16/16866/" target="_blank">武炼巅峰</a></span><span class="s5">莫默</span></li>
+                    <li><span class="s1">[玄幻]</span><span class="s2"><a href="http://www.superxiaoshuo.com.org/files/article/71/71638/" target="_blank">天域苍穹</a></span><span class="s5">风凌天下</span></li>
+                    <li><span class="s1">[玄幻]</span><span class="s2"><a href="http://www.superxiaoshuo.com.org/files/article/75/75172/" target="_blank">太古神王</a></span><span class="s5">净无痕</span></li>
+                </ul>
+            </div>
+            <div class="clear"></div>
+        </div>
 
-		<div class="novelslist">
-			<div class="content">
-				<h2>玄幻小说</h2>
+        <div class="novelslist">
+            <div class="content">
+                <h2>玄幻小说</h2>
 
-				<div class="top">
-					<div class="image"><a href="http://www.superxiaoshuo.com.org/files/article/68/68133/" target="_blank"><img src="%E7%87%83%E6%96%87%E5%B0%8F%E8%AF%B4_%E4%B9%A6%E5%8F%8B%E6%9C%80%E5%80%BC%E5%BE%97%E6%94%B6%E8%97%8F%E7%9A%84%E7%BD%91%E7%BB%9C%E5%B0%8F%E8%AF%B4%E9%98%85%E8%AF%BB%E7%BD%91_files/68133s.jpg" alt="帝霸" width="67" height="82"></a></div>
-					<dl>
-						<dt><a href="http://www.superxiaoshuo.com.org/files/article/68/68133/" target="_blank">帝霸</a></dt>
-						<dd>    千万年前，李七夜栽下一株翠竹。
+                <div class="top">
+                    <div class="image"><a href="http://www.superxiaoshuo.com.org/files/article/68/68133/" target="_blank"><img src="%E7%87%83%E6%96%87%E5%B0%8F%E8%AF%B4_%E4%B9%A6%E5%8F%8B%E6%9C%80%E5%80%BC%E5%BE%97%E6%94%B6%E8%97%8F%E7%9A%84%E7%BD%91%E7%BB%9C%E5%B0%8F%E8%AF%B4%E9%98%85%E8%AF%BB%E7%BD%91_files/68133s.jpg" alt="帝霸" width="67" height="82"></a></div>
+                    <dl>
+                        <dt><a href="http://www.superxiaoshuo.com.org/files/article/68/68133/" target="_blank">帝霸</a></dt>
+                        <dd>    千万年前，李七夜栽下一株翠竹。
     八百万年前，李七夜养了一条鲤鱼。
     五百万年前，李七夜收养一个小女孩。
     今天，李七夜一觉...</dd>
-					</dl>
-					<div class="clear"></div>
-				</div>
-				<ul>
-				</ul>
-					<li><a href="http://www.superxiaoshuo.com.org/files/article/19/19040/" target="_blank">修罗武神</a>/善良的蜜蜂</li>
+                    </dl>
+                    <div class="clear"></div>
+                </div>
+                <ul>
+                </ul>
+                {% for book in xuanhuan_books %}
+                    <li><a href="{{ book.get_absolute_url }}" target="_blank">{{ book.title }}</a>/{{ book.author }}</li>
+                {% empty %}
+                    <p>sorry, not found any book</p>
+                {% endfor %}
+            </div>
+            <div class="content">
+                <h2>修真小说</h2>
 
-					<li><a href="http://www.superxiaoshuo.com.org/files/article/14/14868/" target="_blank">雪中悍刀行</a>/烽火戏诸侯</li>
-
-					<li><a href="http://www.superxiaoshuo.com.org/files/article/77/77295/" target="_blank">七界武神</a>/叶之凡</li>
-
-					<li><a href="http://www.superxiaoshuo.com.org/files/article/68/68895/" target="_blank">逆天邪神</a>/火星引力</li>
-
-					<li><a href="http://www.superxiaoshuo.com.org/files/article/15/15780/" target="_blank">武神空间</a>/傅啸尘</li>
-
-					<li><a href="http://www.superxiaoshuo.com.org/files/article/79/79582/" target="_blank">万古神帝</a>/飞天鱼</li>
-
-					<li><a href="http://www.superxiaoshuo.com.org/files/article/56/56905/" target="_blank">儒道至圣</a>/永恒之火</li>
-
-					<li><a href="http://www.superxiaoshuo.com.org/files/article/44/44864/" target="_blank">万古至尊</a>/太一生水</li>
-
-					<li><a href="http://www.superxiaoshuo.com.org/files/article/77/77384/" target="_blank">五行天</a>/方想</li>
-
-					<li><a href="http://www.superxiaoshuo.com.org/files/article/77/77326/" target="_blank">真武世界</a>/蚕茧里的牛</li>
-
-					<li><a href="http://www.superxiaoshuo.com.org/files/article/15/15163/" target="_blank">我的贴身校花</a>/带玉</li>
-
-					<li><a href="http://www.superxiaoshuo.com.org/files/article/83/83779/" target="_blank">全职法师</a>/乱</li>
-
-			</div>
-			<div class="content">
-				<h2>修真小说</h2>
-
-				<div class="top">
-					<div class="image"><a href="http://www.superxiaoshuo.com.org/files/article/83/83090/" target="_blank"><img src="%E7%87%83%E6%96%87%E5%B0%8F%E8%AF%B4_%E4%B9%A6%E5%8F%8B%E6%9C%80%E5%80%BC%E5%BE%97%E6%94%B6%E8%97%8F%E7%9A%84%E7%BD%91%E7%BB%9C%E5%B0%8F%E8%AF%B4%E9%98%85%E8%AF%BB%E7%BD%91_files/83090s.jpg" alt="一念永恒" width="67" height="82"></a></div>
-					<dl>
-						<dt><a href="http://www.superxiaoshuo.com.org/files/article/83/83090/" target="_blank">一念永恒</a></dt>
-						<dd>    一念成沧海，一念化桑田。一念斩千魔，一念诛万仙。唯我念……永恒
+                <div class="top">
+                    <div class="image"><a href="http://www.superxiaoshuo.com.org/files/article/83/83090/" target="_blank"><img src="%E7%87%83%E6%96%87%E5%B0%8F%E8%AF%B4_%E4%B9%A6%E5%8F%8B%E6%9C%80%E5%80%BC%E5%BE%97%E6%94%B6%E8%97%8F%E7%9A%84%E7%BD%91%E7%BB%9C%E5%B0%8F%E8%AF%B4%E9%98%85%E8%AF%BB%E7%BD%91_files/83090s.jpg" alt="一念永恒" width="67" height="82"></a></div>
+                    <dl>
+                        <dt><a href="http://www.superxiaoshuo.com.org/files/article/83/83090/" target="_blank">一念永恒</a></dt>
+                        <dd>    一念成沧海，一念化桑田。一念斩千魔，一念诛万仙。唯我念……永恒
 ...</dd>
-					</dl>
-					<div class="clear"></div>
-				</div>
-				<ul>
-				</ul>
-					<li><a href="http://www.superxiaoshuo.com.org/files/article/79/79776/" target="_blank">玄界之门</a>/忘语</li>
+                    </dl>
+                    <div class="clear"></div>
+                </div>
+                <ul>
+                </ul>
+                    <li><a href="http://www.superxiaoshuo.com.org/files/article/79/79776/" target="_blank">玄界之门</a>/忘语</li>
 
-					<li><a href="http://www.superxiaoshuo.com.org/files/article/10/10749/" target="_blank">飞天</a>/跃千愁</li>
+                    <li><a href="http://www.superxiaoshuo.com.org/files/article/10/10749/" target="_blank">飞天</a>/跃千愁</li>
 
-					<li><a href="http://www.superxiaoshuo.com.org/files/article/52/52429/" target="_blank">造化之门</a>/鹅是老五</li>
+                    <li><a href="http://www.superxiaoshuo.com.org/files/article/52/52429/" target="_blank">造化之门</a>/鹅是老五</li>
 
-					<li><a href="http://www.superxiaoshuo.com.org/files/article/76/76266/" target="_blank">万古仙穹</a>/观棋</li>
+                    <li><a href="http://www.superxiaoshuo.com.org/files/article/76/76266/" target="_blank">万古仙穹</a>/观棋</li>
 
-					<li><a href="http://www.superxiaoshuo.com.org/files/article/30/30596/" target="_blank">武墓</a>/孤独漂流</li>
+                    <li><a href="http://www.superxiaoshuo.com.org/files/article/30/30596/" target="_blank">武墓</a>/孤独漂流</li>
 
-					<li><a href="http://www.superxiaoshuo.com.org/files/article/77/77330/" target="_blank">一剑飞仙</a>/流浪的蛤蟆</li>
+                    <li><a href="http://www.superxiaoshuo.com.org/files/article/77/77330/" target="_blank">一剑飞仙</a>/流浪的蛤蟆</li>
 
-					<li><a href="http://www.superxiaoshuo.com.org/files/article/18/18319/" target="_blank">蛊真人</a>/蛊真人</li>
+                    <li><a href="http://www.superxiaoshuo.com.org/files/article/18/18319/" target="_blank">蛊真人</a>/蛊真人</li>
 
-					<li><a href="http://www.superxiaoshuo.com.org/files/article/75/75907/" target="_blank">掠天记</a>/黑山老鬼</li>
+                    <li><a href="http://www.superxiaoshuo.com.org/files/article/75/75907/" target="_blank">掠天记</a>/黑山老鬼</li>
 
-					<li><a href="http://www.superxiaoshuo.com.org/files/article/77/77234/" target="_blank">申公豹传承</a>/第九天命</li>
+                    <li><a href="http://www.superxiaoshuo.com.org/files/article/77/77234/" target="_blank">申公豹传承</a>/第九天命</li>
 
-					<li><a href="http://www.superxiaoshuo.com.org/files/article/80/80795/" target="_blank">白袍总管</a>/萧舒</li>
+                    <li><a href="http://www.superxiaoshuo.com.org/files/article/80/80795/" target="_blank">白袍总管</a>/萧舒</li>
 
-					<li><a href="http://www.superxiaoshuo.com.org/files/article/19/19035/" target="_blank">少年医仙 </a>/逐没</li>
+                    <li><a href="http://www.superxiaoshuo.com.org/files/article/19/19035/" target="_blank">少年医仙 </a>/逐没</li>
 
-					<li><a href="http://www.superxiaoshuo.com.org/files/article/79/79836/" target="_blank">九仙图</a>/秋晨</li>
+                    <li><a href="http://www.superxiaoshuo.com.org/files/article/79/79836/" target="_blank">九仙图</a>/秋晨</li>
 
-			</div>
-			<div class="content border">
-				<h2>都市小说</h2>
+            </div>
+            <div class="content border">
+                <h2>都市小说</h2>
 
-				<div class="top">
-					<div class="image"><a href="http://www.superxiaoshuo.com.org/files/article/79/79796/" target="_blank"><img src="%E7%87%83%E6%96%87%E5%B0%8F%E8%AF%B4_%E4%B9%A6%E5%8F%8B%E6%9C%80%E5%80%BC%E5%BE%97%E6%94%B6%E8%97%8F%E7%9A%84%E7%BD%91%E7%BB%9C%E5%B0%8F%E8%AF%B4%E9%98%85%E8%AF%BB%E7%BD%91_files/79796s.jpg" alt="传奇再现" width="67" height="82"></a></div>
-					<dl>
-						<dt><a href="http://www.superxiaoshuo.com.org/files/article/79/79796/" target="_blank">传奇再现</a></dt>
-						<dd>    青涩的少年负气离开家乡。
+                <div class="top">
+                    <div class="image"><a href="http://www.superxiaoshuo.com.org/files/article/79/79796/" target="_blank"><img src="%E7%87%83%E6%96%87%E5%B0%8F%E8%AF%B4_%E4%B9%A6%E5%8F%8B%E6%9C%80%E5%80%BC%E5%BE%97%E6%94%B6%E8%97%8F%E7%9A%84%E7%BD%91%E7%BB%9C%E5%B0%8F%E8%AF%B4%E9%98%85%E8%AF%BB%E7%BD%91_files/79796s.jpg" alt="传奇再现" width="67" height="82"></a></div>
+                    <dl>
+                        <dt><a href="http://www.superxiaoshuo.com.org/files/article/79/79796/" target="_blank">传奇再现</a></dt>
+                        <dd>    青涩的少年负气离开家乡。
     四年过后，他满脸沧桑载着荣耀归来！
     钢筋水泥浇筑的城市里，故人不在，传奇退隐……
     面对家人的...</dd>
-					</dl>
-					<div class="clear"></div>
-				</div>
-				<ul>
-				</ul>
-					<li><a href="http://www.superxiaoshuo.com.org/files/article/66/66244/" target="_blank">我真是大明星</a>/尝谕</li>
+                    </dl>
+                    <div class="clear"></div>
+                </div>
+                <ul>
+                </ul>
+                    <li><a href="http://www.superxiaoshuo.com.org/files/article/66/66244/" target="_blank">我真是大明星</a>/尝谕</li>
 
-					<li><a href="http://www.superxiaoshuo.com.org/files/article/40/40170/" target="_blank">超品相师</a>/九灯和善</li>
+                    <li><a href="http://www.superxiaoshuo.com.org/files/article/40/40170/" target="_blank">超品相师</a>/九灯和善</li>
 
-					<li><a href="http://www.superxiaoshuo.com.org/files/article/79/79431/" target="_blank">隐身侍卫</a>/桃子卖没了</li>
+                    <li><a href="http://www.superxiaoshuo.com.org/files/article/79/79431/" target="_blank">隐身侍卫</a>/桃子卖没了</li>
 
-					<li><a href="http://www.superxiaoshuo.com.org/files/article/16/16856/" target="_blank">超级兵王</a>/步千帆</li>
+                    <li><a href="http://www.superxiaoshuo.com.org/files/article/16/16856/" target="_blank">超级兵王</a>/步千帆</li>
 
-					<li><a href="http://www.superxiaoshuo.com.org/files/article/80/80447/" target="_blank">神藏</a>/打眼</li>
+                    <li><a href="http://www.superxiaoshuo.com.org/files/article/80/80447/" target="_blank">神藏</a>/打眼</li>
 
-					<li><a href="http://www.superxiaoshuo.com.org/files/article/17/17414/" target="_blank">都市之最强纨绔</a>/左耳思念</li>
+                    <li><a href="http://www.superxiaoshuo.com.org/files/article/17/17414/" target="_blank">都市之最强纨绔</a>/左耳思念</li>
 
-					<li><a href="http://www.superxiaoshuo.com.org/files/article/30/30888/" target="_blank">权力巅峰</a>/梦入洪荒</li>
+                    <li><a href="http://www.superxiaoshuo.com.org/files/article/30/30888/" target="_blank">权力巅峰</a>/梦入洪荒</li>
 
-					<li><a href="http://www.superxiaoshuo.com.org/files/article/79/79425/" target="_blank">女神的近身护卫</a>/肥茄子</li>
+                    <li><a href="http://www.superxiaoshuo.com.org/files/article/79/79425/" target="_blank">女神的近身护卫</a>/肥茄子</li>
 
-					<li><a href="http://www.superxiaoshuo.com.org/files/article/13/13056/" target="_blank">官道无疆</a>/瑞根</li>
+                    <li><a href="http://www.superxiaoshuo.com.org/files/article/13/13056/" target="_blank">官道无疆</a>/瑞根</li>
 
-					<li><a href="http://www.superxiaoshuo.com.org/files/article/30/30788/" target="_blank">极品狂少</a>/我本疯狂</li>
+                    <li><a href="http://www.superxiaoshuo.com.org/files/article/30/30788/" target="_blank">极品狂少</a>/我本疯狂</li>
 
-					<li><a href="http://www.superxiaoshuo.com.org/files/article/77/77910/" target="_blank">极品富二代</a>/老施</li>
+                    <li><a href="http://www.superxiaoshuo.com.org/files/article/77/77910/" target="_blank">极品富二代</a>/老施</li>
 
-					<li><a href="http://www.superxiaoshuo.com.org/files/article/77/77199/" target="_blank">修真归来在都市</a>/陌路行</li>
+                    <li><a href="http://www.superxiaoshuo.com.org/files/article/77/77199/" target="_blank">修真归来在都市</a>/陌路行</li>
 
-			</div>
-			<div class="clear"></div>
-		</div>
-		<div class="novelslist">
-			<div class="content">
-				<h2>历史小说</h2>
+            </div>
+            <div class="clear"></div>
+        </div>
+        <div class="novelslist">
+            <div class="content">
+                <h2>历史小说</h2>
 
-				<div class="top">
-					<div class="image"><a href="http://www.superxiaoshuo.com.org/files/article/77/77130/" target="_blank"><img src="%E7%87%83%E6%96%87%E5%B0%8F%E8%AF%B4_%E4%B9%A6%E5%8F%8B%E6%9C%80%E5%80%BC%E5%BE%97%E6%94%B6%E8%97%8F%E7%9A%84%E7%BD%91%E7%BB%9C%E5%B0%8F%E8%AF%B4%E9%98%85%E8%AF%BB%E7%BD%91_files/77130s.jpg" alt="寒门崛起" width="67" height="82"></a></div>
-					<dl>
-						<dt><a href="http://www.superxiaoshuo.com.org/files/article/77/77130/" target="_blank">寒门崛起</a></dt>
-						<dd>    这是一个就业路上屡被蹂躏的古汉语专业研究生，回到了明朝中叶，进入了山村一家幼童身体后的故事。
+                <div class="top">
+                    <div class="image"><a href="http://www.superxiaoshuo.com.org/files/article/77/77130/" target="_blank"><img src="%E7%87%83%E6%96%87%E5%B0%8F%E8%AF%B4_%E4%B9%A6%E5%8F%8B%E6%9C%80%E5%80%BC%E5%BE%97%E6%94%B6%E8%97%8F%E7%9A%84%E7%BD%91%E7%BB%9C%E5%B0%8F%E8%AF%B4%E9%98%85%E8%AF%BB%E7%BD%91_files/77130s.jpg" alt="寒门崛起" width="67" height="82"></a></div>
+                    <dl>
+                        <dt><a href="http://www.superxiaoshuo.com.org/files/article/77/77130/" target="_blank">寒门崛起</a></dt>
+                        <dd>    这是一个就业路上屡被蹂躏的古汉语专业研究生，回到了明朝中叶，进入了山村一家幼童身体后的故事。
     木讷父亲泼辣娘，一水的极品亲戚...</dd>
-					</dl>
-					<div class="clear"></div>
-				</div>
-				<ul>
-				</ul>
-					<li><a href="http://www.superxiaoshuo.com.org/files/article/77/77420/" target="_blank">银狐</a>/孑与2</li>
+                    </dl>
+                    <div class="clear"></div>
+                </div>
+                <ul>
+                </ul>
+                    <li><a href="http://www.superxiaoshuo.com.org/files/article/77/77420/" target="_blank">银狐</a>/孑与2</li>
 
-					<li><a href="http://www.superxiaoshuo.com.org/files/article/19/19223/" target="_blank">特种兵在都市</a>/夜十三</li>
+                    <li><a href="http://www.superxiaoshuo.com.org/files/article/19/19223/" target="_blank">特种兵在都市</a>/夜十三</li>
 
-					<li><a href="http://www.superxiaoshuo.com.org/files/article/67/67275/" target="_blank">医统江山</a>/石章鱼</li>
+                    <li><a href="http://www.superxiaoshuo.com.org/files/article/67/67275/" target="_blank">医统江山</a>/石章鱼</li>
 
-					<li><a href="http://www.superxiaoshuo.com.org/files/article/81/81814/" target="_blank">寒门状元</a>/天子</li>
+                    <li><a href="http://www.superxiaoshuo.com.org/files/article/81/81814/" target="_blank">寒门状元</a>/天子</li>
 
-					<li><a href="http://www.superxiaoshuo.com.org/files/article/73/73312/" target="_blank">三国之召唤猛将</a>/青铜剑客</li>
+                    <li><a href="http://www.superxiaoshuo.com.org/files/article/73/73312/" target="_blank">三国之召唤猛将</a>/青铜剑客</li>
 
-					<li><a href="http://www.superxiaoshuo.com.org/files/article/69/69963/" target="_blank">我要做皇帝</a>/要离刺荆轲</li>
+                    <li><a href="http://www.superxiaoshuo.com.org/files/article/69/69963/" target="_blank">我要做皇帝</a>/要离刺荆轲</li>
 
-					<li><a href="http://www.superxiaoshuo.com.org/files/article/71/71961/" target="_blank">最强兵王</a>/丛林狼</li>
+                    <li><a href="http://www.superxiaoshuo.com.org/files/article/71/71961/" target="_blank">最强兵王</a>/丛林狼</li>
 
-					<li><a href="http://www.superxiaoshuo.com.org/files/article/77/77246/" target="_blank">铁血强国</a>/流泪的鱼wyj</li>
+                    <li><a href="http://www.superxiaoshuo.com.org/files/article/77/77246/" target="_blank">铁血强国</a>/流泪的鱼wyj</li>
 
-					<li><a href="http://www.superxiaoshuo.com.org/files/article/68/68888/" target="_blank">十国千娇</a>/西风紧</li>
+                    <li><a href="http://www.superxiaoshuo.com.org/files/article/68/68888/" target="_blank">十国千娇</a>/西风紧</li>
 
-					<li><a href="http://www.superxiaoshuo.com.org/files/article/77/77305/" target="_blank">盛唐崛起</a>/庚新</li>
+                    <li><a href="http://www.superxiaoshuo.com.org/files/article/77/77305/" target="_blank">盛唐崛起</a>/庚新</li>
 
-					<li><a href="http://www.superxiaoshuo.com.org/files/article/77/77055/" target="_blank">春秋我为王</a>/七月新番</li>
+                    <li><a href="http://www.superxiaoshuo.com.org/files/article/77/77055/" target="_blank">春秋我为王</a>/七月新番</li>
 
-					<li><a href="http://www.superxiaoshuo.com.org/files/article/25/25976/" target="_blank">大官人 </a>/三戒大师</li>
+                    <li><a href="http://www.superxiaoshuo.com.org/files/article/25/25976/" target="_blank">大官人 </a>/三戒大师</li>
 
-			</div>
-			<div class="content">
-				<h2>网游小说</h2>
+            </div>
+            <div class="content">
+                <h2>网游小说</h2>
 
-				<div class="top">
-					<div class="image"><a href="http://www.superxiaoshuo.com.org/files/article/18/18713/" target="_blank"><img src="%E7%87%83%E6%96%87%E5%B0%8F%E8%AF%B4_%E4%B9%A6%E5%8F%8B%E6%9C%80%E5%80%BC%E5%BE%97%E6%94%B6%E8%97%8F%E7%9A%84%E7%BD%91%E7%BB%9C%E5%B0%8F%E8%AF%B4%E9%98%85%E8%AF%BB%E7%BD%91_files/18713s.jpg" alt="惊悚乐园" width="67" height="82"></a></div>
-					<dl>
-						<dt><a href="http://www.superxiaoshuo.com.org/files/article/18/18713/" target="_blank">惊悚乐园</a></dt>
-						<dd>    这是超越维度的游戏。
+                <div class="top">
+                    <div class="image"><a href="http://www.superxiaoshuo.com.org/files/article/18/18713/" target="_blank"><img src="%E7%87%83%E6%96%87%E5%B0%8F%E8%AF%B4_%E4%B9%A6%E5%8F%8B%E6%9C%80%E5%80%BC%E5%BE%97%E6%94%B6%E8%97%8F%E7%9A%84%E7%BD%91%E7%BB%9C%E5%B0%8F%E8%AF%B4%E9%98%85%E8%AF%BB%E7%BD%91_files/18713s.jpg" alt="惊悚乐园" width="67" height="82"></a></div>
+                    <dl>
+                        <dt><a href="http://www.superxiaoshuo.com.org/files/article/18/18713/" target="_blank">惊悚乐园</a></dt>
+                        <dd>    这是超越维度的游戏。
     亦是追寻真理的竞逐。
     未知的封印，鬼神的赌局……
     数据的抗争，人类的救赎……
     在那个连接着现...</dd>
-					</dl>
-					<div class="clear"></div>
-				</div>
-				<ul>
-				</ul>
-					<li><a href="http://www.superxiaoshuo.com.org/files/article/27/27606/" target="_blank">神级英雄</a>/大烟缸</li>
+                    </dl>
+                    <div class="clear"></div>
+                </div>
+                <ul>
+                </ul>
+                    <li><a href="http://www.superxiaoshuo.com.org/files/article/27/27606/" target="_blank">神级英雄</a>/大烟缸</li>
 
-					<li><a href="http://www.superxiaoshuo.com.org/files/article/77/77353/" target="_blank">冠军之心</a>/林海听涛</li>
+                    <li><a href="http://www.superxiaoshuo.com.org/files/article/77/77353/" target="_blank">冠军之心</a>/林海听涛</li>
 
-					<li><a href="http://www.superxiaoshuo.com.org/files/article/70/70550/" target="_blank">深渊主宰</a>/诸生浮屠</li>
+                    <li><a href="http://www.superxiaoshuo.com.org/files/article/70/70550/" target="_blank">深渊主宰</a>/诸生浮屠</li>
 
-					<li><a href="http://www.superxiaoshuo.com.org/files/article/78/78117/" target="_blank">超级指环王</a>/兔来割草</li>
+                    <li><a href="http://www.superxiaoshuo.com.org/files/article/78/78117/" target="_blank">超级指环王</a>/兔来割草</li>
 
-					<li><a href="http://www.superxiaoshuo.com.org/files/article/69/69808/" target="_blank">网游之三国无双</a>/沉默的忧伤</li>
+                    <li><a href="http://www.superxiaoshuo.com.org/files/article/69/69808/" target="_blank">网游之三国无双</a>/沉默的忧伤</li>
 
-					<li><a href="http://www.superxiaoshuo.com.org/files/article/78/78608/" target="_blank">重生之最强剑神</a>/天运老猫</li>
+                    <li><a href="http://www.superxiaoshuo.com.org/files/article/78/78608/" target="_blank">重生之最强剑神</a>/天运老猫</li>
 
-					<li><a href="http://www.superxiaoshuo.com.org/files/article/80/80340/" target="_blank">全能运动员</a>/过关斩将</li>
+                    <li><a href="http://www.superxiaoshuo.com.org/files/article/80/80340/" target="_blank">全能运动员</a>/过关斩将</li>
 
-					<li><a href="http://www.superxiaoshuo.com.org/files/article/76/76555/" target="_blank">网游之大盗贼</a>/泛舟填词</li>
+                    <li><a href="http://www.superxiaoshuo.com.org/files/article/76/76555/" target="_blank">网游之大盗贼</a>/泛舟填词</li>
 
-					<li><a href="http://www.superxiaoshuo.com.org/files/article/83/83921/" target="_blank">英雄联盟之七百年后</a>/沉入海底</li>
+                    <li><a href="http://www.superxiaoshuo.com.org/files/article/83/83921/" target="_blank">英雄联盟之七百年后</a>/沉入海底</li>
 
-					<li><a href="http://www.superxiaoshuo.com.org/files/article/81/81883/" target="_blank">武林半侠传</a>/文抄公</li>
+                    <li><a href="http://www.superxiaoshuo.com.org/files/article/81/81883/" target="_blank">武林半侠传</a>/文抄公</li>
 
-					<li><a href="http://www.superxiaoshuo.com.org/files/article/77/77259/" target="_blank">网游之逆天戒指</a>/上古圣贤</li>
+                    <li><a href="http://www.superxiaoshuo.com.org/files/article/77/77259/" target="_blank">网游之逆天戒指</a>/上古圣贤</li>
 
-					<li><a href="http://www.superxiaoshuo.com.org/files/article/48/48822/" target="_blank">疯巫妖的实验日志</a>/愤怒的松鼠</li>
+                    <li><a href="http://www.superxiaoshuo.com.org/files/article/48/48822/" target="_blank">疯巫妖的实验日志</a>/愤怒的松鼠</li>
 
-			</div>
-			<div class="content border">
-				<h2>科幻小说</h2>
+            </div>
+            <div class="content border">
+                <h2>科幻小说</h2>
 
-				<div class="top">
-					<div class="image"><a href="http://www.superxiaoshuo.com.org/files/article/26/26373/" target="_blank"><img src="%E7%87%83%E6%96%87%E5%B0%8F%E8%AF%B4_%E4%B9%A6%E5%8F%8B%E6%9C%80%E5%80%BC%E5%BE%97%E6%94%B6%E8%97%8F%E7%9A%84%E7%BD%91%E7%BB%9C%E5%B0%8F%E8%AF%B4%E9%98%85%E8%AF%BB%E7%BD%91_files/26373s.jpg" alt="黑铁之堡 " width="67" height="82"></a></div>
-					<dl>
-						<dt><a href="http://www.superxiaoshuo.com.org/files/article/26/26373/" target="_blank">黑铁之堡 </a></dt>
-						<dd>    大灾变之后，世间的一切规则重写，黑铁时代来临，钢铁，蒸汽，武力成为人类赖以生存下去的最大依靠，一个叫张铁的普通少年，懵懵懂懂之...</dd>
-					</dl>
-					<div class="clear"></div>
-				</div>
-				<ul>
-				</ul>
-					<li><a href="http://www.superxiaoshuo.com.org/files/article/68/68898/" target="_blank">异常生物见闻录</a>/远瞳</li>
+                <div class="top">
+                    <div class="image"><a href="http://www.superxiaoshuo.com.org/files/article/26/26373/" target="_blank"><img src="%E7%87%83%E6%96%87%E5%B0%8F%E8%AF%B4_%E4%B9%A6%E5%8F%8B%E6%9C%80%E5%80%BC%E5%BE%97%E6%94%B6%E8%97%8F%E7%9A%84%E7%BD%91%E7%BB%9C%E5%B0%8F%E8%AF%B4%E9%98%85%E8%AF%BB%E7%BD%91_files/26373s.jpg" alt="黑铁之堡 " width="67" height="82"></a></div>
+                    <dl>
+                        <dt><a href="http://www.superxiaoshuo.com.org/files/article/26/26373/" target="_blank">黑铁之堡 </a></dt>
+                        <dd>    大灾变之后，世间的一切规则重写，黑铁时代来临，钢铁，蒸汽，武力成为人类赖以生存下去的最大依靠，一个叫张铁的普通少年，懵懵懂懂之...</dd>
+                    </dl>
+                    <div class="clear"></div>
+                </div>
+                <ul>
+                </ul>
+                    <li><a href="http://www.superxiaoshuo.com.org/files/article/68/68898/" target="_blank">异常生物见闻录</a>/远瞳</li>
 
-					<li><a href="http://www.superxiaoshuo.com.org/files/article/77/77401/" target="_blank">电影世界大抽奖</a>/熊猫胖大</li>
+                    <li><a href="http://www.superxiaoshuo.com.org/files/article/77/77401/" target="_blank">电影世界大抽奖</a>/熊猫胖大</li>
 
-					<li><a href="http://www.superxiaoshuo.com.org/files/article/79/79459/" target="_blank">穿越未来之男人不好当</a>/汝夫人</li>
+                    <li><a href="http://www.superxiaoshuo.com.org/files/article/79/79459/" target="_blank">穿越未来之男人不好当</a>/汝夫人</li>
 
-					<li><a href="http://www.superxiaoshuo.com.org/files/article/77/77317/" target="_blank">武侠世界大穿越</a>/我叫排云掌</li>
+                    <li><a href="http://www.superxiaoshuo.com.org/files/article/77/77317/" target="_blank">武侠世界大穿越</a>/我叫排云掌</li>
 
-					<li><a href="http://www.superxiaoshuo.com.org/files/article/64/64176/" target="_blank">文艺时代</a>/睡觉会变白</li>
+                    <li><a href="http://www.superxiaoshuo.com.org/files/article/64/64176/" target="_blank">文艺时代</a>/睡觉会变白</li>
 
-					<li><a href="http://www.superxiaoshuo.com.org/files/article/27/27181/" target="_blank">星河贵族 </a>/奥尔良烤鲟鱼堡</li>
+                    <li><a href="http://www.superxiaoshuo.com.org/files/article/27/27181/" target="_blank">星河贵族 </a>/奥尔良烤鲟鱼堡</li>
 
-					<li><a href="http://www.superxiaoshuo.com.org/files/article/76/76384/" target="_blank">修真四万年</a>/卧牛真人</li>
+                    <li><a href="http://www.superxiaoshuo.com.org/files/article/76/76384/" target="_blank">修真四万年</a>/卧牛真人</li>
 
-					<li><a href="http://www.superxiaoshuo.com.org/files/article/18/18668/" target="_blank">花间高手</a>/冷云邪神</li>
+                    <li><a href="http://www.superxiaoshuo.com.org/files/article/18/18668/" target="_blank">花间高手</a>/冷云邪神</li>
 
-					<li><a href="http://www.superxiaoshuo.com.org/files/article/77/77063/" target="_blank">重启末世</a>/古羲</li>
+                    <li><a href="http://www.superxiaoshuo.com.org/files/article/77/77063/" target="_blank">重启末世</a>/古羲</li>
 
-					<li><a href="http://www.superxiaoshuo.com.org/files/article/77/77333/" target="_blank">颤栗世界</a>/奥比椰</li>
+                    <li><a href="http://www.superxiaoshuo.com.org/files/article/77/77333/" target="_blank">颤栗世界</a>/奥比椰</li>
 
-					<li><a href="http://www.superxiaoshuo.com.org/files/article/18/18332/" target="_blank">纨绔仙医</a>/步征</li>
+                    <li><a href="http://www.superxiaoshuo.com.org/files/article/18/18332/" target="_blank">纨绔仙医</a>/步征</li>
 
-					<li><a href="http://www.superxiaoshuo.com.org/files/article/77/77174/" target="_blank">恐怖都市</a>/猛虎道长</li>
+                    <li><a href="http://www.superxiaoshuo.com.org/files/article/77/77174/" target="_blank">恐怖都市</a>/猛虎道长</li>
 
-			</div>
-			<div class="clear"></div>
-		</div>
-		<div id="newscontent">
-			<div class="l">
-				<h2>最近更新小说</h2>
-				<ul>
-					<li><span class="s1">[都市小说]</span><span class="s2"><a href="http://www.superxiaoshuo.com.org/files/article/83/83533/" target="_blank">入侵娱乐圈的骗子</a></span><span class="s3"><a href="http://www.superxiaoshuo.com.org/files/article/83/83533/19277557.html" target="_blank">第八六四章 乌克兰美女</a></span><span class="s4">o成佛o</span><span class="s5">05-11</span></li>
+            </div>
+            <div class="clear"></div>
+        </div>
+        <div id="newscontent">
+            <div class="l">
+                <h2>最近更新小说</h2>
+                <ul>
+                    <li><span class="s1">[都市小说]</span><span class="s2"><a href="http://www.superxiaoshuo.com.org/files/article/83/83533/" target="_blank">入侵娱乐圈的骗子</a></span><span class="s3"><a href="http://www.superxiaoshuo.com.org/files/article/83/83533/19277557.html" target="_blank">第八六四章 乌克兰美女</a></span><span class="s4">o成佛o</span><span class="s5">05-11</span></li>
 
-					<li><span class="s1">[修真小说]</span><span class="s2"><a href="http://www.superxiaoshuo.com.org/files/article/86/86359/" target="_blank">奇侠系统</a></span><span class="s3"><a href="http://www.superxiaoshuo.com.org/files/article/86/86359/19277556.html" target="_blank">第三百三十五章 查案任务</a></span><span class="s4">萧胡</span><span class="s5">05-11</span></li>
+                    <li><span class="s1">[修真小说]</span><span class="s2"><a href="http://www.superxiaoshuo.com.org/files/article/86/86359/" target="_blank">奇侠系统</a></span><span class="s3"><a href="http://www.superxiaoshuo.com.org/files/article/86/86359/19277556.html" target="_blank">第三百三十五章 查案任务</a></span><span class="s4">萧胡</span><span class="s5">05-11</span></li>
 
-					<li><span class="s1">[都市小说]</span><span class="s2"><a href="http://www.superxiaoshuo.com.org/files/article/82/82104/" target="_blank">仙界归来</a></span><span class="s3"><a href="http://www.superxiaoshuo.com.org/files/article/82/82104/19277555.html" target="_blank">第一千零二十三章 斩断前尘往事</a></span><span class="s4">静夜寄思</span><span class="s5">05-11</span></li>
+                    <li><span class="s1">[都市小说]</span><span class="s2"><a href="http://www.superxiaoshuo.com.org/files/article/82/82104/" target="_blank">仙界归来</a></span><span class="s3"><a href="http://www.superxiaoshuo.com.org/files/article/82/82104/19277555.html" target="_blank">第一千零二十三章 斩断前尘往事</a></span><span class="s4">静夜寄思</span><span class="s5">05-11</span></li>
 
-					<li><span class="s1">[都市小说]</span><span class="s2"><a href="http://www.superxiaoshuo.com.org/files/article/85/85034/" target="_blank">极品美女的近身保镖</a></span><span class="s3"><a href="http://www.superxiaoshuo.com.org/files/article/85/85034/19277554.html" target="_blank">第七百零七章 老初恋情人</a></span><span class="s4">星辰空</span><span class="s5">05-11</span></li>
+                    <li><span class="s1">[都市小说]</span><span class="s2"><a href="http://www.superxiaoshuo.com.org/files/article/85/85034/" target="_blank">极品美女的近身保镖</a></span><span class="s3"><a href="http://www.superxiaoshuo.com.org/files/article/85/85034/19277554.html" target="_blank">第七百零七章 老初恋情人</a></span><span class="s4">星辰空</span><span class="s5">05-11</span></li>
 
-					<li><span class="s1">[修真小说]</span><span class="s2"><a href="http://www.superxiaoshuo.com.org/files/article/85/85752/" target="_blank">帝皇演义</a></span><span class="s3"><a href="http://www.superxiaoshuo.com.org/files/article/85/85752/19277553.html" target="_blank">第四一零章 伺机而动</a></span><span class="s4">言子木</span><span class="s5">05-11</span></li>
+                    <li><span class="s1">[修真小说]</span><span class="s2"><a href="http://www.superxiaoshuo.com.org/files/article/85/85752/" target="_blank">帝皇演义</a></span><span class="s3"><a href="http://www.superxiaoshuo.com.org/files/article/85/85752/19277553.html" target="_blank">第四一零章 伺机而动</a></span><span class="s4">言子木</span><span class="s5">05-11</span></li>
 
-					<li><span class="s1">[恐怖小说]</span><span class="s2"><a href="http://www.superxiaoshuo.com.org/files/article/79/79818/" target="_blank">御鬼者传奇</a></span><span class="s3"><a href="http://www.superxiaoshuo.com.org/files/article/79/79818/19277551.html" target="_blank">第1587章 巨妖蝶</a></span><span class="s4">沙之愚者</span><span class="s5">05-11</span></li>
+                    <li><span class="s1">[恐怖小说]</span><span class="s2"><a href="http://www.superxiaoshuo.com.org/files/article/79/79818/" target="_blank">御鬼者传奇</a></span><span class="s3"><a href="http://www.superxiaoshuo.com.org/files/article/79/79818/19277551.html" target="_blank">第1587章 巨妖蝶</a></span><span class="s4">沙之愚者</span><span class="s5">05-11</span></li>
 
-					<li><span class="s1">[历史小说]</span><span class="s2"><a href="http://www.superxiaoshuo.com.org/files/article/86/86052/" target="_blank">带着仓库到大明</a></span><span class="s3"><a href="http://www.superxiaoshuo.com.org/files/article/86/86052/19277550.html" target="_blank">第687章 大过年的给朱棣添堵</a></span><span class="s4">迪巴拉爵士</span><span class="s5">05-11</span></li>
+                    <li><span class="s1">[历史小说]</span><span class="s2"><a href="http://www.superxiaoshuo.com.org/files/article/86/86052/" target="_blank">带着仓库到大明</a></span><span class="s3"><a href="http://www.superxiaoshuo.com.org/files/article/86/86052/19277550.html" target="_blank">第687章 大过年的给朱棣添堵</a></span><span class="s4">迪巴拉爵士</span><span class="s5">05-11</span></li>
 
-					<li><span class="s1">[修真小说]</span><span class="s2"><a href="http://www.superxiaoshuo.com.org/files/article/82/82210/" target="_blank">最强反派系统</a></span><span class="s3"><a href="http://www.superxiaoshuo.com.org/files/article/82/82210/19277549.html" target="_blank">第一千零一十七章 馨儿的选择</a></span><span class="s4">封七月</span><span class="s5">05-11</span></li>
+                    <li><span class="s1">[修真小说]</span><span class="s2"><a href="http://www.superxiaoshuo.com.org/files/article/82/82210/" target="_blank">最强反派系统</a></span><span class="s3"><a href="http://www.superxiaoshuo.com.org/files/article/82/82210/19277549.html" target="_blank">第一千零一十七章 馨儿的选择</a></span><span class="s4">封七月</span><span class="s5">05-11</span></li>
 
-					<li><span class="s1">[其他小说]</span><span class="s2"><a href="http://www.superxiaoshuo.com.org/files/article/86/86787/" target="_blank">他是鬼神通</a></span><span class="s3"><a href="http://www.superxiaoshuo.com.org/files/article/86/86787/19277547.html" target="_blank">第二百五十三章 这不是巧了吗？</a></span><span class="s4">水果先锋</span><span class="s5">05-11</span></li>
+                    <li><span class="s1">[其他小说]</span><span class="s2"><a href="http://www.superxiaoshuo.com.org/files/article/86/86787/" target="_blank">他是鬼神通</a></span><span class="s3"><a href="http://www.superxiaoshuo.com.org/files/article/86/86787/19277547.html" target="_blank">第二百五十三章 这不是巧了吗？</a></span><span class="s4">水果先锋</span><span class="s5">05-11</span></li>
 
-					<li><span class="s1">[历史小说]</span><span class="s2"><a href="http://www.superxiaoshuo.com.org/files/article/86/86198/" target="_blank">三国美人录</a></span><span class="s3"><a href="http://www.superxiaoshuo.com.org/files/article/86/86198/19277548.html" target="_blank">四百八十一章 画换宅院</a></span><span class="s4">安静的蜗牛</span><span class="s5">05-11</span></li>
+                    <li><span class="s1">[历史小说]</span><span class="s2"><a href="http://www.superxiaoshuo.com.org/files/article/86/86198/" target="_blank">三国美人录</a></span><span class="s3"><a href="http://www.superxiaoshuo.com.org/files/article/86/86198/19277548.html" target="_blank">四百八十一章 画换宅院</a></span><span class="s4">安静的蜗牛</span><span class="s5">05-11</span></li>
 
-					<li><span class="s1">[历史小说]</span><span class="s2"><a href="http://www.superxiaoshuo.com.org/files/article/86/86732/" target="_blank">宰执大宋</a></span><span class="s3"><a href="http://www.superxiaoshuo.com.org/files/article/86/86732/19277545.html" target="_blank">第三二三 高丽国的那些事儿</a></span><span class="s4">会元</span><span class="s5">05-11</span></li>
+                    <li><span class="s1">[历史小说]</span><span class="s2"><a href="http://www.superxiaoshuo.com.org/files/article/86/86732/" target="_blank">宰执大宋</a></span><span class="s3"><a href="http://www.superxiaoshuo.com.org/files/article/86/86732/19277545.html" target="_blank">第三二三 高丽国的那些事儿</a></span><span class="s4">会元</span><span class="s5">05-11</span></li>
 
-					<li><span class="s1">[其他小说]</span><span class="s2"><a href="http://www.superxiaoshuo.com.org/files/article/85/85924/" target="_blank">从零开始的奇门后人异世行</a></span><span class="s3"><a href="http://www.superxiaoshuo.com.org/files/article/85/85924/19277544.html" target="_blank">504.登上巨轮</a></span><span class="s4">神棍灵昊</span><span class="s5">05-11</span></li>
+                    <li><span class="s1">[其他小说]</span><span class="s2"><a href="http://www.superxiaoshuo.com.org/files/article/85/85924/" target="_blank">从零开始的奇门后人异世行</a></span><span class="s3"><a href="http://www.superxiaoshuo.com.org/files/article/85/85924/19277544.html" target="_blank">504.登上巨轮</a></span><span class="s4">神棍灵昊</span><span class="s5">05-11</span></li>
 
-					<li><span class="s1">[历史小说]</span><span class="s2"><a href="http://www.superxiaoshuo.com.org/files/article/85/85792/" target="_blank">三国之无限抽奖</a></span><span class="s3"><a href="http://www.superxiaoshuo.com.org/files/article/85/85792/19277543.html" target="_blank">第四百七十四章 陷入死地的疯狂</a></span><span class="s4">易子曰</span><span class="s5">05-11</span></li>
+                    <li><span class="s1">[历史小说]</span><span class="s2"><a href="http://www.superxiaoshuo.com.org/files/article/85/85792/" target="_blank">三国之无限抽奖</a></span><span class="s3"><a href="http://www.superxiaoshuo.com.org/files/article/85/85792/19277543.html" target="_blank">第四百七十四章 陷入死地的疯狂</a></span><span class="s4">易子曰</span><span class="s5">05-11</span></li>
 
-					<li><span class="s1">[其他小说]</span><span class="s2"><a href="http://www.superxiaoshuo.com.org/files/article/86/86819/" target="_blank">你好，少将大人</a></span><span class="s3"><a href="http://www.superxiaoshuo.com.org/files/article/86/86819/19277541.html" target="_blank">第789章 夏虫不可以语冰（第一更求月票）</a></span><span class="s4">寒武记</span><span class="s5">05-11</span></li>
+                    <li><span class="s1">[其他小说]</span><span class="s2"><a href="http://www.superxiaoshuo.com.org/files/article/86/86819/" target="_blank">你好，少将大人</a></span><span class="s3"><a href="http://www.superxiaoshuo.com.org/files/article/86/86819/19277541.html" target="_blank">第789章 夏虫不可以语冰（第一更求月票）</a></span><span class="s4">寒武记</span><span class="s5">05-11</span></li>
 
-					<li><span class="s1">[历史小说]</span><span class="s2"><a href="http://www.superxiaoshuo.com.org/files/article/80/80924/" target="_blank">逆袭水浒传</a></span><span class="s3"><a href="http://www.superxiaoshuo.com.org/files/article/80/80924/19277540.html" target="_blank">第卅二章欺国巨骗有郭京 离间传信使高俅</a></span><span class="s4">不开心的橘子</span><span class="s5">05-11</span></li>
+                    <li><span class="s1">[历史小说]</span><span class="s2"><a href="http://www.superxiaoshuo.com.org/files/article/80/80924/" target="_blank">逆袭水浒传</a></span><span class="s3"><a href="http://www.superxiaoshuo.com.org/files/article/80/80924/19277540.html" target="_blank">第卅二章欺国巨骗有郭京 离间传信使高俅</a></span><span class="s4">不开心的橘子</span><span class="s5">05-11</span></li>
 
-					<li><span class="s1">[科幻小说]</span><span class="s2"><a href="http://www.superxiaoshuo.com.org/files/article/78/78789/" target="_blank">全民武侠时代</a></span><span class="s3"><a href="http://www.superxiaoshuo.com.org/files/article/78/78789/19277539.html" target="_blank">第一千三十八章 （二合一）</a></span><span class="s4">斩心锁</span><span class="s5">05-11</span></li>
+                    <li><span class="s1">[科幻小说]</span><span class="s2"><a href="http://www.superxiaoshuo.com.org/files/article/78/78789/" target="_blank">全民武侠时代</a></span><span class="s3"><a href="http://www.superxiaoshuo.com.org/files/article/78/78789/19277539.html" target="_blank">第一千三十八章 （二合一）</a></span><span class="s4">斩心锁</span><span class="s5">05-11</span></li>
 
-					<li><span class="s1">[玄幻小说]</span><span class="s2"><a href="http://www.superxiaoshuo.com.org/files/article/86/86511/" target="_blank">枪神之怒</a></span><span class="s3"><a href="http://www.superxiaoshuo.com.org/files/article/86/86511/19277538.html" target="_blank">第三百七十四章 我们被出卖了</a></span><span class="s4">天涯路</span><span class="s5">05-11</span></li>
+                    <li><span class="s1">[玄幻小说]</span><span class="s2"><a href="http://www.superxiaoshuo.com.org/files/article/86/86511/" target="_blank">枪神之怒</a></span><span class="s3"><a href="http://www.superxiaoshuo.com.org/files/article/86/86511/19277538.html" target="_blank">第三百七十四章 我们被出卖了</a></span><span class="s4">天涯路</span><span class="s5">05-11</span></li>
 
-					<li><span class="s1">[其他小说]</span><span class="s2"><a href="http://www.superxiaoshuo.com.org/files/article/86/86882/" target="_blank">Hello，公爵大人！</a></span><span class="s3"><a href="http://www.superxiaoshuo.com.org/files/article/86/86882/19277537.html" target="_blank">664 伤害</a></span><span class="s4">藤三三</span><span class="s5">05-11</span></li>
+                    <li><span class="s1">[其他小说]</span><span class="s2"><a href="http://www.superxiaoshuo.com.org/files/article/86/86882/" target="_blank">Hello，公爵大人！</a></span><span class="s3"><a href="http://www.superxiaoshuo.com.org/files/article/86/86882/19277537.html" target="_blank">664 伤害</a></span><span class="s4">藤三三</span><span class="s5">05-11</span></li>
 
-					<li><span class="s1">[言情小说]</span><span class="s2"><a href="http://www.superxiaoshuo.com.org/files/article/80/80882/" target="_blank">嫡福</a></span><span class="s3"><a href="http://www.superxiaoshuo.com.org/files/article/80/80882/19277536.html" target="_blank">第四百四十一章 不服</a></span><span class="s4">晓风清露</span><span class="s5">05-11</span></li>
+                    <li><span class="s1">[言情小说]</span><span class="s2"><a href="http://www.superxiaoshuo.com.org/files/article/80/80882/" target="_blank">嫡福</a></span><span class="s3"><a href="http://www.superxiaoshuo.com.org/files/article/80/80882/19277536.html" target="_blank">第四百四十一章 不服</a></span><span class="s4">晓风清露</span><span class="s5">05-11</span></li>
 
-					<li><span class="s1">[玄幻小说]</span><span class="s2"><a href="http://www.superxiaoshuo.com.org/files/article/79/79885/" target="_blank">神道丹尊</a></span><span class="s3"><a href="http://www.superxiaoshuo.com.org/files/article/79/79885/19277534.html" target="_blank">第2914章 自愿者</a></span><span class="s4">孤单地飞</span><span class="s5">05-11</span></li>
+                    <li><span class="s1">[玄幻小说]</span><span class="s2"><a href="http://www.superxiaoshuo.com.org/files/article/79/79885/" target="_blank">神道丹尊</a></span><span class="s3"><a href="http://www.superxiaoshuo.com.org/files/article/79/79885/19277534.html" target="_blank">第2914章 自愿者</a></span><span class="s4">孤单地飞</span><span class="s5">05-11</span></li>
 
-					<li><span class="s1">[其他小说]</span><span class="s2"><a href="http://www.superxiaoshuo.com.org/files/article/84/84634/" target="_blank">重生之我是大明星</a></span><span class="s3"><a href="http://www.superxiaoshuo.com.org/files/article/84/84634/19277532.html" target="_blank">第六百五十九章 退出吧！</a></span><span class="s4">向晚非雪</span><span class="s5">05-11</span></li>
+                    <li><span class="s1">[其他小说]</span><span class="s2"><a href="http://www.superxiaoshuo.com.org/files/article/84/84634/" target="_blank">重生之我是大明星</a></span><span class="s3"><a href="http://www.superxiaoshuo.com.org/files/article/84/84634/19277532.html" target="_blank">第六百五十九章 退出吧！</a></span><span class="s4">向晚非雪</span><span class="s5">05-11</span></li>
 
-					<li><span class="s1">[其他小说]</span><span class="s2"><a href="http://www.superxiaoshuo.com.org/files/article/86/86838/" target="_blank">今夫古妻日常</a></span><span class="s3"><a href="http://www.superxiaoshuo.com.org/files/article/86/86838/19277530.html" target="_blank">388好话</a></span><span class="s4">俊羊羊</span><span class="s5">05-11</span></li>
+                    <li><span class="s1">[其他小说]</span><span class="s2"><a href="http://www.superxiaoshuo.com.org/files/article/86/86838/" target="_blank">今夫古妻日常</a></span><span class="s3"><a href="http://www.superxiaoshuo.com.org/files/article/86/86838/19277530.html" target="_blank">388好话</a></span><span class="s4">俊羊羊</span><span class="s5">05-11</span></li>
 
-					<li><span class="s1">[修真小说]</span><span class="s2"><a href="http://www.superxiaoshuo.com.org/files/article/84/84521/" target="_blank">九界仙尊</a></span><span class="s3"><a href="http://www.superxiaoshuo.com.org/files/article/84/84521/19277529.html" target="_blank">第九百七十六章 血染凌霄城（上）</a></span><span class="s4">神出古异</span><span class="s5">05-11</span></li>
+                    <li><span class="s1">[修真小说]</span><span class="s2"><a href="http://www.superxiaoshuo.com.org/files/article/84/84521/" target="_blank">九界仙尊</a></span><span class="s3"><a href="http://www.superxiaoshuo.com.org/files/article/84/84521/19277529.html" target="_blank">第九百七十六章 血染凌霄城（上）</a></span><span class="s4">神出古异</span><span class="s5">05-11</span></li>
 
-					<li><span class="s1">[其他小说]</span><span class="s2"><a href="http://www.superxiaoshuo.com.org/files/article/85/85891/" target="_blank">青云直上</a></span><span class="s3"><a href="http://www.superxiaoshuo.com.org/files/article/85/85891/19277518.html" target="_blank">第一千五百七十七章 印中立视察</a></span><span class="s4">鹅城知县</span><span class="s5">05-11</span></li>
+                    <li><span class="s1">[其他小说]</span><span class="s2"><a href="http://www.superxiaoshuo.com.org/files/article/85/85891/" target="_blank">青云直上</a></span><span class="s3"><a href="http://www.superxiaoshuo.com.org/files/article/85/85891/19277518.html" target="_blank">第一千五百七十七章 印中立视察</a></span><span class="s4">鹅城知县</span><span class="s5">05-11</span></li>
 
-					<li><span class="s1">[网游小说]</span><span class="s2"><a href="http://www.superxiaoshuo.com.org/files/article/86/86096/" target="_blank">网游之战破苍穹</a></span><span class="s3"><a href="http://www.superxiaoshuo.com.org/files/article/86/86096/19277490.html" target="_blank">第634章，松上太一</a></span><span class="s4">九月花雪</span><span class="s5">05-11</span></li>
+                    <li><span class="s1">[网游小说]</span><span class="s2"><a href="http://www.superxiaoshuo.com.org/files/article/86/86096/" target="_blank">网游之战破苍穹</a></span><span class="s3"><a href="http://www.superxiaoshuo.com.org/files/article/86/86096/19277490.html" target="_blank">第634章，松上太一</a></span><span class="s4">九月花雪</span><span class="s5">05-11</span></li>
 
-					<li><span class="s1">[科幻小说]</span><span class="s2"><a href="http://www.superxiaoshuo.com.org/files/article/85/85213/" target="_blank">超时空之城</a></span><span class="s3"><a href="http://www.superxiaoshuo.com.org/files/article/85/85213/19277488.html" target="_blank">第三章 被世人误解的玉皇大帝</a></span><span class="s4">东方星火</span><span class="s5">05-11</span></li>
+                    <li><span class="s1">[科幻小说]</span><span class="s2"><a href="http://www.superxiaoshuo.com.org/files/article/85/85213/" target="_blank">超时空之城</a></span><span class="s3"><a href="http://www.superxiaoshuo.com.org/files/article/85/85213/19277488.html" target="_blank">第三章 被世人误解的玉皇大帝</a></span><span class="s4">东方星火</span><span class="s5">05-11</span></li>
 
-					<li><span class="s1">[都市小说]</span><span class="s2"><a href="http://www.superxiaoshuo.com.org/files/article/79/79534/" target="_blank">重生之超级砼帝国</a></span><span class="s3"><a href="http://www.superxiaoshuo.com.org/files/article/79/79534/19277487.html" target="_blank">第九百七十章 失眠的人儿</a></span><span class="s4">砼中砼</span><span class="s5">05-11</span></li>
+                    <li><span class="s1">[都市小说]</span><span class="s2"><a href="http://www.superxiaoshuo.com.org/files/article/79/79534/" target="_blank">重生之超级砼帝国</a></span><span class="s3"><a href="http://www.superxiaoshuo.com.org/files/article/79/79534/19277487.html" target="_blank">第九百七十章 失眠的人儿</a></span><span class="s4">砼中砼</span><span class="s5">05-11</span></li>
 
-					<li><span class="s1">[玄幻小说]</span><span class="s2"><a href="http://www.superxiaoshuo.com.org/files/article/86/86418/" target="_blank">极品书虫的世界</a></span><span class="s3"><a href="http://www.superxiaoshuo.com.org/files/article/86/86418/19277486.html" target="_blank">第374章 樱唇</a></span><span class="s4">搬砖的二哥</span><span class="s5">05-11</span></li>
+                    <li><span class="s1">[玄幻小说]</span><span class="s2"><a href="http://www.superxiaoshuo.com.org/files/article/86/86418/" target="_blank">极品书虫的世界</a></span><span class="s3"><a href="http://www.superxiaoshuo.com.org/files/article/86/86418/19277486.html" target="_blank">第374章 樱唇</a></span><span class="s4">搬砖的二哥</span><span class="s5">05-11</span></li>
 
-					<li><span class="s1">[网游小说]</span><span class="s2"><a href="http://www.superxiaoshuo.com.org/files/article/73/73028/" target="_blank">两球成名</a></span><span class="s3"><a href="http://www.superxiaoshuo.com.org/files/article/73/73028/19277485.html" target="_blank">第一百八十六章 繁荣背后的隐患</a></span><span class="s4">夜轻雨暖</span><span class="s5">05-11</span></li>
+                    <li><span class="s1">[网游小说]</span><span class="s2"><a href="http://www.superxiaoshuo.com.org/files/article/73/73028/" target="_blank">两球成名</a></span><span class="s3"><a href="http://www.superxiaoshuo.com.org/files/article/73/73028/19277485.html" target="_blank">第一百八十六章 繁荣背后的隐患</a></span><span class="s4">夜轻雨暖</span><span class="s5">05-11</span></li>
 
-					<li><span class="s1">[历史小说]</span><span class="s2"><a href="http://www.superxiaoshuo.com.org/files/article/86/86752/" target="_blank">诡三国</a></span><span class="s3"><a href="http://www.superxiaoshuo.com.org/files/article/86/86752/19277484.html" target="_blank">第三三七章 风起</a></span><span class="s4">马月猴年</span><span class="s5">05-11</span></li>
+                    <li><span class="s1">[历史小说]</span><span class="s2"><a href="http://www.superxiaoshuo.com.org/files/article/86/86752/" target="_blank">诡三国</a></span><span class="s3"><a href="http://www.superxiaoshuo.com.org/files/article/86/86752/19277484.html" target="_blank">第三三七章 风起</a></span><span class="s4">马月猴年</span><span class="s5">05-11</span></li>
 
-				</ul>
-			</div>
-			<div class="r">
-				<h2>最新入库小说</h2>
-				<ul>
-					<li><span class="s1">[其他]</span><span class="s2"><a href="http://www.superxiaoshuo.com.org/files/article/86/86906/" target="_blank">青诡纪事</a></span><span class="s5">04-17</span></li>
+                </ul>
+            </div>
+            <div class="r">
+                <h2>最新入库小说</h2>
+                <ul>
+                    <li><span class="s1">[其他]</span><span class="s2"><a href="http://www.superxiaoshuo.com.org/files/article/86/86906/" target="_blank">青诡纪事</a></span><span class="s5">04-17</span></li>
 
-					<li><span class="s1">[其他]</span><span class="s2"><a href="http://www.superxiaoshuo.com.org/files/article/86/86903/" target="_blank">大妖寻夫指南</a></span><span class="s5">04-15</span></li>
+                    <li><span class="s1">[其他]</span><span class="s2"><a href="http://www.superxiaoshuo.com.org/files/article/86/86903/" target="_blank">大妖寻夫指南</a></span><span class="s5">04-15</span></li>
 
-					<li><span class="s1">[其他]</span><span class="s2"><a href="http://www.superxiaoshuo.com.org/files/article/86/86904/" target="_blank">总裁夫人二选一</a></span><span class="s5">04-15</span></li>
+                    <li><span class="s1">[其他]</span><span class="s2"><a href="http://www.superxiaoshuo.com.org/files/article/86/86904/" target="_blank">总裁夫人二选一</a></span><span class="s5">04-15</span></li>
 
-					<li><span class="s1">[其他]</span><span class="s2"><a href="http://www.superxiaoshuo.com.org/files/article/86/86905/" target="_blank">庶女日记</a></span><span class="s5">04-15</span></li>
+                    <li><span class="s1">[其他]</span><span class="s2"><a href="http://www.superxiaoshuo.com.org/files/article/86/86905/" target="_blank">庶女日记</a></span><span class="s5">04-15</span></li>
 
-					<li><span class="s1">[都市]</span><span class="s2"><a href="http://www.superxiaoshuo.com.org/files/article/86/86901/" target="_blank">神级蚊子</a></span><span class="s5">04-15</span></li>
+                    <li><span class="s1">[都市]</span><span class="s2"><a href="http://www.superxiaoshuo.com.org/files/article/86/86901/" target="_blank">神级蚊子</a></span><span class="s5">04-15</span></li>
 
-					<li><span class="s1">[言情]</span><span class="s2"><a href="http://www.superxiaoshuo.com.org/files/article/86/86902/" target="_blank">重生空间之光荣军属</a></span><span class="s5">04-15</span></li>
+                    <li><span class="s1">[言情]</span><span class="s2"><a href="http://www.superxiaoshuo.com.org/files/article/86/86902/" target="_blank">重生空间之光荣军属</a></span><span class="s5">04-15</span></li>
 
-					<li><span class="s1">[其他]</span><span class="s2"><a href="http://www.superxiaoshuo.com.org/files/article/86/86900/" target="_blank">灵异之鬼图腾</a></span><span class="s5">04-15</span></li>
+                    <li><span class="s1">[其他]</span><span class="s2"><a href="http://www.superxiaoshuo.com.org/files/article/86/86900/" target="_blank">灵异之鬼图腾</a></span><span class="s5">04-15</span></li>
 
-					<li><span class="s1">[其他]</span><span class="s2"><a href="http://www.superxiaoshuo.com.org/files/article/86/86899/" target="_blank">穿越黑棺</a></span><span class="s5">04-15</span></li>
+                    <li><span class="s1">[其他]</span><span class="s2"><a href="http://www.superxiaoshuo.com.org/files/article/86/86899/" target="_blank">穿越黑棺</a></span><span class="s5">04-15</span></li>
 
-					<li><span class="s1">[其他]</span><span class="s2"><a href="http://www.superxiaoshuo.com.org/files/article/86/86897/" target="_blank">冷王，医妃要私奔</a></span><span class="s5">04-14</span></li>
+                    <li><span class="s1">[其他]</span><span class="s2"><a href="http://www.superxiaoshuo.com.org/files/article/86/86897/" target="_blank">冷王，医妃要私奔</a></span><span class="s5">04-14</span></li>
 
-					<li><span class="s1">[言情]</span><span class="s2"><a href="http://www.superxiaoshuo.com.org/files/article/86/86898/" target="_blank">重生当军嫂</a></span><span class="s5">04-14</span></li>
+                    <li><span class="s1">[言情]</span><span class="s2"><a href="http://www.superxiaoshuo.com.org/files/article/86/86898/" target="_blank">重生当军嫂</a></span><span class="s5">04-14</span></li>
 
-					<li><span class="s1">[都市]</span><span class="s2"><a href="http://www.superxiaoshuo.com.org/files/article/86/86896/" target="_blank">捡宝王</a></span><span class="s5">04-14</span></li>
+                    <li><span class="s1">[都市]</span><span class="s2"><a href="http://www.superxiaoshuo.com.org/files/article/86/86896/" target="_blank">捡宝王</a></span><span class="s5">04-14</span></li>
 
-					<li><span class="s1">[其他]</span><span class="s2"><a href="http://www.superxiaoshuo.com.org/files/article/86/86894/" target="_blank">绝色丹师：驭火成仙</a></span><span class="s5">04-13</span></li>
+                    <li><span class="s1">[其他]</span><span class="s2"><a href="http://www.superxiaoshuo.com.org/files/article/86/86894/" target="_blank">绝色丹师：驭火成仙</a></span><span class="s5">04-13</span></li>
 
-					<li><span class="s1">[其他]</span><span class="s2"><a href="http://www.superxiaoshuo.com.org/files/article/86/86895/" target="_blank">全能少女：校草男神抢着爱</a></span><span class="s5">04-13</span></li>
+                    <li><span class="s1">[其他]</span><span class="s2"><a href="http://www.superxiaoshuo.com.org/files/article/86/86895/" target="_blank">全能少女：校草男神抢着爱</a></span><span class="s5">04-13</span></li>
 
-					<li><span class="s1">[其他]</span><span class="s2"><a href="http://www.superxiaoshuo.com.org/files/article/86/86893/" target="_blank">重生之大神是天后</a></span><span class="s5">04-12</span></li>
+                    <li><span class="s1">[其他]</span><span class="s2"><a href="http://www.superxiaoshuo.com.org/files/article/86/86893/" target="_blank">重生之大神是天后</a></span><span class="s5">04-12</span></li>
 
-					<li><span class="s1">[都市]</span><span class="s2"><a href="http://www.superxiaoshuo.com.org/files/article/86/86892/" target="_blank">我的国术梦</a></span><span class="s5">04-11</span></li>
+                    <li><span class="s1">[都市]</span><span class="s2"><a href="http://www.superxiaoshuo.com.org/files/article/86/86892/" target="_blank">我的国术梦</a></span><span class="s5">04-11</span></li>
 
-					<li><span class="s1">[都市]</span><span class="s2"><a href="http://www.superxiaoshuo.com.org/files/article/86/86891/" target="_blank">谍行漫威</a></span><span class="s5">04-11</span></li>
+                    <li><span class="s1">[都市]</span><span class="s2"><a href="http://www.superxiaoshuo.com.org/files/article/86/86891/" target="_blank">谍行漫威</a></span><span class="s5">04-11</span></li>
 
-					<li><span class="s1">[其他]</span><span class="s2"><a href="http://www.superxiaoshuo.com.org/files/article/86/86887/" target="_blank">绝色妖娆：鬼医至尊</a></span><span class="s5">04-10</span></li>
+                    <li><span class="s1">[其他]</span><span class="s2"><a href="http://www.superxiaoshuo.com.org/files/article/86/86887/" target="_blank">绝色妖娆：鬼医至尊</a></span><span class="s5">04-10</span></li>
 
-					<li><span class="s1">[其他]</span><span class="s2"><a href="http://www.superxiaoshuo.com.org/files/article/86/86888/" target="_blank">医妃嫁到：皇叔，成亲吧</a></span><span class="s5">04-10</span></li>
+                    <li><span class="s1">[其他]</span><span class="s2"><a href="http://www.superxiaoshuo.com.org/files/article/86/86888/" target="_blank">医妃嫁到：皇叔，成亲吧</a></span><span class="s5">04-10</span></li>
 
-					<li><span class="s1">[其他]</span><span class="s2"><a href="http://www.superxiaoshuo.com.org/files/article/86/86889/" target="_blank">史上最强宠：帝少，一对一</a></span><span class="s5">04-10</span></li>
+                    <li><span class="s1">[其他]</span><span class="s2"><a href="http://www.superxiaoshuo.com.org/files/article/86/86889/" target="_blank">史上最强宠：帝少，一对一</a></span><span class="s5">04-10</span></li>
 
-					<li><span class="s1">[其他]</span><span class="s2"><a href="http://www.superxiaoshuo.com.org/files/article/86/86890/" target="_blank">不做救世主</a></span><span class="s5">04-10</span></li>
+                    <li><span class="s1">[其他]</span><span class="s2"><a href="http://www.superxiaoshuo.com.org/files/article/86/86890/" target="_blank">不做救世主</a></span><span class="s5">04-10</span></li>
 
-					<li><span class="s1">[都市]</span><span class="s2"><a href="http://www.superxiaoshuo.com.org/files/article/86/86886/" target="_blank">超级U盘</a></span><span class="s5">04-10</span></li>
+                    <li><span class="s1">[都市]</span><span class="s2"><a href="http://www.superxiaoshuo.com.org/files/article/86/86886/" target="_blank">超级U盘</a></span><span class="s5">04-10</span></li>
 
-					<li><span class="s1">[其他]</span><span class="s2"><a href="http://www.superxiaoshuo.com.org/files/article/86/86885/" target="_blank">快穿之炮灰虐渣旅</a></span><span class="s5">04-10</span></li>
+                    <li><span class="s1">[其他]</span><span class="s2"><a href="http://www.superxiaoshuo.com.org/files/article/86/86885/" target="_blank">快穿之炮灰虐渣旅</a></span><span class="s5">04-10</span></li>
 
-					<li><span class="s1">[其他]</span><span class="s2"><a href="http://www.superxiaoshuo.com.org/files/article/86/86884/" target="_blank">美人谋欢</a></span><span class="s5">04-09</span></li>
+                    <li><span class="s1">[其他]</span><span class="s2"><a href="http://www.superxiaoshuo.com.org/files/article/86/86884/" target="_blank">美人谋欢</a></span><span class="s5">04-09</span></li>
 
-					<li><span class="s1">[其他]</span><span class="s2"><a href="http://www.superxiaoshuo.com.org/files/article/86/86882/" target="_blank">Hello，公爵大人！</a></span><span class="s5">04-09</span></li>
+                    <li><span class="s1">[其他]</span><span class="s2"><a href="http://www.superxiaoshuo.com.org/files/article/86/86882/" target="_blank">Hello，公爵大人！</a></span><span class="s5">04-09</span></li>
 
-					<li><span class="s1">[其他]</span><span class="s2"><a href="http://www.superxiaoshuo.com.org/files/article/86/86883/" target="_blank">魔女香雪海</a></span><span class="s5">04-09</span></li>
+                    <li><span class="s1">[其他]</span><span class="s2"><a href="http://www.superxiaoshuo.com.org/files/article/86/86883/" target="_blank">魔女香雪海</a></span><span class="s5">04-09</span></li>
 
-					<li><span class="s1">[其他]</span><span class="s2"><a href="http://www.superxiaoshuo.com.org/files/article/86/86881/" target="_blank">嫡女当嫁：一等世子妃</a></span><span class="s5">04-09</span></li>
+                    <li><span class="s1">[其他]</span><span class="s2"><a href="http://www.superxiaoshuo.com.org/files/article/86/86881/" target="_blank">嫡女当嫁：一等世子妃</a></span><span class="s5">04-09</span></li>
 
-					<li><span class="s1">[都市]</span><span class="s2"><a href="http://www.superxiaoshuo.com.org/files/article/86/86880/" target="_blank">连环杀手在美国</a></span><span class="s5">04-05</span></li>
+                    <li><span class="s1">[都市]</span><span class="s2"><a href="http://www.superxiaoshuo.com.org/files/article/86/86880/" target="_blank">连环杀手在美国</a></span><span class="s5">04-05</span></li>
 
-					<li><span class="s1">[其他]</span><span class="s2"><a href="http://www.superxiaoshuo.com.org/files/article/86/86879/" target="_blank">最初的魔鬼</a></span><span class="s5">04-05</span></li>
+                    <li><span class="s1">[其他]</span><span class="s2"><a href="http://www.superxiaoshuo.com.org/files/article/86/86879/" target="_blank">最初的魔鬼</a></span><span class="s5">04-05</span></li>
 
-					<li><span class="s1">[其他]</span><span class="s2"><a href="http://www.superxiaoshuo.com.org/files/article/86/86877/" target="_blank">穿书之为何我完成不了捧杀</a></span><span class="s5">04-05</span></li>
+                    <li><span class="s1">[其他]</span><span class="s2"><a href="http://www.superxiaoshuo.com.org/files/article/86/86877/" target="_blank">穿书之为何我完成不了捧杀</a></span><span class="s5">04-05</span></li>
 
-					<li><span class="s1">[其他]</span><span class="s2"><a href="http://www.superxiaoshuo.com.org/files/article/86/86876/" target="_blank">穿梭时空的剑仙</a></span><span class="s5">04-05</span></li>
+                    <li><span class="s1">[其他]</span><span class="s2"><a href="http://www.superxiaoshuo.com.org/files/article/86/86876/" target="_blank">穿梭时空的剑仙</a></span><span class="s5">04-05</span></li>
 
-				</ul>
-			</div>
+                </ul>
+            </div>
         <div class="clear"></div>
     </div>
 </div>

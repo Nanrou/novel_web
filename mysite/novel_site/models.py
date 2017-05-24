@@ -1,7 +1,9 @@
 # -*- coding:utf-8 -*-
 
+from random import sample
 from django.db import models
 from django.urls import reverse, reverse_lazy
+
 
 # Create your models here.
 
@@ -19,6 +21,13 @@ class CategoryTable(models.Model):
 
     def get_absolute_url(self):
         return reverse('novel_site:category', kwargs={'cate': self.cate})
+
+    def get_random_ele(self, num):
+        try:
+            res = sample(list(self.cate_books.all().only('id')), num)
+        except ValueError:
+            res = self.cate_books.all()
+        return res
 
     def __str__(self):
         return self.category

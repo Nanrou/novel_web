@@ -114,7 +114,7 @@ def insert_to_detail(files, **kwargs):
                         res = operate_detail_res(pickle.load(rf))
                     except RuntimeError:
                         with open('miss_chapter.txt', 'a') as wf:
-                            wf.write('wrong in {}'.format(file))  # res会使用上次的
+                            wf.write('{}:wrong in {}'.format(datetime.datetime.now(), file))  # res会使用上次的
                     res['id'] = file.split('/')[-1]
                     res.update(kwargs)
                     detail_list.append(models.BookTableOne(**res))  # 创建实例，放到list里

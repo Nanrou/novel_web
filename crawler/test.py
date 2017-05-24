@@ -43,7 +43,7 @@ def split_txt(txt_path, title, chapter_index, store_path='./', title_split=' ', 
     title = book_name
     split_txt(t_path, title, t_rule, 1, store_path='./book/01')
 
-    目前发现，正文部分前面都是有四个空格的，所以对首字判断
+    目前发现，正文部分前面都是有四个空格的，所以直接对首字判断即可
     """
     if not store_path.endswith('/'):  # 保证路径的存在
         store_path += '/'
@@ -95,7 +95,6 @@ def split_txt(txt_path, title, chapter_index, store_path='./', title_split=' ', 
                         'title': title,
                         'chapter': chapter_title,
                         'content': ''.join(ls[start_index + 1:end_index-2]).replace('\r\n\r\n', '<br/>').replace('  ', '　'),
-                        # 'content': ''.join(ls[start_index + 1:end_index-2]),
                     }
                     with open(store_path + str(chapter_index), 'wb') as wf:
                         pickle.dump(res, wf)
@@ -119,7 +118,6 @@ def split_txt(txt_path, title, chapter_index, store_path='./', title_split=' ', 
                 'title': title,
                 'chapter': chapter_title,
                 'content': ''.join(ls[start_index + 1:end_index-2]).replace('\r\n\r\n', '<br/>').replace('  ', '　'),
-                # 'content': ''.join(ls[start_index + 1:end_index-2]),
             }
             with open(store_path + str(chapter_index), 'wb') as wf:
                 pickle.dump(res, wf)
@@ -233,6 +231,12 @@ def product_txt_split_rule(start=None, end=None, file_path='./'):
 
 @time_clock
 def bbb(file):
+    """
+    根据file中的参数，去运行小说分割
+    后面可以尝试多进程
+    :param file:
+    :return:
+    """
     with open(file, 'r') as rf:
         # res_list = rf.readlines()
         for line in rf.readlines():

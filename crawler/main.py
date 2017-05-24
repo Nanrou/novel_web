@@ -118,6 +118,6 @@ if __name__ == '__main__':
 
     # insert_detail('book/chapter/02')
     # insert_info('./info/')
-    for i in range(21, 29):
-        s = 'book/chapter/{i:0>2}'.format(i=i)
-        insert_detail(s)
+    # for i in range(21, 29):
+    #     s = 'book/chapter/{i:0>2}'.format(i=i)
+    #     insert_detail(s)
