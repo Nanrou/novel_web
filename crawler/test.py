@@ -34,16 +34,17 @@ async def test():
 
 
 @time_clock
-def split_txt(txt_path, title, title_rule, chapter_index, stone_path='./', title_split=' '):
+def split_txt(txt_path, title, chapter_index, stone_path='./', title_split=' ', title_rule=None):
     """
     将全本小说分割成独立章节，然后放到一个文件夹里
-    t_rule = r'第一篇'
+    t_rule = r'第一篇'  #  如果有多种方式，则传入list形式的rule
     t_path = 'test/xue.txt'
     title = book_name
-    split_txt(t_path, title, title_rule=t_rule, stone_path='./book/01', chapter_index=1)
+    split_txt(t_path, title, t_rule, 1, stone_path='./book/01')
 
+    目前发现，正文部分前面都是有四个空格的，所以对首字判断
     """
-    if not stone_path.endswith('/'):
+    if not stone_path.endswith('/'):  # 保证路径的存在
         stone_path += '/'
     if not os.path.exists(stone_path):
         os.mkdir(stone_path)
@@ -54,15 +55,19 @@ def split_txt(txt_path, title, title_rule, chapter_index, stone_path='./', title
     with codecs.open(txt_path, 'r', encoding='utf-8') as f:
         ls = f.readlines()
         start_index = None
-        for index, line in enumerate(ls, start=1):
+        for index, line in enumerate(ls):
             flag = False
-            if isinstance(title_rule, list):
-                for tt in title_rule:
-                    if re.match(tt, line):
+            if title_rule:  # 传入rule的话
+                if isinstance(title_rule, list):
+                    for tt in title_rule:
+                        if re.match(tt, line):
+                            flag = True
+                            break
+                else:
+                    if re.match(title_rule, line):
                         flag = True
-                        break
             else:
-                if re.match(title_rule, line):
+                if '\u4e00' <= line[0] <= '\u9fff':  # 只要是中字开头的，标题是书名号开头的，所以没影响
                     flag = True
 
             if flag:
@@ -73,12 +78,12 @@ def split_txt(txt_path, title, title_rule, chapter_index, stone_path='./', title
                             tmp_ll = tmp_ll[:-1]
                         if len(tmp_ll) == 2:
                             chapter_title = tmp_ll[-1]
-                        elif len(tmp_ll) <= 4:
+                        elif len(tmp_ll) < 5:
                             chapter_title = ' '.join(tmp_ll[-2:])
-                        elif len(tmp_ll) == 5:
-                            chapter_title = ' '.join(tmp_ll[-3:])
+                        # elif len(tmp_ll) == 5:
+                        #     chapter_title = ' '.join(tmp_ll[-3:])
                         else:
-                            chapter_title = ' '.join(tmp_ll[-4:])
+                            chapter_title = ' '.join(tmp_ll[2:])
                         continue  # 跳过第一次
 
                     end_index = index
@@ -143,6 +148,12 @@ def get_urls():
 
 
 def get_img(index, title):
+    """
+    去另外一个网站下载那些小说的封面图片
+    :param index:
+    :param title:
+    :return:
+    """
     HEADERS = {'user-agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:51.0) Gecko/20100101 Firefox/51.0 '}
     # res = requests.post(url, data=var, headers=HEADERS)
     res = requests.get('http://so.ranwen.org/cse/search?q={}&click=1&s=18402225725594290780&nsid='.format(title), headers=HEADERS)
@@ -162,6 +173,10 @@ def get_img(index, title):
 
 @time_clock
 def record_title_index():
+    """
+    取出有download url的信息
+    :return:
+    """
     with codecs.open('download_url', 'r', encoding='utf-8') as rf:
         title_list = []
         tls = rf.readlines()
@@ -179,6 +194,10 @@ def record_title_index():
 
 @time_clock
 def download_novel():
+    """
+    去文件中，下载url的的小说
+    :return:
+    """
     with open('./images/title_list.txt', 'r') as rf:
         for index, line in enumerate(rf.readlines(), start=1):
             if index < 1:
@@ -195,6 +214,20 @@ def download_novel():
             time.sleep(random.randint(0, 12))
 
 
+@time_clock
+def product_txt_split_rule(start=None, end=None, file_path='./'):
+
+    file_list = [file_path + str(i) for i in sorted(map(int, os.listdir(file_path)))]
+    rule_list = []
+    for i, file_name in enumerate(file_list[start:end], start=1):
+        with open(file_name, 'rb') as rf:
+            title = pickle.load(rf)['title']
+        s = "'./book/{i}.txt', '{title}', {i}, './book/chapter/{i:0>2}', r' '".format(i=i, title=title)
+        rule_list.append(s)
+    with open('txt_split_rule.txt', 'w') as wf:
+        wf.write('\n'.join(rule_list))
+
+
 if __name__ == '__main__':
     # download_novel()
     # import os
@@ -207,16 +240,16 @@ if __name__ == '__main__':
     test_ll = ['./book/1.txt', '逆鳞', r'第.*?卷', 1, './book/chapter/01', r'！']
 
     tt_ll = [
-        ['./book/2.txt', '择天记', [r'第.*?卷', r'正文'], 2, './book/chapter/02', r' '],
-        ['./book/3.txt', '妖神记', r'第.*?卷', 3, './book/chapter/03', r' '],
+        # ['./book/2.txt', '择天记', [r'第.*?卷', r'正文'], 2, './book/chapter/02', r' '],
+        # ['./book/3.txt', '妖神记', r'第.*?卷', 3, './book/chapter/03', r' '],
         # ['./book/4.txt', '大主宰', r'正文', 4, './book/chapter/04', r' '],
         # ['./book/5.txt', '高术通神', r'正文', 5, './book/chapter/05', r' '],
         # ['./book/6.txt', '绝世战魂', r'正文', 6, './book/chapter/06', r' '],
         # ['./book/7.txt', '凌天战尊', r'正文', 7, './book/chapter/07', r' '],
-        ['./book/8.txt', '重生之都市修仙', r'第.*?卷', 8, './book/chapter/08', r' '],
+        # ['./book/8.txt', '重生之都市修仙', r'第.*?卷', 8, './book/chapter/08', r' '],
     ]
 
-    for t in tt_ll:
-        split_txt(*t)
-
+    # for t in tt_ll:
+    #     split_txt(*t)
+    product_txt_split_rule(file_path='./info/')
 

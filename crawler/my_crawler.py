@@ -279,7 +279,15 @@ def image_download(index, url, store_path='./novel_site/images/'):
     return filename[2:]
 
 
-def search_novel(index, title, url, stone_path='./'):
+def search_novel(index, title, url, store_path='./'):
+    """
+    去url那个网站，搜名为title的小说，然后保存info信息到store_path，再返回下载小说的download url
+    :param index:
+    :param title:
+    :param url:
+    :param store_path:
+    :return:
+    """
 
     header = {'user-agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:51.0) Gecko/20100101 Firefox/51.0 '}
 
@@ -337,7 +345,7 @@ def search_novel(index, title, url, stone_path='./'):
         res['status'] = '连载中'
         res['img_url'] = ''
 
-        with codecs.open(stone_path + str(index), 'wb') as wf:
+        with codecs.open(store_path + str(index), 'wb') as wf:
             pickle.dump(res, wf)
 
         if not download_url.startswith('http://'):
