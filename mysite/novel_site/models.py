@@ -23,10 +23,16 @@ class CategoryTable(models.Model):
         return reverse('novel_site:category', kwargs={'cate': self.cate})
 
     def get_random_ele(self, num):
-        try:
-            res = sample(list(self.cate_books.all().only('id')), num)
-        except ValueError:
-            res = self.cate_books.all()
+        if self.pk is 6:
+            try:
+                res = sample(list(InfoTable.objects.filter(_status=True).only('title', 'author', 'resume')), num)
+            except ValueError:
+                res = InfoTable.objects.filter(_status=True).only('title', 'author', 'resume')
+        else:
+            try:
+                res = sample(list(self.cate_books.all().only('title', 'author', 'resume')), num)
+            except ValueError:
+                res = self.cate_books.all().only('title', 'author', 'resume')
         return res
 
     def __str__(self):
@@ -39,7 +45,7 @@ class InfoTable(models.Model):
                                  related_name='cate_books', null=True)
     author = models.ForeignKey(AuthorTable, verbose_name='author', on_delete=models.CASCADE,
                                related_name='author_boos', null=True)
-    status = models.CharField(max_length=5, null=True)
+    _status = models.BooleanField(default=0)
     update_time = models.DateTimeField(null=True)
     store_des = models.IntegerField(verbose_name='book_table_index', null=True)
     image = models.CharField(max_length=70, verbose_name='image_des', null=True)
@@ -47,6 +53,15 @@ class InfoTable(models.Model):
 
     def __str__(self):
         return self.title
+
+    @property
+    def status(self):
+        if self._status:
+            return '完结'
+        else:
+            return '连载中'
+        # dd = {'FALSE': '连载中', 'TRUE': '完结'}
+        # return dd[str(self._status)]
 
     def get_absolute_url(self):
         return reverse('novel_site:info', kwargs={'pk': self.pk})

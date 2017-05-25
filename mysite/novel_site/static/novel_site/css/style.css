@@ -96,11 +96,11 @@ table.grid td { background-color: #FFFFFF !important; border: 1px solid #C3DFEA;
 .novelslist2{ margin: 10px auto; border:3px solid #A6D3E8; width:974px;background:#FEF9EF;}
 .novelslist2 h2 { margin:0px; background-color: #A6D3E8; border-bottom: 1px solid #DDDDDD; font-size: 14px; font-weight: bold; height: 30px; line-height: 30px; overflow: hidden; padding: 0 0 0 10px;}
 .novelslist2 ul{ padding:10px;}
-.novelslist2 li{ padding:5px 0px 0px 0px; border-bottom:solid 1px #DDDDDD; height:25px; line-height:25px; overflow:hidden;}
+.novelslist2 li{ padding:5px 0px 0px 0px; border-bottom:solid 1px #DDDDDD; height:25px; line-height:25px; overflow:hidden;display: inline-block;width: 48%;font-size: medium;}
 .novelslist2 li span{ float:left; display:inline-block;}
-.novelslist2 li .s1{ width:12%;overflow:hidden;text-align:center;}
-.novelslist2 li .s2{ width:20%;overflow:hidden;}
-.novelslist2 li .s3{ width:33%;overflow:hidden;}
+.novelslist2 li .s1{ width:30%;overflow:hidden;text-align:center;}
+.novelslist2 li .s2{ width:40%;overflow:hidden;}
+.novelslist2 li .s3{ width:30%;overflow:hidden;}
 .novelslist2 li .s4{ width:15%;overflow:hidden;}
 .novelslist2 li .s5{ color:red; width:10%;overflow:hidden;}
 .novelslist2 li .s6{ width:10%; overflow:hidden;}

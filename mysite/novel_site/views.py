@@ -106,3 +106,8 @@ class BookView(DetailView):
         return self.book_info.all_chapters_detail  # 传给父类的get object，再寻找对应的条目
 
 
+class QuanbenView(ListView):
+
+    template_name = 'novel_site/quanben.html'
+    queryset = InfoTable.objects.filter(_status=True).order_by('update_time')
+    context_object_name = 'books'
