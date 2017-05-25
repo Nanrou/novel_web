@@ -1,5 +1,6 @@
 # -*- coding:utf-8 -*-
 
+from random import sample
 from django.shortcuts import render, loader, get_object_or_404, redirect
 from django.urls import reverse
 from django.http import HttpResponse
@@ -9,6 +10,7 @@ from django.views.generic.detail import DetailView, SingleObjectMixin
 from django.views.generic.list import ListView
 from django.views.generic.base import TemplateView
 from django.http import Http404
+
 # Create your views here.
 
 
@@ -22,7 +24,14 @@ class HomeView(DetailView):
     def get_context_data(self, **kwargs):
         context = super(HomeView, self).get_context_data(**kwargs)
         context['top_four'] = self.obj[0:4]
-        context['xuanhuan_books'] = CategoryTable.objects.get(id=1).get_random_ele(6)
+
+        cate_list = []
+        for index in range(1, 7):
+            books = CategoryTable.objects.get(id=index).get_random_ele(6)
+            book = sample(list(books), 1)[0]
+            cate_list.append([book, books])
+        context['cate_list1'] = cate_list[0:3]
+        context['cate_list2'] = cate_list[3:]
 
         return context
 

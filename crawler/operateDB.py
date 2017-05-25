@@ -78,6 +78,11 @@ def operate_info_res(res, store_des, pk):  # 修正res中的内容
     if '：' in res['status'] or '：' in res['status']:
         res['status'] = res['status'][0].split('：')[-1][:3]
 
+    if '\xa0' in res['resume']:
+        res['resume'] = res['resume'].replace('\xa0', '')
+    if '\u3000' in res['resume']:
+        res['resume'] = res['resume'].replace('\u3000', '')
+
     res['store_des'] = store_des
 
     name = res['author']
