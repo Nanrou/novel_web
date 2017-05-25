@@ -46,7 +46,6 @@ INFO_RULE = {
     }
 
 
-@time_clock
 def download_info(info_urls):
     # loop = asyncio.get_event_loop()
     # asyncio.set_event_loop(None)
@@ -67,9 +66,9 @@ def download_detail(detail_urls):
 
 
 @time_clock
-def insert_info(store_path):
-    info_list = sorted(map(int, os.listdir(store_path)))
-    for index, info in enumerate(info_list, start=1):
+def insert_info(start, store_path='./info/'):  # 要指明从第几本开始输入
+    info_list = sorted(map(int, os.listdir(store_path)))[start-1:]
+    for index, info in enumerate(info_list, start=start):
         insert_to_info(store_path + str(info), pk=int(index))
 
 
@@ -85,6 +84,18 @@ def insert_detail(store_path):  # 这里逻辑改一下，每次只导入一本�
         #     insert_to_detail(folder_path + detail)
     detail_list = [store_path + str(i) for i in detail_list]
     insert_to_detail(detail_list)
+
+
+@time_clock
+def start_insert_detail(start):
+    """
+
+    :param start: 从第start本开始塞进去
+    :return:
+    """
+    book_paths = ['./book/chapter/' + str(i) for i in sorted(map(int, os.listdir('./book/chapter/')))[start-1:]]
+    for book_path in book_paths:
+        insert_detail(book_path)
 
 
 @time_clock

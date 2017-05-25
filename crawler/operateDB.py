@@ -16,6 +16,10 @@ except ImportError:
 
 import pickle
 import re
+
+from django.db.models import ObjectDoesNotExist
+
+
 from my_crawler import image_download
 from my_logger import MyLogger
 
@@ -72,6 +76,13 @@ def insert_to_info(files, store_des=1, pk=None):
 
 
 def operate_info_res(res, store_des, pk):  # 修正res中的内容
+    """
+
+    :param res:
+    :param store_des: 是指小说在第几个数据库
+    :param pk:
+    :return:
+    """
     if pk:
         res['id'] = pk
 
@@ -100,6 +111,11 @@ def operate_info_res(res, store_des, pk):  # 修正res中的内容
         img_path = image_download(index, img_url)
     res['image'] = img_path
     res.pop('img_url')
+
+    if res['status'] == '连载中':
+        res['status'] = 0
+    else:
+        res['status'] = 1
 
     return res
 
@@ -155,7 +171,7 @@ def operate_detail_res(res):
 
 
 def get_author_id(name):
-    name = name.split('：')[-1]
+    name = name if '：' not in name else name.split('：')[-1]
     obj, created = models.AuthorTable.objects.get_or_create(author=name)
     return obj.id
 
@@ -167,11 +183,20 @@ def get_category_id(category):
 
 
 def get_title_id(title):
-    obj = models.InfoTable.objects.only('id').get(title=title)
+    try:
+        obj = models.InfoTable.objects.only('id').get(title=title)
+    except ObjectDoesNotExist:
+        print("InfoTable hasn't {}".format(title))
+        return None
     return {'title_id': obj.id, 'book_id': obj.id}
 
 
 def filter_content(txt):
+    """
+    过滤文件中想要过滤的东西
+    :param txt:
+    :return:
+    """
     need_confirm = 0
     if 'div' in txt:  # 去头尾标签
         txt = txt.split('<div id="content">')[-1].split('</div>')[0]
@@ -220,6 +245,10 @@ def update_update_time(start=None, end=None):
     for ins in t_list:
         ins.update_time = datetime.datetime.now().isoformat(' ', 'seconds')
         ins.save()
+
+
+def get_infotable_count():
+    return models.InfoTable.objects.count()
 
 
 if __name__ == '__main__':

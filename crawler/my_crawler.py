@@ -20,6 +20,10 @@
 --------------------------------------
 5.23
 新增对应网站的爬取方式
+--------------------------------------
+5.25
+再降耦合，把协程下载分出来
+
 """
 import os.path
 import pickle
@@ -43,6 +47,21 @@ from my_logger import MyLogger
 HEADERS = {'user-agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:51.0) Gecko/20100101 Firefox/51.0 '}
 
 LOGGER = MyLogger('crawler_log')
+
+
+# class AsyncDownload(object):
+#
+#     def __init__(self, urls, loop=None, max_tasks=5):
+#         if loop is None:
+#             loop = asyncio.get_event_loop()
+#         self.loop = loop
+#         self.urls = urls
+#         self.max_tasks = max_tasks
+#         self.session = aiohttp.ClientSession(loop=self.loop, headers=HEADERS)
+#         self.q = Queue(loop=self.loop)
+#
+#     def add_url(self, url):
+#         self.q.put_nowait(url)
 
 
 class Crawler(object):  # 父类只提供爬取的逻辑，子类自己定义储存方式
@@ -279,6 +298,17 @@ def image_download(index, url, store_path='./novel_site/images/'):
     return filename[2:]
 
 
+def novel_download(index, url, store_path='./book/'):
+    if not store_path.endswith('/'):
+        store_path += '/'
+    if not os.path.exists(store_path):
+        os.mkdir(store_path)
+    res = requests.get(url)
+    filename = store_path + str(index) + '.txt'
+    with codecs.open(filename, 'w', encoding='utf-8') as wf:
+        wf.write(res.content)
+
+
 def search_novel(index, title, url, store_path='./'):
     """
     去url那个网站，搜名为title的小说，然后保存info信息到store_path，再返回下载小说的download url
@@ -351,11 +381,6 @@ def search_novel(index, title, url, store_path='./'):
         if not download_url.startswith('http://'):
             download_url = 'http://www.ranwenw.com' + download_url
         return download_url
-
-
-# res = requests.get('http://www.ranwenw.com/modules/article/txtarticle.php?id=52', headers=HEADER)
-# with codecs.open('nilin.txt', 'w', encoding='utf-8') as f:
-#     f.write(res.text)
 
 
 if __name__ == '__main__':
