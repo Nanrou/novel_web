@@ -372,7 +372,7 @@ def search_novel(index, title, url, store_path='./'):
 
         res.pop('download_url')
 
-        res['status'] = '连载中'
+        res['_status'] = '连载中'
         res['img_url'] = ''
 
         with codecs.open(store_path + str(index), 'wb') as wf:

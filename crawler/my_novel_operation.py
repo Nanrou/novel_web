@@ -128,6 +128,9 @@ def get_novel_urls(file):
 
     先去数据库中看info的index到多少了
     然后每个title需要与数据库对比是否存在
+
+    只会保存下载成功的url
+
     :return:
     """
 
@@ -166,7 +169,7 @@ def download_novel(file):
     :return:
     """
     HEADERS = {'user-agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:51.0) Gecko/20100101 Firefox/51.0 '}
-    with open(file, 'r') as rf:
+    with codecs.open(file, 'r', encoding='utf-8') as rf:
         tt_list = rf.readlines()
 
     not_finish_list = []
@@ -199,7 +202,7 @@ def product_txt_split_rule(start, end=None, file_path='./info/'):
     """
     file_list = [file_path + str(i) for i in sorted(map(int, os.listdir(file_path)))]
     rule_list = []
-    for i, file_name in enumerate(file_list[start:end], start=start):
+    for i, file_name in enumerate(file_list[start-1:end], start=start):
         with open(file_name, 'rb') as rf:
             title = pickle.load(rf)['title']
         s = "./book/{i}.txt,{title},{i},./book/chapter/{i:0>2}, ".format(i=i, title=title)
@@ -278,17 +281,16 @@ def start_insert_detail(start, path='./book/chapter/'):
 def main(file):
     # get_novel_urls(file)
     # Logger.debug('already get novel download url')
-
+    #
     # info_index = get_infotable_count() + 1
     # insert_info(info_index)
     # Logger.debug('already insert info')
+    info_index = 30
+    download_novel('novel_download_url.txt')
+    Logger.debug('already download the novel')
+    bbb(product_txt_split_rule(info_index))
 
-    # download_novel('novel_download_url.txt')
-    # Logger.debug('already download the novel')
-    info_index = 31
-    product_txt_split_rule(info_index)
-
-    # start_insert_detail(info_index)
+    start_insert_detail(info_index)
 
 
 if __name__ == '__main__':

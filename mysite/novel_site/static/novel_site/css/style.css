@@ -56,6 +56,7 @@ table.grid td { background-color: #FFFFFF !important; border: 1px solid #C3DFEA;
 #hotcontent .ll .item dl dt{ height:25px; line-height:25px; overflow:hidden; font-size:14px; border-bottom:dotted 1px #6191D0; font-weight:bold; }
 #hotcontent .ll .item dl dt span{ float:right; font-weight:normal;}
 #hotcontent .ll .item dl dd{ padding:7px 0px 0px 0px; line-height:20px; color:#9E9E9E; text-indent:2em; height:120px; overflow:hidden;}
+#hotcontent .ll .item dl dd a:link, a:visited{ color: #555555 }
 #hotcontent .r{border:3px solid #C3DFEA;float:right;width:265px;  background:#FEF9EF;}
 #hotcontent h2{background-color:#E1ECED;border-bottom:1px solid #DDD;font-size:14px;font-weight:700;height:30px;line-height:30px;overflow:hidden;margin:0;padding:0 0 0 10px;}
 #flash{height:308px;overflow:hidden;}
@@ -147,6 +148,7 @@ table.grid td { background-color: #FFFFFF !important; border: 1px solid #C3DFEA;
 .dahengfu{overflow:hidden; width:976px; margin:10px auto;}
 .box_con{border:2px solid #88C6E5; overflow:hidden;width:976px;margin:10px auto;}
 .con_top {font-size:14px; border-bottom: #88C6E5 1px solid; text-align:left; padding: 0px 10px; line-height:40px; height:40px; background-color:#E1ECED;}
+.con_top a:visited{color:#6F78A7;text-decoration:none;}
 .con_top #bdshare{float:right;line-height:20px;padding-right:20px;padding-top:9px;text-align:right;}
 #sidebar{float:left;width:140px;text-align:left;}
 #maininfo{float:right;width:800px;}
@@ -163,6 +165,7 @@ table.grid td { background-color: #FFFFFF !important; border: 1px solid #C3DFEA;
 #info{padding:10px;margin:10px;font-size:15px;}
 #info h1{font-family:黑体;font-size:28px;font-weight:700;overflow:hidden;margin:auto;padding:1px;}
 #info p{height:25px;line-height:25px;padding-top:2px;width:350px;margin:auto;overflow:hidden;float:left;}
+#info p a:visited{color: #6F78A7}
 #intro{	width:96%;overflow:hidden;line-height:150%;border-top:1px dashed #88C6E5;padding:10px;font-size:13px;}
 #intro p{text-indent:2em; margin-top:10px;}
 #listtj{width:960px;font-size:13px;padding:5px;float:left;text-align:center;}

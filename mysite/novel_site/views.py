@@ -102,7 +102,7 @@ class BookView(DetailView):
     #     return self.book_info.all_chapters
 
     def get_queryset(self):
-        self.book_info = InfoTable.objects.defer('resume', 'image', 'update_time', 'status').select_related().get(pk=self.kwargs['pk'])
+        self.book_info = InfoTable.objects.defer('resume', 'image', 'update_time', '_status').select_related().get(pk=self.kwargs['pk'])
         return self.book_info.all_chapters_detail  # 传给父类的get object，再寻找对应的条目
 
 

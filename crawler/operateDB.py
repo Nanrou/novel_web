@@ -86,8 +86,12 @@ def operate_info_res(res, store_des, pk):  # 修正res中的内容
     if pk:
         res['id'] = pk
 
-    if '：' in res['status'] or '：' in res['status']:
-        res['status'] = res['status'][0].split('：')[-1][:3]
+    if 'status' in res:
+        res['_status'] = res['status']
+        res.pop('status')
+
+    if '：' in res['_status']:
+        res['_status'] = res['_status'][0].split('：')[-1][:3]
 
     if '\xa0' in res['resume']:
         res['resume'] = res['resume'].replace('\xa0', '')
@@ -112,10 +116,10 @@ def operate_info_res(res, store_des, pk):  # 修正res中的内容
     res['image'] = img_path
     res.pop('img_url')
 
-    if res['status'] == '连载中':
-        res['status'] = 0
+    if res['_status'] == '连载中':
+        res['_status'] = 0
     else:
-        res['status'] = 1
+        res['_status'] = 1
 
     return res
 
@@ -220,11 +224,11 @@ def filter_content(txt):
 def update_img_path(start=None, end=None):
     """
     批量插入图片路径，若图片不存在则为miss
-    :param start:
+    :param start:因为现在书的序号是从1开始的，所以start值需要减1
     :param end:
     :return:
     """
-    t_list = models.InfoTable.objects.all()[start: end].only('id', 'image')
+    t_list = models.InfoTable.objects.all()[start-1: end].only('id', 'image')
     for ins in t_list:
         index = str(ins.id)
         if os.path.exists('../mysite/novel_site/static/novel_site/images/{}s.jpg'.format(index)):
@@ -237,11 +241,11 @@ def update_img_path(start=None, end=None):
 def update_update_time(start=None, end=None):
     """
     批量参入更新时间
-    :param start:
+    :param start:因为现在书的序号是从1开始的，所以start值需要减1
     :param end:
     :return:
     """
-    t_list = models.InfoTable.objects.all()[start: end].only('update_time')
+    t_list = models.InfoTable.objects.all()[start-1: end].only('update_time')
     for ins in t_list:
         ins.update_time = datetime.datetime.now().isoformat(' ', 'seconds')
         ins.save()
