@@ -23,6 +23,11 @@ import requests
 from crawler.my_decorate import time_clock
 from crawler.my_crawler import search_novel
 from crawler.operateDB import get_infotable_count, get_title_id
+from crawler.my_logger import MyLogger
+from crawler.operateDB import insert_to_detail, insert_to_info, get_infotable_count
+
+
+Logger = MyLogger('novel_operation')
 
 
 @time_clock
@@ -61,7 +66,9 @@ def split_txt(txt_path, title, chapter_index, store_path, title_split=' ', title
                     if re.match(title_rule, line):
                         flag = True
             else:
-                if '\u4e00' <= line[0] <= '\u9fff':  # 只要是中字开头的，标题是书名号开头的，所以没影响
+                if '\u4e00' <= line[0] <= '\u9fff' \
+                        or '\u4e00' <= line[1] <= '\u9fff' and line[0] != '《':
+                    # 1，中字开头的，2，标题是书名号开头的，所以没影响
                     flag = True
 
             if flag:
@@ -117,7 +124,7 @@ def split_txt(txt_path, title, chapter_index, store_path, title_split=' ', title
 @time_clock
 def get_novel_urls(file):
     """
-    去那个网站搜这n本小说，如果有就下载相关info，并将小说url放到download_url的txt中
+    去那个网站搜这n本小说，如果有就下载相关info(生成pickle)，并将小说url放到download_url的txt中
 
     先去数据库中看info的index到多少了
     然后每个title需要与数据库对比是否存在
@@ -127,25 +134,27 @@ def get_novel_urls(file):
     SEARCH_URL = 'http://www.ranwenw.com/modules/article/search.php'
 
     book_index = get_infotable_count() + 1
+    novel_download_url = []
 
     with codecs.open(file, 'r', encoding='utf-8') as rf:
         for title in rf.readlines():
 
             title = title.strip()
 
-            if get_title_id(title):
-                print('title is existed')
-                continue
+            # if get_title_id(title):
+            #     Logger.warning('title is existed')
+            #     continue
 
             url = search_novel(book_index, title, url=SEARCH_URL, store_path='./info/')
             if url:
-                with codecs.open('novel_download_url.txt', 'a', encoding='utf-8') as wf:
-                    wf.write(str(book_index) + ',' + title + ',' + url + '\n')
+                novel_download_url.append('{},{},{}'.format(str(book_index), title, url))
                 book_index += 1
-                print('done {}'.format(title))
+                Logger.debug('done {}'.format(title))
             else:
-                print('not found {}'.format(title))
+                Logger.debug('not found {}'.format(title))
             time.sleep(12)
+        with codecs.open('novel_download_url.txt', 'w', encoding='utf-8') as wf:
+            wf.write('\n'.join(novel_download_url))
 
 
 @time_clock
@@ -166,21 +175,22 @@ def download_novel(file):
         try:
             res = requests.get(url, headers=HEADERS)
         except requests.exceptions.ConnectionError:
-            print('wrong in {}, {}'.format(index, title))
+            Logger.warning('wrong in {}, {}'.format(index, title))
             not_finish_list.append(line)
             continue
         with codecs.open('./book/' + str(index) + '.txt', 'w', encoding='utf-8') as wf:
             wf.write(res.text)
-        print('done with {}, {}'.format(index, title))
+        Logger.debug('done with {}, {}'.format(index, title))
         time.sleep(random.randint(0, 12))
 
     with open(file, 'w') as wf:
-        wf.write(not_finish_list)
+        wf.write('\n'.join(not_finish_list))
 
 
 @time_clock
-def product_txt_split_rule(start=None, end=None, file_path='./'):
+def product_txt_split_rule(start, end=None, file_path='./info/'):
     """
+    去info这个文件夹下面，遍历pickle文件
     生成bbb函数的参数
     :param start:从第几本开始生产参数
     :param end:
@@ -196,6 +206,7 @@ def product_txt_split_rule(start=None, end=None, file_path='./'):
         rule_list.append(s)
     with open('txt_split_rule.txt', 'w') as wf:
         wf.write('\n'.join(rule_list))
+    return 'txt_split_rule.txt'
 
 
 @time_clock
@@ -210,13 +221,76 @@ def bbb(file):
         res_list = rf.readlines()
     for index, line in enumerate(res_list):
         var_list = line.strip('\n').split(',')
-        print(var_list)
+        Logger.debug('start split {}'.format(var_list))
         try:
             split_txt(*var_list)
-        except IndexError or UnicodeError:  # 在出错的情况下，不用手动删除已完成的
+            Logger.debug('Finish split {}'.format(var_list))
+        except IndexError or UnicodeError as e:  # 在出错的情况下，不用手动删除已完成的
+            Logger.warning('{} happen in {}'.format(e, var_list))
             with open(file, 'w') as wf:
                 wf.write('\n'.join(res_list[index:]))
 
 
+@time_clock
+def insert_info(start, store_path='./info/'):  # 要指明从第几本开始输入
+    info_list = (store_path + str(i) for i in sorted(map(int, os.listdir(store_path)))[start-1:])
+    for index, info in enumerate(info_list, start=start):  # 这里的逻辑是一次插入一个info
+        insert_to_info(info, pk=int(index))
+
+
+@time_clock
+def insert_detail(store_path):  # 这里逻辑改一下，每次只导入一本书
+    if not store_path.endswith('/'):
+        store_path += '/'
+    detail_list = [store_path + str(i) for i in sorted(map(int, os.listdir(store_path)))]
+    insert_to_detail(detail_list)
+
+
+@time_clock
+def start_insert_detail(start, path='./book/chapter/'):
+    """
+
+    :param start: 从第start本开始塞进去
+    :param path:
+    :return:
+    """
+    book_paths = [path + str(i) for i in sorted(map(int, os.listdir('./book/chapter/')))[start-1:]]
+    for book_path in book_paths:
+        insert_detail(book_path)
+
+
+# @time_clock
+# def get_url_from_redis(table_index):  # 这里的逻辑是一次只下载一本
+#     if isinstance(table_index, list):
+#         table_index = table_index[0]
+#
+#     conn = redis.StrictRedis()
+#     length = conn.llen(table_index)
+#     items = conn.lrange(table_index, 0, length-1)
+#     detail_urls = []
+#     for item in items:
+#         index, url = str(item).split('!')
+#         detail_urls.append([index[2:], url[:-1]])
+#     download_detail(detail_urls)
+
+
+@time_clock
+def main(file):
+    # get_novel_urls(file)
+    # Logger.debug('already get novel download url')
+
+    # info_index = get_infotable_count() + 1
+    # insert_info(info_index)
+    # Logger.debug('already insert info')
+
+    # download_novel('novel_download_url.txt')
+    # Logger.debug('already download the novel')
+    info_index = 31
+    product_txt_split_rule(info_index)
+
+    # start_insert_detail(info_index)
+
+
 if __name__ == '__main__':
-    pass
+    main('bbb.txt')
+

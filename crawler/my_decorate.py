@@ -7,10 +7,10 @@ from functools import wraps
 def time_clock(func):
     @wraps(func)
     def wrapper(*args, **kwargs):
-        print('start {}'.format(func.__name__))
+        print('start {}({})'.format(func.__name__, *args, **kwargs))
         start_time = time.time()
         res = func(*args, **kwargs)
-        print('all done, it cost: {}'.format(my_round(time.time() - start_time)))
+        print('--{}-- cost: {}'.format(func.__name__, my_round(time.time() - start_time)))
         return res
     return wrapper
 

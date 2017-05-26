@@ -65,53 +65,6 @@ def download_detail(detail_urls):
     return detailc.store_path
 
 
-@time_clock
-def insert_info(start, store_path='./info/'):  # 要指明从第几本开始输入
-    info_list = sorted(map(int, os.listdir(store_path)))[start-1:]
-    for index, info in enumerate(info_list, start=start):
-        insert_to_info(store_path + str(info), pk=int(index))
-
-
-@time_clock
-def insert_detail(store_path):  # 这里逻辑改一下，每次只导入一本书
-    if not store_path.endswith('/'):
-        store_path += '/'
-    detail_list = sorted(map(int, os.listdir(store_path)))
-    # for detail in folder_list:  # 这里的逻辑已经是下载完全部一次存完
-    #     folder_path = store_path + folder
-    #     detail_name_list = os.listdir(folder_path)
-        # for detail in detail_list:  # 一个文件夹里可能有1000+的文件，不要逐个存入，要一次存入多个
-        #     insert_to_detail(folder_path + detail)
-    detail_list = [store_path + str(i) for i in detail_list]
-    insert_to_detail(detail_list)
-
-
-@time_clock
-def start_insert_detail(start):
-    """
-
-    :param start: 从第start本开始塞进去
-    :return:
-    """
-    book_paths = ['./book/chapter/' + str(i) for i in sorted(map(int, os.listdir('./book/chapter/')))[start-1:]]
-    for book_path in book_paths:
-        insert_detail(book_path)
-
-
-@time_clock
-def get_url_from_redis(table_index):  # 这里的逻辑是一次只下载一本
-    if isinstance(table_index, list):
-        table_index = table_index[0]
-
-    conn = redis.StrictRedis()
-    length = conn.llen(table_index)
-    items = conn.lrange(table_index, 0, length-1)
-    detail_urls = []
-    for item in items:
-        index, url = str(item).split('!')
-        detail_urls.append([index[2:], url[:-1]])
-    download_detail(detail_urls)
-
 
 if __name__ == '__main__':
     info_urls = [

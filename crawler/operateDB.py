@@ -71,7 +71,7 @@ def insert_to_info(files, store_des=1, pk=None):
     else:
         with open(files, 'rb') as rf:
             res = operate_info_res(pickle.load(rf), store_des, pk)
-            models.InfoTable.objects.create(**res)
+            models.InfoTable.objects.update_or_create(**res)
             Logger.debug('insert {}'.format(files))
 
 
