@@ -12,6 +12,8 @@
 <script src="http://apps.bdimg.com/libs/jquery/1.4.2/jquery.js"></script>
 <script src="{% static 'novel_site/js/m.js' %}"></script>
 <script src="{% static 'novel_site/js/header.js' %}"></script>
+<link rel="shortcut icon" href={% static 'novel_site/css/favicon.ico' %}>
+<link rel="bookmark" href={% static 'novel_site/css/favicon.ico' %}>
 {% block optional_script %}
 <!-- optional_script -->
 {% endblock optional_script %}
@@ -23,10 +25,10 @@
     <!-- 页眉 -->
         <div class="ywtop_con">
             <div class="ywtop_sethome">
-                <a onclick="this.style.behavior='url(#default#homepage)';this.setHomePage('');" href=="#">将本站设为首页</a>
+                <a onclick="SetHome(this,window.location)" href="javascript:void(0);">将本站设为首页</a>
             </div>
             <div class="ywtop_addfavorite">
-                <a href="javascript:window.external.addFavorite('','爱看小说的都收藏了')">收藏超级小说</a>
+                <a href="" onclick="addFavorite()" rel="sidebar">收藏超级小说</a>
             </div>
         </div>
     </div>
