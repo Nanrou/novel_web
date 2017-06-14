@@ -189,3 +189,303 @@ worker沉默（不工作?不发送response?）超过timeout秒之后就会重启
 
 默认值：`8190`
 
+## Debugging 调试
+
+### reload 重载
+
+用法：`--reload`
+
+默认值：`False`
+
+更改代码的时候重启workers， 只建议在开发过程中开启。
+
+文档推荐下载`inotify`这个包来作为重载引擎。
+
+### reload_engine 重载的引擎
+
+用法：`--reload-engine STRING`
+
+默认值：`auto`
+
+选择重载的引擎，支持的有三种，分别是`auto`，`poll`，`inotify`（需要单独安装）
+
+### spew 显示
+
+用法：`--spew`
+
+默认值：`False`
+
+启动一个能够将服务器执行过的每一条语句都打印出来的函数，然后这个选项是原子性的，就是要么全打，要么不打。
+
+### check_config 检查配置
+
+用法：`--check-config`
+
+默认值：`False`
+
+显示现在的配置。
+
+## Server Mechanics 服务器结构
+
+### preload_app 预重载应用
+
+用法：`--preload`
+
+默认值：`False`
+
+在worker进程被复制（派生）之前载入应用的代码。
+
+通过预加载应用，可以节省内存资源和提高服务启动时间。当然，如果你将应用加载进worker进程这个动作延后，那么重启worker将会容易很多。
+
+## sendfile  发送文件？
+
+用法：`--no-sendfile`
+
+默认值：`None`
+
+这个值可以在环境变量设置。（文档中并没有提到这个选项是干嘛的 ）
+
+## chdir 改变目录？
+
+用法：`--chdir`
+
+默认值：`/home/docs/checkouts/readthedocs.org/user_builds/gunicorn-docs/checkouts/latest/docs/source`
+
+在载入应用之前改变目录（但是文档中没讲明白这个目录是存放什么的）
+
+## daemon 守护进程
+
+用法：`-D, --daemon`
+
+默认值：`False`
+
+以守护进程形式来运行Gunicorn进程。
+
+其实就是将这个服务放到后台去运行。
+
+## raw_env 设置环境变量
+
+用法：`-e ENV, --env ENV`
+
+默认值：`[]`
+
+用键值对来设置环境变量。
+
+`$ gunicorn -b 127.0.0.1:8000 --env FOO=1 test:app`
+
+## pidfile 进程文件名
+
+用法：`-p FILE, --pid FILE`
+
+默认值：`None`
+
+设置pid文件的文件名，如果不设置的话，不会创建pid文件。
+
+## worker_tmp_dir 工作临时地址
+
+用法：`--worker-tmp-dir DIR`
+
+默认值：`None`
+
+设置工作的临时文件夹的地址。
+
+如果不设置，则会采用默认值，也就是调用`os.fchmod`来找一个地址，但是如果这个地址是disk-backed类型的文件系统，很有可能会让worker阻塞；或者如果默认的硬盘满掉了，Gunicorn也不会启动。所以文档建议我们在新挂载一个/tmpfs，然后把这个地址赋到这里来
+
+```shell
+sudo cp /etc/fstab /etc/fstab.orig
+sudo mkdir /mem
+echo 'tmpfs       /mem tmpfs defaults,size=64m,mode=1777,noatime,comment=for-gunicorn 0 0' | sudo tee -a /etc/fstab
+sudo mount /mem
+..... --worker-tmp-dir /mem
+```
+
+### user 设置用户
+
+用法：`-u USER, --user USER`
+
+默认值：`1005`
+
+选择一个工作进程来作为当前用户。
+
+这里可以输入有效的用户id或者用户名，那么在用`pwd.getpwnam(value)`的时候就可以取到这个值。如果输入`None`，则不会改变当前工作进程的用户。
+
+###group 设置用户组
+
+用法：`-g GROUP, --group GROUP`
+
+默认值：`205`
+
+与上面那个类似。
+
+### umask 权限掩码
+
+用法：`-m INT, --umask INT`
+
+默认值：`0`
+
+Gunicorn对写文件的权限。
+
+### initgroups 设置新组
+
+用法：`--initgroups`
+
+默认值：`False`
+
+设置为真的时候，会将所有worker进程加到一个指定名字的新组中。
+
+### tmp_upload_dir 上传文件的临时存放地址
+
+默认值：`None`
+
+保存那些临时的请求内容。
+
+文档讲这个选型未来可能会被移除。
+
+如果设置了路径，要确保worker进程有权限去写。如果不设置，则会选择/tmp来存放。
+
+### secure_scheme_headers 
+
+默认值：`    {'X-FORWARDED-PROTOCOL': 'ssl', 'X-FORWARDED-PROTO': 'https', 'X-FORWARDED-SSL': 'on'}`
+
+这个字典指明了哪些请求头是HTTPS请求。
+
+### forwarded_allow_ips 
+
+用法：`--forwarded-allow-ips STRING`
+
+默认值：`127.0.0.1`
+
+（这个看不懂，感觉是将那些HTTPS请求头转发到某个地址）
+
+## Logging 日志设置
+
+### accesslog 设置访问日志存放的地方
+
+用法：`--access-logfile FILE`
+
+默认值：`None`
+
+设置为`-`就是记录到标准输出。
+
+### access_log_format 访问日志的格式
+
+用法：`--access-logformat STRING`
+
+默认值：`%(h)s %(l)s %(u)s %(t)s "%(r)s" %(s)s %(b)s "%(f)s" "%(a)s"`
+
+| Identifier  | Description                         |
+| :---------- | :---------------------------------- |
+| h           | remote address                      |
+| l           | '-'                                 |
+| u           | user name                           |
+| t           | date of the request                 |
+| r           | status line (e.g. GET / HTTP/1.1)   |
+| m           | request method                      |
+| U           | URL path without query string       |
+| q           | query string                        |
+| H           | protocol                            |
+| s           | status                              |
+| B           | response length                     |
+| b           | response length or '-' (CLF format) |
+| f           | referer                             |
+| a           | user agent                          |
+| T           | request time in seconds             |
+| D           | request time in microseconds        |
+| L           | request time in decimal seconds     |
+| p           | process ID                          |
+| {Header}i   | request header                      |
+| {Header}o   | response header                     |
+| {Variable}e | environment variable                |
+
+### errorlog 设置错误日志的存放地址
+
+用法：`--error-logfile FILE, --log-file FILE`
+
+默认值：`-`
+
+设置为`-`就是记录到标准输出。
+
+### loglevel 设置日志等级
+
+用法：`--log-level LEVEL`
+
+默认值：`info`
+
+debug，info，warning，error，critical
+
+### capture_output 捕捉标准输出
+
+用法：`--capture-output`
+
+默认值：`False`
+
+重定向标准输出和标准错误信息到错误日志。
+
+### logger_class 选择处理日志的方法
+
+用法：`--logger-class STRING`
+
+默认值：`gunicorn.glogging.Logger`
+
+### logconfig 日志的配置
+
+用法：`--log-config FILE`
+
+默认值：`None`
+
+默认使用python标准库logging的配置文件形式。
+
+### syslog_addr 系统日志的地址
+
+用法：`--log-syslog-to SYSLOG_ADDR`
+
+默认值：`udp://localhost:514`
+
+设置发送系统日志信息的地址。
+
+**可传递的方式**
+
+* `unix://PATH#TYPE`对于unix的socket来讲，可以用stream或者gram形式。
+* `udp://HOST:PORT`
+* `tcp://HOST:PORT`
+
+### syslog  启用系统日志来记载
+
+用法：`--log-syslog`
+
+默认值：`False`
+
+把Gunicorn的日志发送到系统日志。
+
+### syslog_prefix 系统日志的前缀 
+
+用法：`--log-syslog-prefix SYSLOG_RREFIX`
+
+默认值：`None`
+
+设置每条系统日志的前缀，默认是进程的名字。
+
+### syslog_facility 系统日志的别名
+
+用法：`--log-syslog-facility SYSLOG_FACILITY`
+
+默认值：`user`
+
+### enable_stdio_inheritance  标准输入输出的继承
+
+用法：`-R, --enable-stdio-inhertitance`
+
+默认值：`False`
+
+允许标准输入输出的继承，允许标准输入输出文件描述符在守护进程模式下的继承。
+
+可以设置环境变量`PYHTONUNBUFFERED`来取消python标准输出的缓存（？）
+
+### statsd_host
+
+网上查到statsd的意思是单机搭建，暂时没理解是什么意思。
+
+### statsd_prefix
+
+不懂不懂
+
