@@ -225,7 +225,7 @@ worker沉默（不工作?不发送response?）超过timeout秒之后就会重启
 
 显示现在的配置。
 
-## Server Mechanics 服务器结构
+## Server Mechanics 服务结构方面
 
 ### preload_app 预重载应用
 
@@ -488,4 +488,231 @@ debug，info，warning，error，critical
 ### statsd_prefix
 
 不懂不懂
+
+## Process Naming  进程命名
+
+### proc_name 设置进程名字
+
+用法：`-n STRING, --name STRING`
+
+默认值：`None`
+
+用`setproctitle`这个模块（需要额外安装）去给进程命名，方便我们在`ps`或者`top`的时候分辨出哪个是我们想要的。
+
+不设置的时候，会用`default_proc_name`
+
+### default_proc_name 默认的进程名
+
+`gunicorn`
+
+## Server Mechanics  服务架构
+
+### pythonpath
+
+用法：`--pythonpath STRING`
+
+默认值：`None`
+
+将这些路径加到python path去
+
+e.g.`'/home/djangoprojects/myproject,/home/python/mylibrary'`
+
+### paste
+
+PASS
+
+## Server Hooks 服务的钩子函数
+
+### on_starting
+
+```python
+def on_starting(sever):
+	pass
+```
+
+这个函数会在主进程初始化后被调用。
+
+函数需要接收一个服务的实例作为参数。
+
+### on_reload
+
+```python
+def on_reload(server):
+	pass
+```
+
+函数会在接收到挂起信号而重载的时候被调用。
+
+函数需要接收一个服务的实例作为参数。
+
+### when_ready
+
+```python
+def when_ready(sever):
+	pass
+```
+
+函数会在服务启动之后就被调用。
+
+函数需要接收一个服务的实例作为参数。
+
+### pre_fork
+
+```python
+def post_fork(sever, worker):
+	pass
+```
+
+函数在worker派生（生成）之前被调用。
+
+函数需要接收一个服务的实例和一个新的worker。（不懂，既然函数是在生成worker之前调用，那又怎么将这个未生成的worker传到这个函数里面来呢）
+
+### post_fork
+
+```python
+def post_fork(sever, worker):
+	pass
+```
+
+函数在worker派生（生成）之后被调用。
+
+函数需要接收一个服务的实例和一个新的worker。
+
+### post_worker_init
+
+```python
+def post_worker_init(worker):
+	pass
+```
+
+函数在worker完成应用初始化之后被调用。
+
+函数需要接收一个完成初始化的worker。
+
+### work_int
+
+```python
+def worker_int(worker):
+	pass
+```
+
+函数会在worker退出信号流（？）或者挂起的时候调用。
+
+函数需要接收一个完成初始化的worker。
+
+### work_abort
+
+```python
+def worker_abort(worker):
+	pass
+```
+
+函数会在worker接收到请求异常终止信号的时候被调用。
+
+一般这个情况发生在timeout（超时）。
+
+函数需要接收一个完成初始化的worker。
+
+### pre_exec
+
+```python
+def pre_exec(server):
+	pass
+```
+
+函数会在新的主进程生成（派生）之前被调用。
+
+函数需要接收一个服务的实例。
+
+### pre_request
+
+```python
+def pre_request(worker, req):
+    worker.log.debug("%s %s" % (req.method, req.path))
+```
+
+函数会在worker处理请求之前被调用。
+
+函数需要接收这个worker，和请求作为参数。
+
+### post_request
+
+```python
+def post_request(worker, req, environ, resp):
+    pass
+```
+
+函数会在worker处理请求后被调用。
+
+函数需要接收这个worker，和请求作为参数。
+
+### child_exit
+
+```python
+def child_ext(sever, worker):
+    pass
+```
+
+函数会在worker完全退出之后，在主进程被调用。
+
+函数需要接收这个服务的实例，和这个worker作为参数。
+
+### worker_exit
+
+```python
+def worker_exit(server, worker):
+    pass
+```
+
+函数会在worker完全退出之后，在worker进程被调用。
+
+函数需要接收这个服务的实例，和这个worker作为参数。
+
+###	nworkers_changed
+
+```python
+def nworkers_changed(server, new_value, old_value):
+    pass
+```
+
+函数在worker数量产生变化后被调用。
+
+函数接收的参数为，服务的实例，新的worker数量，和变化之前的数量。
+
+第一次的时候，old_value是None
+
+### on_exit
+
+```python
+def on_exit(server):
+    pass
+```
+
+函数在退出Gunicorn的时候被调用。
+
+函数接收服务的实例作为参数。
+
+## Server Mechanics
+
+### proxy_protocol 代理协议
+
+用法：`--proxy_protocol`
+
+默认值：`False`
+
+使用代理模式。
+
+文档介绍了开启这个模式后，可以让stunnel作为HTTPS的前端，然后Gunicorn作为HTTP的服务器。（并不是很懂，暂时略过）
+
+### proxy_allow_ips
+
+用法：`--proxy-allow-from`
+
+默认值：`127.0.0.1`
+
+不懂不懂
+
+设置`*`来禁用这个功能。
+
+## SSL
 
