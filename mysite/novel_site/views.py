@@ -13,6 +13,9 @@ from django.http import Http404
 
 # Create your views here.
 
+class TestView(TemplateView):
+	template_name = 'moble/home.html'
+
 
 class HomeView(DetailView):
     template_name = 'novel_site/home.html'
