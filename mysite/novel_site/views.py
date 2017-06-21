@@ -23,33 +23,21 @@ def get_book_from_cate():
     return cate_list
 
 
-class TestView(DetailView):
+class MobileHomeView(TemplateView):
     template_name = 'mobile/home.html'
 
-    def get_object(self, queryset=None):
-        return InfoTable.objects.all()
-
     def get_context_data(self, **kwargs):
-        context = super(TestView, self).get_context_data(**kwargs)
+        context = super(MobileHomeView, self).get_context_data(**kwargs)
         context['cate_book'] = get_book_from_cate()
         return context
 
 
-class HomeView(DetailView):
+class HomeView(TemplateView):
     template_name = 'novel_site/home.html'
-
-    def dispatch(self, request, *args, **kwargs):
-        if 'mobile' in request.META['HTTP_USER_AGENT'] or 'Mobile' in request.META['HTTP_USER_AGENT']:
-            return redirect('m/', permanent=True)  # 用301还是302？
-        return super(HomeView, self).dispatch(request, *args, **kwargs)
-
-    def get_object(self, queryset=None):
-        self.obj = InfoTable.objects.all()
-        return self.obj
 
     def get_context_data(self, **kwargs):
         context = super(HomeView, self).get_context_data(**kwargs)
-        context['top_four'] = self.obj[0:4]
+        context['top_four'] = InfoTable.objects.all()[0:4]
 
         cate_list = get_book_from_cate()
         context['cate_list1'] = cate_list[0:3]

@@ -1,18 +1,6 @@
-
-*, ::after, ::before {
- -webkit-tap-highlight-color:rgba(0, 0, 0, 0);
- -moz-tap-highlight-color:rgba(0, 0, 0, 0);
- -o-tap-highlight-color:rgba(0, 0, 0, 0);
- tap-highlight-color:rgba(0, 0, 0, 0);
-/*    -webkit-text-size-adjust:none;
-    -moz-text-size-adjust:none;
-    -o-text-size-adjust:none;
-    text-size-adjust:none;
-*/}
-/*article,aside,details,figcaption,figure,footer,header,hgroup,menu,nav,section{display:block;}*/
 body, h1, h2, h3, h4, h5, h6, p, div, ul, li, dl, dt, dd, h1 {margin:0;padding: 0;}
 html {background:#fff;font:16px/1.5 'microsoft yahei';}
-input, textarea {font-size:12px;font-family:"微软雅黑";}
+input, textarea {font-size:12px;font-family:"寰蒋闆呴粦";}
 li {list-style:none;}
 img {border:none;margin:0;padding:0;}
 a {color:#000; text-decoration:none;}
@@ -457,7 +445,7 @@ background: none;
 	line-height: 35px;
 }
 
-.bookbox{position:relative;zoom:1;overflow:auto;padding:14px 8px;border-bottom:1px solid #dfdfdf}
+.bookbox{position:relative;overflow:auto;padding:14px 8px;border-bottom:1px solid #dfdfdf}
 .bookbox::after{visibility: hidden;display:block;font-size:0;content: ' ';clear: both;height:0;}
 .bookbox:hover{background:#f9f9f9}
 .bookbox .bookimg{float:left;margin-right:10px;width:74px;height:98px}
@@ -504,7 +492,7 @@ h4.bookname a {color: #007BB1;}
 	 padding:2px 7px;
 	 margin-left:5px;
 	 border-radius:3px;
-	 color:#0065B5';
+	 color:#0065B5;
 }
 .set .set2 p{
      border:1px solid #007BB1;
@@ -576,7 +564,7 @@ h4.bookname a {color: #007BB1;}
 	color:red;
 }
 
-/*目录页*/
+/*鐩綍椤�*/
 .index_block {
     border: 0px;
     overflow: hidden;
