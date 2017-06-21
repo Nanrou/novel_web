@@ -1,0 +1,126 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+
+<html class="gwd_">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8">
+	<meta charset="utf-8">
+	<title>超级小说移动版_书友最值得收藏的网络小说阅读网</title>
+	<meta name="keywords" content="超级小说网移动版,小说阅读网,m.superxiaoshuo.com">
+	<meta name="description" content="超级小说移动版是广大书友最值得收藏的网络小说阅读网,网站收录了当前最火热的网络小说,免费提供高质量的小说最新章节,是广大网络小说爱好者必备的小说阅读网。">
+	<meta name="MobileOptimized" content="240">
+	<meta name="applicable-device" content="mobile">
+	<link rel="canonical" href="http://www.superxiaoshuo.com/">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+	<meta http-equiv="Cache-Control" content="max-age=300">
+	<meta http-equiv="Cache-Control" content="no-transform">
+	<link rel="shortcut icon" href="{% static 'mobile/css/favicon.ico' %}">
+	<link rel="stylesheet" href="{% static 'mobile/css/style_wap.css' %}">
+	<script src="{% static 'mobile/js/wap.js' %}"></script>
+	<script src="{% static 'mobile/js/ajax.js' %}"></script>
+</head>
+<body>
+	<div class="header">
+		<div class="logo">
+			<h2>
+				<a href="http://m.superxiaoshuo.com/">超级小说</a>
+			</h2>
+			<p>m.superxiaoshuo.com</p>
+		</div>
+		<div class="reg">
+			<div id="login_top">
+				<a class="box" href="">登录</a>
+				<a class="box" href="">注册</a>
+			</div>
+		</div>
+	</div>
+	
+	<!-- 登陆之后显示的 -->
+	<div id="info" class="login_top" style="display:none">
+		<a rel="nofollow" href="" style="color:#fff;">我的书架</a>
+		<a rel="nofollow" href="" style="color:#fff;">查看资料</a>
+		<a rel="nofollow" href="" style="color:#fff">退出</a>
+	</div>
+	
+	<!-- 导航栏 -->
+	<div class="nav">
+		<ul>
+			<li><a href="http://m.superxiaoshuo.com/xuanhuan/">分类</a></li>
+			<li><a href="http://m.superxiaoshuo.com/top.html">排行</a></li>
+			<li><a href="http://m.superxiaoshuo.com/quanben/">全本</a></li>
+			<li><a rel="nofollow" href="">书架</a></li>        
+		</ul>
+	</div>
+
+	<!-- 搜索栏 -->
+	<div class="search">
+		<form name="articlesearch" action="http://zhannei.baidu.com/cse/search">
+			<input name="s" value="18402225725594290780" type="hidden">
+			<table style="width:100%;">
+				<tbody>
+					<tr>
+						<td class="frame">
+						<input id="s_key" name="q" class="key" value="请输入文章名称，宁少字勿错字！" onfocus="this.value=''" type="text">
+						<td class="button">
+						<input name="submit" value="" class="go" onclick="check()" type="submit">
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</form>
+	</div>
+    {% for book, books in cate_book %}
+	<div class="article">
+		<h2 class="title">
+			<span>
+				<a href="{{ book.category.get_absolute_url }}">{{ book.category }}</a>
+			</span>
+				<a href="{{ book.category.get_absolute_url }}">更多...</a>
+		</h2>
+		<div class="block">
+			<div class="block_img">
+				<a href="{{ book.get_absolute_url }}">
+					<img src="{% static book.image %}" alt="{{ book.title }}" onerror="{% static 'novel_site/images/miss.jpg' %}" width="80" height="100">
+				</a>
+			</div>
+			<div class="block_txt">
+				<h2>
+					<a href="{{ book.get_absolute_url }}" style="color: #007BB1;">绝世唐门</a>
+				</h2>
+				<p>{{ book.author }}</p>
+				<p>
+				<a href="{{ book.get_absolute_url }}">{{ book.resume }}</a>
+				</p>
+			</div>
+			<div style="clear:both"></div>
+			<ul>
+                {% for book in books %}
+				<li><a href="{{ book.get_absolute_url }}" class="blue">{{ book.title }}</a>/{{ book.author }}</li>
+                {% empty %}
+                <li><p>sorry, not found any book</p></li>
+                {% endfor %}
+			</ul>
+		</div>
+    </div>
+    {% endfor %}
+    
+	<!-- 底部菜单 -->
+	<div class="footer">
+		<ul>
+			<li><a href="http://www.superxiaoshuo.com/">电脑版</a></li>
+			<li><a rel="nofollow" href="">书架</a></li>
+			<li><a rel="nofollow" href="http://so.superxiaoshuo.com/cse/search?s=18402225725594290780">搜索</a></li>
+			<li><a href="" style="color:red">报错</a></li>
+		</ul>
+	</div>
+	
+	<!-- 站长统计 -->
+	<div style="display:none;width:0px">
+		<script src="" language="JavaScript"></script>
+		<script src="" charset="utf-8" type="text/javascript"></script>
+		<a href="" target="_blank" title="站长统计">站长统计</a>
+	</div>
+
+ 
+
+<div id="GWDANG_HAS_BUILT"></div></body></html>

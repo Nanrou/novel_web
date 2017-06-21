@@ -52,12 +52,12 @@
                     <div class="clear"></div>
                 </div>
                 <ul>
+                    {% for book in books %}
+                        <li><a href="{{ book.get_absolute_url }}" target="_blank">{{ book.title }}</a>/{{ book.author }}</li>
+                    {% empty %}
+                        <li><p>sorry, not found any book</p></li>
+                    {% endfor %}
                 </ul>
-                {% for book in books %}
-                    <li><a href="{{ book.get_absolute_url }}" target="_blank">{{ book.title }}</a>/{{ book.author }}</li>
-                {% empty %}
-                    <p>sorry, not found any book</p>
-                {% endfor %}
             </div>
         {% endfor %}
         </div>
@@ -83,130 +83,6 @@
                 </div>
             {% endfor %}
         </div>
-        {% comment %}
-        <div class="novelslist">
-            <div class="content">
-                <h2>历史小说</h2>
-
-                <div class="top">
-                    <div class="image"><a href="http://www.superxiaoshuo.com.org/files/article/77/77130/" target="_blank"><img src="%E7%87%83%E6%96%87%E5%B0%8F%E8%AF%B4_%E4%B9%A6%E5%8F%8B%E6%9C%80%E5%80%BC%E5%BE%97%E6%94%B6%E8%97%8F%E7%9A%84%E7%BD%91%E7%BB%9C%E5%B0%8F%E8%AF%B4%E9%98%85%E8%AF%BB%E7%BD%91_files/77130s.jpg" alt="寒门崛起" width="67" height="82"></a></div>
-                    <dl>
-                        <dt><a href="http://www.superxiaoshuo.com.org/files/article/77/77130/" target="_blank">寒门崛起</a></dt>
-                        <dd>    这是一个就业路上屡被蹂躏的古汉语专业研究生，回到了明朝中叶，进入了山村一家幼童身体后的故事。
-    木讷父亲泼辣娘，一水的极品亲戚...</dd>
-                    </dl>
-                    <div class="clear"></div>
-                </div>
-                <ul>
-                </ul>
-                    <li><a href="http://www.superxiaoshuo.com.org/files/article/77/77420/" target="_blank">银狐</a>/孑与2</li>
-
-                    <li><a href="http://www.superxiaoshuo.com.org/files/article/19/19223/" target="_blank">特种兵在都市</a>/夜十三</li>
-
-                    <li><a href="http://www.superxiaoshuo.com.org/files/article/67/67275/" target="_blank">医统江山</a>/石章鱼</li>
-
-                    <li><a href="http://www.superxiaoshuo.com.org/files/article/81/81814/" target="_blank">寒门状元</a>/天子</li>
-
-                    <li><a href="http://www.superxiaoshuo.com.org/files/article/73/73312/" target="_blank">三国之召唤猛将</a>/青铜剑客</li>
-
-                    <li><a href="http://www.superxiaoshuo.com.org/files/article/69/69963/" target="_blank">我要做皇帝</a>/要离刺荆轲</li>
-
-                    <li><a href="http://www.superxiaoshuo.com.org/files/article/71/71961/" target="_blank">最强兵王</a>/丛林狼</li>
-
-                    <li><a href="http://www.superxiaoshuo.com.org/files/article/77/77246/" target="_blank">铁血强国</a>/流泪的鱼wyj</li>
-
-                    <li><a href="http://www.superxiaoshuo.com.org/files/article/68/68888/" target="_blank">十国千娇</a>/西风紧</li>
-
-                    <li><a href="http://www.superxiaoshuo.com.org/files/article/77/77305/" target="_blank">盛唐崛起</a>/庚新</li>
-
-                    <li><a href="http://www.superxiaoshuo.com.org/files/article/77/77055/" target="_blank">春秋我为王</a>/七月新番</li>
-
-                    <li><a href="http://www.superxiaoshuo.com.org/files/article/25/25976/" target="_blank">大官人 </a>/三戒大师</li>
-
-            </div>
-            <div class="content">
-                <h2>网游小说</h2>
-
-                <div class="top">
-                    <div class="image"><a href="http://www.superxiaoshuo.com.org/files/article/18/18713/" target="_blank"><img src="%E7%87%83%E6%96%87%E5%B0%8F%E8%AF%B4_%E4%B9%A6%E5%8F%8B%E6%9C%80%E5%80%BC%E5%BE%97%E6%94%B6%E8%97%8F%E7%9A%84%E7%BD%91%E7%BB%9C%E5%B0%8F%E8%AF%B4%E9%98%85%E8%AF%BB%E7%BD%91_files/18713s.jpg" alt="惊悚乐园" width="67" height="82"></a></div>
-                    <dl>
-                        <dt><a href="http://www.superxiaoshuo.com.org/files/article/18/18713/" target="_blank">惊悚乐园</a></dt>
-                        <dd>    这是超越维度的游戏。
-    亦是追寻真理的竞逐。
-    未知的封印，鬼神的赌局……
-    数据的抗争，人类的救赎……
-    在那个连接着现...</dd>
-                    </dl>
-                    <div class="clear"></div>
-                </div>
-                <ul>
-                </ul>
-                    <li><a href="http://www.superxiaoshuo.com.org/files/article/27/27606/" target="_blank">神级英雄</a>/大烟缸</li>
-
-                    <li><a href="http://www.superxiaoshuo.com.org/files/article/77/77353/" target="_blank">冠军之心</a>/林海听涛</li>
-
-                    <li><a href="http://www.superxiaoshuo.com.org/files/article/70/70550/" target="_blank">深渊主宰</a>/诸生浮屠</li>
-
-                    <li><a href="http://www.superxiaoshuo.com.org/files/article/78/78117/" target="_blank">超级指环王</a>/兔来割草</li>
-
-                    <li><a href="http://www.superxiaoshuo.com.org/files/article/69/69808/" target="_blank">网游之三国无双</a>/沉默的忧伤</li>
-
-                    <li><a href="http://www.superxiaoshuo.com.org/files/article/78/78608/" target="_blank">重生之最强剑神</a>/天运老猫</li>
-
-                    <li><a href="http://www.superxiaoshuo.com.org/files/article/80/80340/" target="_blank">全能运动员</a>/过关斩将</li>
-
-                    <li><a href="http://www.superxiaoshuo.com.org/files/article/76/76555/" target="_blank">网游之大盗贼</a>/泛舟填词</li>
-
-                    <li><a href="http://www.superxiaoshuo.com.org/files/article/83/83921/" target="_blank">英雄联盟之七百年后</a>/沉入海底</li>
-
-                    <li><a href="http://www.superxiaoshuo.com.org/files/article/81/81883/" target="_blank">武林半侠传</a>/文抄公</li>
-
-                    <li><a href="http://www.superxiaoshuo.com.org/files/article/77/77259/" target="_blank">网游之逆天戒指</a>/上古圣贤</li>
-
-                    <li><a href="http://www.superxiaoshuo.com.org/files/article/48/48822/" target="_blank">疯巫妖的实验日志</a>/愤怒的松鼠</li>
-
-            </div>
-            <div class="content border">
-                <h2>科幻小说</h2>
-
-                <div class="top">
-                    <div class="image"><a href="http://www.superxiaoshuo.com.org/files/article/26/26373/" target="_blank"><img src="%E7%87%83%E6%96%87%E5%B0%8F%E8%AF%B4_%E4%B9%A6%E5%8F%8B%E6%9C%80%E5%80%BC%E5%BE%97%E6%94%B6%E8%97%8F%E7%9A%84%E7%BD%91%E7%BB%9C%E5%B0%8F%E8%AF%B4%E9%98%85%E8%AF%BB%E7%BD%91_files/26373s.jpg" alt="黑铁之堡 " width="67" height="82"></a></div>
-                    <dl>
-                        <dt><a href="http://www.superxiaoshuo.com.org/files/article/26/26373/" target="_blank">黑铁之堡 </a></dt>
-                        <dd>    大灾变之后，世间的一切规则重写，黑铁时代来临，钢铁，蒸汽，武力成为人类赖以生存下去的最大依靠，一个叫张铁的普通少年，懵懵懂懂之...</dd>
-                    </dl>
-                    <div class="clear"></div>
-                </div>
-                <ul>
-                </ul>
-                    <li><a href="http://www.superxiaoshuo.com.org/files/article/68/68898/" target="_blank">异常生物见闻录</a>/远瞳</li>
-
-                    <li><a href="http://www.superxiaoshuo.com.org/files/article/77/77401/" target="_blank">电影世界大抽奖</a>/熊猫胖大</li>
-
-                    <li><a href="http://www.superxiaoshuo.com.org/files/article/79/79459/" target="_blank">穿越未来之男人不好当</a>/汝夫人</li>
-
-                    <li><a href="http://www.superxiaoshuo.com.org/files/article/77/77317/" target="_blank">武侠世界大穿越</a>/我叫排云掌</li>
-
-                    <li><a href="http://www.superxiaoshuo.com.org/files/article/64/64176/" target="_blank">文艺时代</a>/睡觉会变白</li>
-
-                    <li><a href="http://www.superxiaoshuo.com.org/files/article/27/27181/" target="_blank">星河贵族 </a>/奥尔良烤鲟鱼堡</li>
-
-                    <li><a href="http://www.superxiaoshuo.com.org/files/article/76/76384/" target="_blank">修真四万年</a>/卧牛真人</li>
-
-                    <li><a href="http://www.superxiaoshuo.com.org/files/article/18/18668/" target="_blank">花间高手</a>/冷云邪神</li>
-
-                    <li><a href="http://www.superxiaoshuo.com.org/files/article/77/77063/" target="_blank">重启末世</a>/古羲</li>
-
-                    <li><a href="http://www.superxiaoshuo.com.org/files/article/77/77333/" target="_blank">颤栗世界</a>/奥比椰</li>
-
-                    <li><a href="http://www.superxiaoshuo.com.org/files/article/18/18332/" target="_blank">纨绔仙医</a>/步征</li>
-
-                    <li><a href="http://www.superxiaoshuo.com.org/files/article/77/77174/" target="_blank">恐怖都市</a>/猛虎道长</li>
-
-            </div>
-            <div class="clear"></div>
-        </div>
-        {% endcomment %}
         <div id="newscontent">
             <div class="l">
                 <h2>最近更新小说</h2>

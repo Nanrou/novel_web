@@ -1,4 +1,4 @@
-document.writeln("<script src='\/scripts\/ajax.js'><\/script>");
+//document.writeln("<script src='\/scripts\/ajax.js'><\/script>");
 var jieqiUserId = 0;
 var jieqiUserName = '';
 function showlogin(){//登录

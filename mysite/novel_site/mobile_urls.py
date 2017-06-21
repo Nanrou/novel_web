@@ -4,7 +4,6 @@ from django.conf.urls import url
 from . import views
 
 
-app_name = 'novel_site_moble'
 urlpatterns = [
     url(r'^$', views.TestView.as_view(), name='home'),
     url(r'^cate/quanben/$', views.QuanbenView.as_view(), name='quanben'),

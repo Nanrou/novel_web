@@ -18,5 +18,5 @@ from django.contrib import admin
 
 urlpatterns = [
     url(r'', include('novel_site.urls')),
-	url(r'm/', include('novel_site.moble_urls'))
+    # url(r'm/', include('novel_site.mobile_urls')),
 ]

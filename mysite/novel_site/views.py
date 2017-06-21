@@ -13,12 +13,35 @@ from django.http import Http404
 
 # Create your views here.
 
-class TestView(TemplateView):
-	template_name = 'moble/home.html'
+
+def get_book_from_cate():
+    cate_list = []
+    for index in range(1, 7):
+        books = CategoryTable.objects.get(id=index).get_random_ele(6)
+        book = sample(list(books), 1)[0]
+        cate_list.append([book, books])
+    return cate_list
+
+
+class TestView(DetailView):
+    template_name = 'mobile/home.html'
+
+    def get_object(self, queryset=None):
+        return InfoTable.objects.all()
+
+    def get_context_data(self, **kwargs):
+        context = super(TestView, self).get_context_data(**kwargs)
+        context['cate_book'] = get_book_from_cate()
+        return context
 
 
 class HomeView(DetailView):
     template_name = 'novel_site/home.html'
+
+    def dispatch(self, request, *args, **kwargs):
+        if 'mobile' in request.META['HTTP_USER_AGENT'] or 'Mobile' in request.META['HTTP_USER_AGENT']:
+            return redirect('m/', permanent=True)  # 用301还是302？
+        return super(HomeView, self).dispatch(request, *args, **kwargs)
 
     def get_object(self, queryset=None):
         self.obj = InfoTable.objects.all()
@@ -28,11 +51,7 @@ class HomeView(DetailView):
         context = super(HomeView, self).get_context_data(**kwargs)
         context['top_four'] = self.obj[0:4]
 
-        cate_list = []
-        for index in range(1, 7):
-            books = CategoryTable.objects.get(id=index).get_random_ele(6)
-            book = sample(list(books), 1)[0]
-            cate_list.append([book, books])
+        cate_list = get_book_from_cate()
         context['cate_list1'] = cate_list[0:3]
         context['cate_list2'] = cate_list[3:]
 
