@@ -93,8 +93,14 @@ class Book(models.Model):
     def get_absolute_url(self):
         return reverse('novel_site:detail', kwargs={'pk': self.book_id, 'index': self.pk})
 
+    @staticmethod
+    def miss_img_path():
+        return 'mobile/css/miss.jpg'
+
     class Meta:
         abstract = True
+
+
 
 
 class BookTableOne(Book):

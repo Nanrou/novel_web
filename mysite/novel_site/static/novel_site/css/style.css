@@ -48,7 +48,7 @@ table.grid td { background-color: #FFFFFF !important; border: 1px solid #C3DFEA;
 #hotcontent .l .item dl{float:right;width:190px;padding:0 5px 0 0;}
 #hotcontent .l .item .image{float:left;width:120px;}
 #hotcontent .l .item .image img{background-color:#FFF;border:1px solid #DDD;padding:1px;}
-#hotcontent .ll{ border:3px solid #B8C3CF; margin: 10px auto; padding:5px;  float:left; width:964px; height:320px; overflow:hidden;}
+#hotcontent .ll{ background:#FBF6EC; border:3px solid #B8C3CF; margin: 10px auto; padding:5px;  float:left; width:964px; height:320px; overflow:hidden;}
 #hotcontent .ll .item{ width:315px; float:left; padding:2px 0px 0px 5px;border-right-width: 1px;border-color: #8585c9;border-right-style: solid;border-bottom-width: 1px;border-bottom-style: solid;}
 #hotcontent .ll .item .image{ float:left; width:120px;}
 #hotcontent .ll .item .image img{ border:solid 1px #DDDDDD; padding:1px; background-color:White;}

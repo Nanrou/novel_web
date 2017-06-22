@@ -2,47 +2,54 @@
 {% load staticfiles %}
 
 {% block meta_description %}
-	<title>ะþประกหตะกหตลละะฐ๑-ศผฮฤะกหตาฦถฏฐๆ</title>
-	<meta name="keywords" content="ะþประกหตะกหตลละะฐ๑,ะþประกหตะกหตtxtฯยิุ">
-	<meta name="description" content="ศผฮฤะกหตาฦถฏฐๆฬแนฉรโทักขศศรลตฤะþประกหตะกหตลละะฐ๑กขื๎ะยะþประกหตะกหตผฐTXTฯยิุกฃ">
-	<meta name="MobileOptimized" content="240">
-	<link rel="canonical" href="http://www.ranwena.com/xuanhuan/">
+	<title>{{ cate }}ๅฐ่ฏดๅฐ่ฏดๆ’่กๆฆ-่ถ…็บงๅฐ่ฏด็งปๅจ็</title>
+	<meta name="keywords" content="{{ cate }}ๅฐ่ฏดๅฐ่ฏดๆ’่กๆฆ,{{ cate }}ๅฐ่ฏดๅฐ่ฏดtxtไธ่ฝฝ">
+	<meta name="description" content="่ถ…็บงๅฐ่ฏด็งปๅจ็ๆไพๅ…่ดนใ€็ญ้—จ็{{ cate }}ๅฐ่ฏดๅฐ่ฏดๆ’่กๆฆใ€ๆ€ๆ–ฐ{{ cate }}ๅฐ่ฏดๅฐ่ฏดๅTXTไธ่ฝฝใ€">
+	<link rel="canonical" href="http://www.superxiaoshuo.com/cate/{{ cate.cate }}">
 {% endblock meta_description %}
 
 {% block header %}
 	<div class="header">
-		<a href="javascript:history.go(-1);" class="return">ทตปุ</a>
-		<a href="http://m.ranwena.com/" class="home">สืาณ</a>
-		<h2><a href="http://m.ranwena.com/">ศผฮฤะกหต</a></h2><p>m.ranwena.com</p>
+		<a href="javascript:history.go(-1);" class="return">่ฟ”ๅ</a>
+		<a href="/" class="home">้ฆ–้กต</a>
+		<h2><a href="/">่ถ…็บงๅฐ่ฏด</a></h2><p>m.superxiaoshuo.com</p>
 	</div>
 {% endblock header %}
 
 {% block main %}
 	<div class="content">
-	<ul>
-	<li class="prev  state "><a href="http://m.ranwena.com/xuanhuan/">ะþประกหต</a></li>
-	<li class="prev "><a href="http://m.ranwena.com/xiuzhen/">ะÞีๆะกหต</a></li>
-	<li class="prev "><a href="http://m.ranwena.com/dushi/">ถผสะะกหต</a></li>
-	</ul>
-	<ul>
-	<li class="prev "><a href="http://m.ranwena.com/lishi/">ภ๚สทะกหต</a></li>
-	<li class="prev "><a href="http://m.ranwena.com/wangyou/">อ๘ำฮะกหต</a></li>
-	<li class="prev "><a href="http://m.ranwena.com/kehuan/">ฟฦประกหต</a></li>
-	</ul>
-	<ul>
-	<li class="prev "><a href="http://m.ranwena.com/kongbu/">ฟึฒภะกหต</a></li>
-	<li class="prev "><a href="http://m.ranwena.com/yanqing/">ัิว้ะกหต</a></li>
-	<li class="prev "><a href="http://m.ranwena.com/qita/">ฦไห๛ะกหต</a></li>
-	</ul>
+        <ul>
+            <li class="prev"><a href="cate/xuanhuan/">็ๅนปไฟฎ็</a></li>
+            <li class="prev"><a href="cate/kehuan/">็ง‘ๅนป็ฝ‘ๆธธ</a></li>
+            <li class="prev"><a href="cate/dushi/">้ฝๅธ้็”</a></li>
+        </ul>
+        <ul>
+            <li class="prev"><a href="cate/jiakong/">ๆถ็ฉบๅๅฒ</a></li>
+            <li class="prev"><a href="cate/kongbu/">ๆๆ€–็ฝ‘ๆธธ</a></li>
+            <li class="prev"><a href="cate/quanben/">ๅ…จๆฌๅฐ่ฏด</a></li>
+        </ul>
 	</div>
 
-	<div class="toptab"><span class="active">ะþประกหต</span></div>
-	<div class="bookbox"><div class="bookimg"><a href="http://m.ranwena.com/files/article/81/81234/"><img src="%E7%8E%84%E5%B9%BB%E5%B0%8F%E8%AF%B4%E5%B0%8F%E8%AF%B4%E6%8E%92%E8%A1%8C%E6%A6%9C-%E7%87%83%E6%96%87%E5%B0%8F%E8%AF%B4%E7%A7%BB%E5%8A%A8%E7%89%88_files/81234m.jpg" onerror="this.src='http://www.ranwena.com/modules/article/images/nocover.jpg'"></a></div><div class="bookinfo"><h4 class="bookname"><a href="http://m.ranwena.com/files/article/81/81234/">ธวสภตÛื๐</a></h4><div class="author">ื๗ี฿ฃบาปาถวเฬ์</div><div class="cl0"></div><div class="update"><span>ธüะยึมฃบ</span><a href="http://m.ranwena.com/files/article/81/81234/19668057.html">ตฺศýวงหฤฐูาปสฎม๙ีย ฮÞษฯีฝมฆฃก</a></div><div class="cl0"></div><div class="intro_line"><span>ผ๒ฝ้ฃบ</span>    ยานลห๊ิยฃฌึ๎สฅี๙ฐิกฃาปธ๖บลณฦกฐหฏษ๑กฑตฤษูฤ๊ฃฌา๒ป๖ตรธฃฟชฦ๔าปรลฤๆฬ์นฆทจกฃดำดหาิบ๓ฃฌาปธ๖ศโฬๅฮÞหซตฤฦๆฒลฃฌบแันฬ์ตุฃฌฝฃีถะวณฝฃฌอ๒วงฦๆฒลิฺห๛ฝลฯยูู้๋ฒüภ๕กฃศบะÛแศฦ๐ตฤฤ๊ด๚ฃฌฮจฮาฐิฮไถภื๐ฃกVIPถฉิฤศบฃบ434739889
-	</div></div></div>
-	<div class="bookbox"><div class="bookimg"><a href="http://m.ranwena.com/files/article/86/86274/"><img src="%E7%8E%84%E5%B9%BB%E5%B0%8F%E8%AF%B4%E5%B0%8F%E8%AF%B4%E6%8E%92%E8%A1%8C%E6%A6%9C-%E7%87%83%E6%96%87%E5%B0%8F%E8%AF%B4%E7%A7%BB%E5%8A%A8%E7%89%88_files/86274m.jpg" onerror="this.src='http://www.ranwena.com/modules/article/images/nocover.jpg'"></a></div><div class="bookinfo"><h4 class="bookname"><a href="http://m.ranwena.com/files/article/86/86274/">ฬซนละวตÛ</a></h4><div class="author">ื๗ี฿ฃบษีตถ</div><div class="cl0"></div><div class="update"><span>ธüะยึมฃบ</span><a href="http://m.ranwena.com/files/article/86/86274/19668049.html">ตฺ940ีย ฒ๎ตใพอหภมห</a></div><div class="cl0"></div><div class="intro_line"><span>ผ๒ฝ้ฃบ</span>    ทฑะวด๓ยฝฃฌะวณฝาฺอ๒ฃฌฮไตภึฎศหฃฌฟษพ๕ะัะวป๊ฃฌฝ๘ถ๘วฟปฏืิษํฃฌฑไตฤฮÞฑศวฟด๓ฃฌำ๋ฬ์ตุี๙ทๆกฃ
-		ยๅณฝฃฌาปธ๖ฮÞทจพ๕ะัะวป๊ตฤทฯศหฃฌื๑ัญฤธวืาลิธศฅศฯืๆน้ืฺฃฌศดิโำ๖ม่ศ่ฃฌฑ๔มูหภอ๖ฃฌตซศดาฒา๒ดหดฅถฏมหธธวืาลม๔ึฎฮ๏ฃฌพ๕ะัฤÜนปษýผถตฤฦๆา์ะวป๊กฃ
-		ดำดหฬคษฯวฟี฿ึฎยทฃฌำ๋รภ...</div></div></div>
+	<div class="toptab"><span class="active">{{ cate }}ๅฐ่ฏด</span></div>
 
-	<div class="page"><a href="http://m.ranwena.com/xuanhuan/2">ฯยาณ</a><a href="http://m.ranwena.com/xuanhuan/2785"> ฮฒาณ</a></div><div class="page"><form name="checklogin" method="post" action="">สไศ๋าณสý<input name="page" format="*N" size="4"><input name="submit" value="ฬ๘ืช" onclick="window.location='/xuanhuan/'+this.previousSibling.value;" type="button"> </form>(ตฺ1/2785าณ)ตฑวฐ15ฬ๕/าณ</div>
+    {% for book in cate_books %}
+	<div class="bookbox">
+        <div class="bookimg">
+            <a href="{{ book.get_absolute_url }}">
+                <img src="{% static book.image %}" onerror="this.src='{% static book.miss_img_path %}'">
+            </a>
+        </div>
+        <div class="bookinfo">
+            <h4 class="bookname"><a href="{{ book.get_absolute_url }}">{{ book.title }}</a></h4>
+            <div class="author">ไฝ่€…๏ผ{{ book.author }}</div>
+            <div class="update"><span>ๆดๆ–ฐ่ณ๏ผ</span><a href="{{ book.latest_chapter.get_absolute_url }}">{{ book.latest_chapter.chapter }}</a></div>
+            <div class="intro_line">
+                <span>็ฎ€ไป๏ผ</span>{{ book.resume|truncatechars:30 }}
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+
+	<div class="page"><a href="http://m.superxiaoshuo.com/xuanhuan/2">ไธ้กต</a><a href="http://m.superxiaoshuo.com/xuanhuan/2785"> ๅฐพ้กต</a></div><div class="page"><form name="checklogin" method="post" action="">่พ“ๅ…ฅ้กตๆ•ฐ<input name="page" format="*N" size="4"><input name="submit" value="่ทณ่ฝฌ" onclick="window.location='/xuanhuan/'+this.previousSibling.value;" type="button"> </form>(็ฌฌ1/2785้กต)ๅฝ“ๅ15ๆก/้กต</div>
 {% endblock main %}
 

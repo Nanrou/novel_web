@@ -23,20 +23,13 @@ def get_book_from_cate():
     return cate_list
 
 
-class MobileHomeView(TemplateView):
-    template_name = 'mobile/home.html'
-
-    def get_context_data(self, **kwargs):
-        context = super(MobileHomeView, self).get_context_data(**kwargs)
-        context['cate_book'] = get_book_from_cate()
-        return context
-
 
 class HomeView(TemplateView):
     template_name = 'novel_site/home.html'
 
     def get_context_data(self, **kwargs):
-        context = super(HomeView, self).get_context_data(**kwargs)
+        # context = super(HomeView, self).get_context_data(**kwargs)
+        context = dict()
         context['top_four'] = InfoTable.objects.all()[0:4]
 
         cate_list = get_book_from_cate()
@@ -56,7 +49,6 @@ class CategoryView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(CategoryView, self).get_context_data(**kwargs)
-        # cate_books = self.obj.cate_books.all()
         context['cate_books'] = self.obj.cate_books.all()[0:6]
         return context
 
@@ -121,3 +113,33 @@ class QuanbenView(ListView):
     template_name = 'novel_site/quanben.html'
     queryset = InfoTable.objects.filter(_status=True).order_by('update_time')
     context_object_name = 'books'
+
+
+class MobileHomeView(TemplateView):
+    template_name = 'mobile/home.html'
+
+    def get_context_data(self, **kwargs):
+        # context = super(MobileHomeView, self).get_context_data(**kwargs)
+        # context['cate_book'] = get_book_from_cate()
+        # return context
+        return {'cate_book': get_book_from_cate()}
+
+
+class MobileQuanbenView(TemplateView):
+    template_name = 'mobile/quanben.html'
+
+
+class MobileCategoryView(CategoryView):
+    template_name = 'mobile/category.html'
+
+    def get_context_data(self, **kwargs):
+        return {'cate_books': self.obj.cate_books.all()[:10]}
+
+
+class MobileInfoView(TemplateView):
+    template_name = 'mobile/info.html'
+
+
+class MobileBookView(TemplateView):
+    template_name = 'mobile/detail.html'
+

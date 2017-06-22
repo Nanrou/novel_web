@@ -1,6 +1,6 @@
 body, h1, h2, h3, h4, h5, h6, p, div, ul, li, dl, dt, dd, h1 {margin:0;padding: 0;}
 html {background:#fff;font:16px/1.5 'microsoft yahei';}
-input, textarea {font-size:12px;font-family:"寰蒋闆呴粦";}
+input, textarea {font-size:12px;font-family:'microsoft yahei';}
 li {list-style:none;}
 img {border:none;margin:0;padding:0;}
 a {color:#000; text-decoration:none;}
@@ -345,7 +345,7 @@ body {
 	color:#999;display:list-item;
 }
 .chapter li a{display:block; border-radius:4px;overflow:hidden;display:list-item;}
-.chapter span {background: url(/images/list.png) no-repeat scroll 0 0 transparent;display: block;float: right;height: 20px; margin-right: 10px;margin-top: 5px;width: 14px;}
+.chapter span {background: url(list.png) no-repeat scroll 0 0 transparent;display: block;float: right;height: 20px; margin-right: 10px;margin-top: 5px;width: 14px;}
 
 .ablum {
     height: auto;
@@ -472,35 +472,35 @@ h4.bookname a {color: #007BB1;}
 .toptab span.active{color:#000;border-bottom:3px solid #3ba8de; overflow:hidden}
 /*style*/
 .set{
-     height:32px;
-	 padding-top:10px;
-	 font-size:12px;	
-	 width:100%;
-	 color:#000;
+	height:32px;
+	padding-top:10px;
+	font-size:12px;	
+	width:100%;
+	color:#000;
 }
 .set .set1{
-     float:right;
-	 border:1px solid #007BB1;
-	 padding:2px 10px;
-	 margin-left:10px;
-	 border-radius:5px;
-	 color:#0065B5;
+	float:right;
+	border:1px solid #007BB1;
+	padding:2px 10px;
+	margin-left:10px;
+	border-radius:5px;
+	color:#0065B5;
 }
 .set .set2 div{
-     border:1px solid #007BB1;
-	 float:left;
-	 padding:2px 7px;
-	 margin-left:5px;
-	 border-radius:3px;
-	 color:#0065B5;
+	border:1px solid #007BB1;
+	float:left;
+	padding:2px 7px;
+	margin-left:5px;
+	border-radius:3px;
+	color:#0065B5;
 }
 .set .set2 p{
-     border:1px solid #007BB1;
-	 float:left;
-	 padding:5px 5px;
-	 margin-left:5px;
-	 border-radius:3px;
-	 color:#0065B5;
+    border:1px solid #007BB1;
+	float:left;
+	padding:5px 5px;
+	margin-left:5px;
+	border-radius:3px;
+	color:#0065B5;
 }
 .content{
     width:98%;
@@ -544,7 +544,6 @@ h4.bookname a {color: #007BB1;}
 	text-align:center;
 	padding:4px 0px; 
 	background-color:#fff;
-	color:#000;
 	border:1px solid #999;
 }
 .state a{
@@ -570,20 +569,20 @@ h4.bookname a {color: #007BB1;}
     line-height: 20px;
 }
 .read{
-     background: #fff;
-	 line-height: 40px;
-	 height: 40px;
-	 border-bottom:2px solid #efefef
+	background: #fff;
+	line-height: 40px;
+	height: 40px;
+	border-bottom:2px solid #efefef
 }
 
 .read h1{
-     padding: 0 5px;
-	 display: inline-block;
-	 height: 40px;
-	 background:#fff;
-	 float: left;
-	 font-size:20px;
-	 color:#000;
+	padding: 0 5px;
+	display: inline-block;
+	height: 40px;
+	background:#fff;
+	float: left;
+	font-size:20px;
+	color:#000;
 }
 .read h2 {
     padding: 0 5px;
@@ -600,11 +599,11 @@ h4.bookname a {color: #007BB1;}
     width: 70%;
 }
 .read span{
-	 float:right;
-	 margin-right:10px;
+	float:right;
+	margin-right:10px;
 }
 .read span a{
-	 color:red;
+	color:red;
 }
 .hot{
 	margin-top: 5px;
@@ -681,5 +680,4 @@ h4.bookname a {color: #007BB1;}
 .nr_page .prev{text-align:left;margin-left:7px;}
 .nr_page .mulu{text-align:center;}
 .nr_page .next{text-align:right;margin-right:7px;}
-.prev a,.mulu a,.next a{display:block;text-align:center;padding:5px 5px;background-color:#f4f0e9;color:green;border:1px solid #ece6da; }
 .nr_nr{margin:15px;line-height:150%;font-size:22px;color:#000;overflow:hidden;}
