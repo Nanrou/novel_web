@@ -564,7 +564,6 @@ h4.bookname a {color: #007BB1;}
 	color:red;
 }
 
-/*鐩綍椤�*/
 .index_block {
     border: 0px;
     overflow: hidden;
@@ -667,3 +666,20 @@ h4.bookname a {color: #007BB1;}
 /*page*/
 .page{height: auto;padding-bottom: 10px;text-align:center;padding-top: 15px;}
 .page a{text-align:center;padding: 4px 15px 4px 15px;margin-right:5px;border-radius: 3px;background: #2A7CE7;color:#fff;}
+
+/*detail*/
+.c_nr{background-color:#FBF6EC;color:#fff}
+.nr_set{padding:10px;font-size:12px; background-color:#ECF0F0;position:relative;z-index:999;}
+.nr_set .set1{float:right;border:1px solid #0065B5;padding:2px 10px;margin-left:10px;border-radius:5px;color:#0065B5}
+.nr_set .set2 div{border:1px solid #0065B5;float:left;padding:2px 7px;margin-left:5px;border-radius:3px;color:#0065B5}
+.nr_set .set2 p{border:1px solid #0065B5;float:left;padding:5px 5px;margin-left:5px;border-radius:3px;color:#0065B5}
+.cc{height:0px;clear:both;}
+.nr_title{padding:10px 5px;font-weight:bold;font-size:18px; text-align:center;color:#000;position:relative;z-index:999;}
+.nr_page{ margin:3px 0px;position:relative;z-index:999;padding-top: 15px}
+.nr_page table{width:100%;}
+.nr_page table td{ text-align:center}
+.nr_page .prev{text-align:left;margin-left:7px;}
+.nr_page .mulu{text-align:center;}
+.nr_page .next{text-align:right;margin-right:7px;}
+.prev a,.mulu a,.next a{display:block;text-align:center;padding:5px 5px;background-color:#f4f0e9;color:green;border:1px solid #ece6da; }
+.nr_nr{margin:15px;line-height:150%;font-size:22px;color:#000;overflow:hidden;}
