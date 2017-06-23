@@ -19,14 +19,14 @@
 {% block main %}
 	<div class="content">
         <ul>
-            <li class="prev"><a href="cate/xuanhuan/">玄幻修真</a></li>
-            <li class="prev"><a href="cate/kehuan/">科幻网游</a></li>
-            <li class="prev"><a href="cate/dushi/">都市重生</a></li>
+            <li class="prev"><a href="/m/cate/xuanhuan/">玄幻修真</a></li>
+            <li class="prev"><a href="/m/cate/kehuan/">科幻网游</a></li>
+            <li class="prev"><a href="/m/cate/dushi/">都市重生</a></li>
         </ul>
         <ul>
-            <li class="prev"><a href="cate/jiakong/">架空历史</a></li>
-            <li class="prev"><a href="cate/kongbu/">恐怖网游</a></li>
-            <li class="prev"><a href="cate/quanben/">全本小说</a></li>
+            <li class="prev"><a href="/m/cate/jiakong/">架空历史</a></li>
+            <li class="prev"><a href="/m/cate/kongbu/">恐怖网游</a></li>
+            <li class="prev"><a href="/m/cate/quanben/">全本小说</a></li>
         </ul>
 	</div>
 
@@ -35,14 +35,14 @@
     {% for book in cate_books %}
 	<div class="bookbox">
         <div class="bookimg">
-            <a href="{{ book.get_absolute_url }}">
+            <a href="{{ book.get_mobile_url }}">
                 <img src="{% static book.image %}" onerror="this.src='{% static book.miss_img_path %}'">
             </a>
         </div>
         <div class="bookinfo">
-            <h4 class="bookname"><a href="{{ book.get_absolute_url }}">{{ book.title }}</a></h4>
+            <h4 class="bookname"><a href="{{ book.get_mobile_url }}">{{ book.title }}</a></h4>
             <div class="author">作者：{{ book.author }}</div>
-            <div class="update"><span>更新至：</span><a href="{{ book.latest_chapter.get_absolute_url }}">{{ book.latest_chapter.chapter }}</a></div>
+            <div class="update"><span>更新至：</span><a href="{{ book.latest_chapter.get_mobile_url }}">{{ book.latest_chapter.chapter }}</a></div>
             <div class="intro_line">
                 <span>简介：</span>{{ book.resume|truncatechars:30 }}
             </div>

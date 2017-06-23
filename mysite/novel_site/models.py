@@ -22,6 +22,9 @@ class CategoryTable(models.Model):
     def get_absolute_url(self):
         return reverse('novel_site:category', kwargs={'cate': self.cate})
 
+    def get_mobile_url(self):
+        return reverse('novel_site:m_category', kwargs={'cate': self.cate})
+
     def get_random_ele(self, num):
         if self.pk is 6:
             try:
@@ -66,9 +69,16 @@ class InfoTable(models.Model):
     def get_absolute_url(self):
         return reverse('novel_site:info', kwargs={'pk': self.pk})
 
+    def get_mobile_url(self):
+        return reverse('novel_site:m_info', kwargs={'pk': self.pk})
+
     @property
     def latest_chapter(self):
         return MAP_DICT[str(self.store_des)].objects.filter(title=self.pk).defer('content', 'need_confirm').latest('id')
+
+    @property
+    def earliest_chapter(self):
+        return MAP_DICT[str(self.store_des)].objects.filter(title=self.pk).defer('content', 'need_confirm').earliest('id')
 
     @property
     def all_chapters(self):  # 看是否要放到view中去
@@ -82,6 +92,10 @@ class InfoTable(models.Model):
     def all_chapters_id_only(self):
         return MAP_DICT[str(self.store_des)].objects.filter(title=self.pk).only('id', 'book_id')
 
+    @property
+    def miss_img_path(self):
+        return 'mobile/css/miss.jpg'
+
 
 class Book(models.Model):
     title = models.ForeignKey(InfoTable, verbose_name='title', on_delete=models.CASCADE,)
@@ -93,14 +107,11 @@ class Book(models.Model):
     def get_absolute_url(self):
         return reverse('novel_site:detail', kwargs={'pk': self.book_id, 'index': self.pk})
 
-    @staticmethod
-    def miss_img_path():
-        return 'mobile/css/miss.jpg'
+    def get_mobile_url(self):
+        return reverse('novel_site:m_detail', kwargs={'pk': self.book_id, 'index': self.pk})
 
     class Meta:
         abstract = True
-
-
 
 
 class BookTableOne(Book):

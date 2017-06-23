@@ -2,10 +2,10 @@
 {% load staticfiles %}
 
 {% block meta_description %}
-	<link rel="canonical" href="http://www.superxiaoshuo.com/files/article/17/17543/12607806.html">
-	<title> 第六百二十章 小霍飞刀（上）-绝世唐门全文免费阅读 - 超级小说移动版</title>
-	<meta name="keywords" content=" 第六百二十章 小霍飞刀（上）,绝世唐门全文阅读。">
-	<meta name="description" content="超级小说免费为大家提供绝世唐门最新章节阅读,如果你想第一时间观看下一章节,请留意以及收藏超级小说,方便你下次阅读绝世唐门最新章节。">
+	<link rel="canonical" href="{{ book.get_absolute_url }}">
+	<title> {{ book.chapter }}-{{ book.title }}全文免费阅读 - 超级小说移动版</title>
+	<meta name="keywords" content=" {{ book.chapter }},{{ book.title }}全文阅读。">
+	<meta name="description" content="超级小说免费为大家提供{{ book.title }}最新章节阅读,如果你想第一时间观看下一章节,请留意以及收藏超级小说,方便你下次阅读{{ book.title }}最新章节。">
     <meta name="format-detection" content="telephone=no">
 {% endblock meta_description %}
 
@@ -25,7 +25,7 @@
 
 {% block main %}
     <div class="c_nr">
-        <div class="nr_title" id="nr_title"> 第六百二十章 小霍飞刀（上）</div>
+        <div class="nr_title" id="nr_title">{{ book.chapter }}</div>
         <div class="report">
             <a rel="nofollow" href="" style="color:red">章节错误/点此举报</a>
         </div>
@@ -33,17 +33,17 @@
             <table cellspacing="0" cellpadding="0">
                 <tbody>
                     <tr>
+                        <td class="prev"><a id="pt_prev" href="{{ last_page }}">上一章</a></td>
+                        <td class="mulu"><a id="pt_mulu" href="{{ mulu }}">返回目录</a></td>
+                        <td class="next"><a id="pt_next" href="{{ next_page }}">下一章</a></td>
                         <td class="prev"><a rel="nofollow" href="" id="pt_shujia" style="color:red">书架</a></td>
-                        <td class="prev"><a id="pt_prev" href="">上一章</a></td>
-                        <td class="mulu"><a id="pt_mulu" href="">返回目录</a></td>
-                        <td class="next"><a id="pt_next" href="">下一章</a></td>
                     </tr>
                 </tbody>
             </table>
         </div>
         <div id="nr" class="nr_nr">
             <div id="nr1">
-            霍雨浩的脸色有些苍白，一连串的爆发，让他体内的三大魂核疯狂运
+                {{ book.content|safe }}
             </div>
         </div>
         <div class="report">
@@ -53,10 +53,10 @@
             <table cellspacing="0" cellpadding="0">
                 <tbody>
                     <tr>
-                        <td class="prev"><a id="pb_prev" href="">上一章</a></td>
-                        <td class="mulu"><a id="pb_mulu" href="">返回目录</a></td>
-                        <td class="next"><a id="pb_next" href="">下一章</a></td>
-                        <td class="next"><a id="shujia" href="">书签</a></td>
+                        <td class="prev"><a id="pt_prev" href="{{ last_page }}">上一章</a></td>
+                        <td class="mulu"><a id="pt_mulu" href="{{ mulu }}">返回目录</a></td>
+                        <td class="next"><a id="pt_next" href="{{ next_page }}">下一章</a></td>
+                        <td class="prev"><a rel="nofollow" href="" id="pt_shujia" style="color:red">书架</a></td>
                     </tr>
                 </tbody>
             </table>

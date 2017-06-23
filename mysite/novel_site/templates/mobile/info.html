@@ -3,47 +3,50 @@
 
 {% block meta_description %}
 	<meta name="format-detection" content="telephone=no">
-	<link rel="canonical" href="http://www.ranwena.com/files/article/17/17543/">
-	<meta property="og:url" content="http://m.ranwena.com/files/article/17/17543/">
+	<link rel="canonical" href="{{ info.get_mobile_url }}">
+	<meta property="og:url" content="{{ info.get_absolute_url }}">
 
-	<title>绝世唐门最新章节列表_绝世唐门无弹窗全文阅读_绝世唐门燃文</title>
-	<meta name="keywords" content="绝世唐门,绝世唐门最新章节列表,绝世唐门无弹窗广告全文阅读,绝世唐门燃文小说。">
-	<meta name="description" content="《绝世唐门》是唐家三少的作品,燃文小说提供绝世唐门最新章节列表全文阅读,燃文小说保证比同类网站更新更快,绝无弹窗广告保证无章节错误100%正确保证无广告,《绝世唐门》无弹窗广告最佳全文阅读体验就在燃文小说。">
+	<title>{{ info.title }}最新章节列表_{{ info.title }}无弹窗全文阅读_超级小说</title>
+	<meta name="keywords" content="{{ info.title }},{{ info.title }}最新章节列表,{{ info.title }}无弹窗广告全文阅读,{{ info.title }}超级小说。">
+	<meta name="description" content="《{{ info.title }}》是{{ info.author }}的作品,超级小说提供{{ info.title }}最新章节列表全文阅读,超级小说保证比同类网站更新更快,绝无弹窗广告保证无章节错误100%正确保证无广告,《{{ info.title }}》无弹窗广告最佳全文阅读体验就在超级小说。">
 {% endblock meta_description %}
 
 {% block main %}
 	<div class="cover">
 	  <div class="block">
-		<div class="block_img2"><img src="" onerror="this.src='http://www.ranwena.com/modules/article/images/nocover.jpg'" width="80" height="100" border="0"></div>
+		<div class="block_img2">
+            <img src="{% static info.image %}"  width="80" height="100" border="0">
+        </div>
 		<div class="block_txt2">
-		<p><a href="http://m.ranwena.com/files/article17/17543/"></a></p>
-        <h1><a href="http://m.ranwena.com/files/article17/17543/">绝世唐门</a></h1><p></p>
-		<p>作者：唐家三少</p>
-		<p>分类：<a href="http://m.ranwena.com/xuanhuan/">玄幻小说</a></p>
-		<p>状态：连载中</p>
-		<p>更新：<font style="color:red">2012-11-12 20:26</font></p>
-		<p>最新：<a href="http://m.ranwena.com/files/article/17/17543/12682307.html">第六百二十二章 大结局（四）</a></p>
+            <p><a href="{{ info.get_mobile_url }}"></a></p>
+            <h1><a href="{{ info.get_mobile_url }}"></a>{{ info.title }}</h1>
+            <p>作者：{{ info.author }}</p>
+            <p>分类：{{ info.category }}</p>
+            <p>状态：{{ info.status }}</p>
+            <p>更新：{{ info.update_time|date:'Y-m-d H:i:s' }}</p>
+            <p>最新：<a href="{{ latest_chapter.get_mobile_url }}">{{ latest_chapter.chapter }}</a></p>
 		</div>
 	  </div>
 	<div style="clear:both"></div>
 	<div class="ablum_read">
 		<span class="margin_right">
-			<a href="http://m.ranwena.com/files/article/17/17543/5026337.html">阅读第一章</a>
+			<a href="{{ info.earliest_chapter.get_mobile_url }}">阅读第一章</a>
 		</span>
 		<span class="margin_right">
-		<a href="" style="color:#fff">加入书架</a>
+		<a href="">加入书架</a>
 		</span>
 	</div>
-	<div class="intro">绝世唐门小说简介</div>
-	<div class="intro_info">    
-	这里没有魔法，没有斗气，没有武术，却有武魂。唐门创立万年之后的斗罗大陆上，唐门式微。一代天骄横空出世，新一代史莱克七怪能否重振唐门，谱写一曲绝世
-	唐门之歌？ 百万年魂兽，手握日月摘星辰的死灵圣法神，导致唐门衰落的全新魂导器体系。一切的神奇都将一一展现。 
-	唐门暗器能否重振雄风，唐门能否重现辉煌，一切尽在绝世唐门！ 【斗罗大陆II，我想，有这几个字就足够了吧。归来吧，唐门的兄弟姐妹】 
-	v群群号：100489824（加群需要全订阅或粉丝值三千）YY：4095
+	<div class="intro">{{ info.title }}小说简介</div>
+	<div class="intro_info">
+        {{ info.resume }}
 	</div>
-	<div class="intro">绝世唐门最新章节</div>
+	<div class="intro">{{ info.title }}最新章节</div>
 	   <ul class="chapter">
-			<li><span></span><a href="http://m.ranwena.com/files/article/17/17543/12682307.html">第六百二十二章 大结局（四）</a></li>
+           {% for chapter in all_chapters %}
+			<li><span></span>
+                <a href="{{ chapter.get_mobile_url }}">{{ chapter.chapter }}</a>
+            </li>
+           {% endfor %}
 		</ul>
 	</div>
 	<div class="ablum_read">
