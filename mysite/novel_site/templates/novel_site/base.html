@@ -9,7 +9,8 @@
 <!-- meta_description -->
 {% endblock meta_description %}
 <link rel="stylesheet" href="{% static 'novel_site/css/style.css' %}">
-<script src="http://apps.bdimg.com/libs/jquery/1.4.2/jquery.js"></script>
+<script src="http://apps.bdimg.com/libs/jquery/1.4.2/jquery.min.js"></script>
+<script src="http://apps.bdimg.com/libs/jquery.cookie/1.4.1/jquery.cookie.min.js"></script>
 <script src="{% static 'novel_site/js/m.js' %}"></script>
 <script src="{% static 'novel_site/js/header.js' %}"></script>
 <link rel="shortcut icon" href="{% static 'novel_site/css/favicon.ico' %}">
@@ -28,7 +29,7 @@
                 <a onclick="SetHome(this,window.location)" href="javascript:void(0);">将本站设为首页</a>
             </div>
             <div class="ywtop_addfavorite">
-                <a href="" onclick="addFavorite()" rel="sidebar">收藏超级小说</a>
+                <a href="" onclick="addFavorite;" rel="sidebar">收藏超级小说</a>
             </div>
         </div>
     </div>
@@ -56,6 +57,7 @@
             <li><a href="/cate/quanben/">全本小说</a></li>
         </ul>
     </div>
+	<script>show_lastread();</script>
     {% block main %}
     {% endblock main %}
     <div id="footer" class="footer">
@@ -68,6 +70,12 @@
             </p>
         </div>
     {% block move_widget %}
+	<div id="shangxia">
+        <div id="shang" title="↑ 返回顶部"></div>
+        <div id="comt" title="查看评论"></div>
+        <div id="xia" title="↓ 移至底部"></div>
+        <div id="myrss" title="Hi!看点不一样的?" onclick="window.open('/');"></div>
+    </div>
     {% endblock move_widget%}
     </div>
 </div>

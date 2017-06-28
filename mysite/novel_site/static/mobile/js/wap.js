@@ -1,8 +1,6 @@
-//document.writeln("<script src='\/scripts\/ajax.js'><\/script>");
 var jieqiUserId = 0;
 var jieqiUserName = '';
 function showlogin(){//登录
-	//doAjax("/modules/article/wapajax.php", "showlogin=1", "showlogin2", "GET", 0);
 	get_user_info();
 	if(jieqiUserId != 0 && jieqiUserName != '' && document.cookie.indexOf('PHPSESSID') != -1){//丫
 		document.writeln('<div onclick="show_bookcase()" style="max-width:90px;overflow:hidden;height:50px;padding:0px 10px;" class="c_index_top">'+jieqiUserName+'</div>');

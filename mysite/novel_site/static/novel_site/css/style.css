@@ -32,6 +32,9 @@ a:hover {text-decoration:underline; top:-1px;}
 .nav{background:none repeat scroll 0 0 #88C6E5;height:40px;overflow:hidden;width:980px;margin:10px auto auto;}
 .nav ul li{float:left;line-height:44px;}
 .nav ul li a{color:#FFF;font-size:18px;font-weight:700;padding:0 10px;}
+.nav_lastread {color:#207b54; font-size:18px;background:#EBF373;height:28px;overflow:hidden;width:980px;margin:5px auto auto;}
+.nav_lastread div {padding-left:80px; padding-top:5px;}
+.nav_lastread a {color:#207b54; text-decoration:underline;}
 #admin{ border:solid 2px #E1ECED; height:30px; line-height:30px; width:88%; text-align:center; margin:5px; padding:3px;}
 table.grid caption, .gridtop { background-color:#E1ECED; border:solid 2px #C3DFEA;border-bottom:0px; font-size: 14px; font-weight: bold; margin: auto; padding-bottom: 5px; padding-top: 5px; text-align: center; vertical-align: middle;}
 table.grid { border: 2px solid #C3DFEA; border-collapse: collapse; margin: auto; padding: 3px;}

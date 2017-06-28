@@ -543,8 +543,9 @@ h4.bookname a {color: #007BB1;}
     display:block;
 	text-align:center;
 	padding:4px 0px; 
-	background-color:#fff;
-	border:1px solid #999;
+	background-color:#f4f0e9;
+	color:green;
+	border:1px solid #ece6da;
 }
 .state a{
 	background-color:#b8dff5;

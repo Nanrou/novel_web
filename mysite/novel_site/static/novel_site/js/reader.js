@@ -11,15 +11,17 @@
 })();
 
 var speed = 5;
-var autopage;// = $.cookie("autopage");
 var night;
 var timer;
 var temPos=1;
 
 $(document).ready(function(){//初始化页面可选部分
-	if(typeof(nextpage) != "undefined" ) {//应该要修改这部分逻辑，nextpage不存在，后面所有的都可以加上默认值
-                            //没必要为所有的可选都设置cookie
-		nextpage = nextpage;
+	//if(typeof(nextpage) != "undefined" ) {
+	if(document.cookie.length>0) {
+		//应该要修改这部分逻辑，nextpage不存在，后面所有的都可以加上默认值
+		//nextpage = nextpage;
+		
+		
 		autopage = getCookie("autopage");
 		
 		sbgcolor = getCookie("bcolor");
@@ -39,6 +41,7 @@ $(document).ready(function(){//初始化页面可选部分
 		
 		speed = getCookie("scrollspeed");
 		
+		autopage = getCookie('autopage');
 		if(autopage==1) {
 			$('#autopage').attr("checked",true);//设置checkerd为ture
 			speed = getCookie("scrollspeed");
@@ -55,10 +58,19 @@ $(document).ready(function(){//初始化页面可选部分
 	}
 });
 
+$(window).load(function(){  // 页面加载完后就设置cookie
+		var tmp = $('#book_name').text() + '  ' + $('#chapter_name').text();
+		
+		setCookie('lastread_title', tmp, 365);
+		setCookie('lastread_url', window.location.pathname, 365);
+});
+
+/*
 if (getCookie("bgcolor") != '') {
     wrapper.style.background = getCookie("bgcolor");
     document.getElementById("bcolor").value = getCookie("bgcolor")
 }
+*/
 
 function changebgcolor(id) {
     wrapper.style.background = id.options[id.selectedIndex].value;
@@ -66,7 +78,7 @@ function changebgcolor(id) {
 }
 
 function setBGColor(sbgcolor){
-	$('#wrapper').css("background-color",sbgcolor);
+	$('#main_body').css("background-color",sbgcolor);
 	setCookie("bcolor",sbgcolor,365);
 }
 
@@ -114,13 +126,14 @@ function scrolling()
 	}else{
 		temPos=document.documentElement.scrollTop;
 	}
-
+/*
 	if(currentpos!=temPos){
         ///msie/.test( userAgent )
         var autopage = getCookie("autopage");
         if(autopage==1&&/nextpage/.test( document.referrer ) == false) location.href=nextpage;
 		sc();
 	}
+*/
 }
 
 function scrollwindow(){ //设置定时任务：滚屏
@@ -151,7 +164,7 @@ var timestamp = Math.ceil((new Date()).valueOf()/1000); //当前时间戳
 var flag_overtime = -1;
 		
 function LastRead(){this.bookList="bookList"}
-LastRead.prototype={
+LastRead.prototype={  // 这是一个类了
 	set:function(bid,tid,title,texttitle,author,sortname){
 		if(!(bid&&tid&&title&&texttitle&&author&&sortname))return;
 		var v=bid+'#'+tid+'#'+title+'#'+texttitle+'#'+author+'#'+sortname;
