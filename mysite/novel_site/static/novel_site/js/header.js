@@ -1,3 +1,5 @@
+
+//添加字符串格式化功能
 String.prototype.format = function(args) {
 	var result = this;
 	if (arguments.length > 0) {    
@@ -55,7 +57,7 @@ function delCookie(name){//只需要设置 expires 参数为以前的时间即�
     var cval=getCookie(name);
     document.cookie= name + "=;expires="+exp.toGMTString();
 }
-
+//设置主页
 function SetHome(obj,vrl)
     {
         try
@@ -75,7 +77,7 @@ function SetHome(obj,vrl)
                  }
         }
     }
-
+//添加收藏
 function addFavorite() {
     var url = window.location;
     var title = document.title;

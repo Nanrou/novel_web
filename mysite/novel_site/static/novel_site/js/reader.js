@@ -21,7 +21,6 @@ $(document).ready(function(){//初始化页面可选部分
 		//应该要修改这部分逻辑，nextpage不存在，后面所有的都可以加上默认值
 		//nextpage = nextpage;
 		
-		
 		autopage = getCookie("autopage");
 		
 		sbgcolor = getCookie("bcolor");
