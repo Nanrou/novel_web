@@ -13,13 +13,13 @@
 {% endblock script %}
 {% block nav %}
 	<div class="nr_set">
-		<div id="lightdiv" class="set1" onclick="nr_setbg('light')">关灯</div>
-		<div id="huyandiv" class="set1" onclick="nr_setbg('huyan')">护眼</div>
+		<div id="lightdiv" class="set1" onclick="setYejian()">关灯</div>
+		<div id="huyandiv" class="set1" onclick="setHuyan()">护眼</div>
 		<div class="set2">
 			<div>字体：</div>
-			<div id="fontbig" onclick="nr_setbg('big')">大</div>
-			<div id="fontmiddle" onclick="nr_setbg('middle')">中</div> 
-			<div id="fontsmall" onclick="nr_setbg('small')">小</div>
+			<div id="fontbig" onclick="setSize('big')">大</div>
+			<div id="fontmiddle" onclick="setSize('middle')">中</div> 
+			<div id="fontsmall" onclick="setSize('small')">小</div>
 		</div>
 		<div class="cc"></div>
 	</div>
@@ -27,7 +27,7 @@
 
 {% block main %}
     <div class="c_nr" id="nr_body">
-		<div display="none" id="book_name">{{ book.title }}</div>
+		<div style="display:none" id="book_name">{{ book.title }}</div>
         <div class="nr_title" id="nr_title">{{ book.chapter }}</div>
         <div class="report">
             <a rel="nofollow" href="" style="color:red">章节错误/点此举报</a>
@@ -45,7 +45,7 @@
             </table>
         </div>
         <div id="nr" class="nr_nr">
-            <div id="nr1">
+            <div>
                 {{ book.content|safe }}
             </div>
         </div>

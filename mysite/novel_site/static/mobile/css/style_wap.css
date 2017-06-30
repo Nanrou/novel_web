@@ -578,7 +578,7 @@ h4.bookname a {color: #007BB1;}
 .report{
 	font-size:18px;	
 	text-align:center;
-	line-height:40px; 
+	line-height:25px; 
 }
 .report a{
 	color:red;
@@ -694,8 +694,8 @@ h4.bookname a {color: #007BB1;}
 .nr_set .set2 div{border:1px solid #0065B5;float:left;padding:2px 7px;margin-left:5px;border-radius:3px;color:#0065B5}
 .nr_set .set2 p{border:1px solid #0065B5;float:left;padding:5px 5px;margin-left:5px;border-radius:3px;color:#0065B5}
 .cc{height:0px;clear:both;}
-.nr_title{padding:10px 5px;font-weight:bold;font-size:18px; text-align:center;color:#000;position:relative;z-index:999;}
-.nr_page{ margin:3px 0px;position:relative;z-index:999;padding-top: 15px}
+.nr_title{padding:10px 5px;font-weight:bold;font-size:21px; text-align:center;color:#000;position:relative;z-index:999;}
+.nr_page{ margin:3px 0px;position:relative;z-index:999;padding-top: 8px;}
 .nr_page table{width:100%;}
 .nr_page table td{ text-align:center}
 .nr_page .prev{text-align:left;margin-left:7px;}
