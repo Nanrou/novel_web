@@ -12,10 +12,14 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
 	<meta http-equiv="Cache-Control" content="max-age=300">
 	<meta http-equiv="Cache-Control" content="no-transform">
+	<script src="http://apps.bdimg.com/libs/jquery/1.4.2/jquery.min.js"></script>
+	<script src="http://apps.bdimg.com/libs/jquery.cookie/1.4.1/jquery.cookie.min.js"></script>
 	<link rel="shortcut icon" href="{% static 'mobile/css/favicon.ico' %}">
 	<link rel="stylesheet" href="{% static 'mobile/css/style_wap.css' %}">
 	<script src="{% static 'mobile/js/wap.js' %}"></script>
 	<script src="{% static 'mobile/js/ajax.js' %}"></script>
+	{% block script %}
+	{% endblock script %}
 </head>
 
 <body>
@@ -32,6 +36,7 @@
 			<li><a rel="nofollow" href="">书架</a></li>        
 		</ul>
 	</div>
+	<script>show_lastread();</script>
 
 	<!-- 搜索栏 -->
 	<div class="search">

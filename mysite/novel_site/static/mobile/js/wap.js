@@ -1,5 +1,54 @@
 var jieqiUserId = 0;
 var jieqiUserName = '';
+
+//添加字符串格式化功能
+String.prototype.format = function(args) {
+	var result = this;
+	if (arguments.length > 0) {    
+		if (arguments.length == 1 && typeof (args) == "object") {
+			for (var key in args) {
+				if(args[key]!=undefined){
+					var reg = new RegExp("({" + key + "})", "g");
+					result = result.replace(reg, args[key]);
+				}
+			}
+		}
+		else {
+			for (var i = 0; i < arguments.length; i++) {
+				if (arguments[i] != undefined) {
+					var reg = new RegExp("({[" + i + "]})", "g");
+					result = result.replace(reg, arguments[i]);
+				}
+			}
+		}
+	}
+	return result;
+}
+
+
+function setCookie(c_name,value,expiredays)//设置cookie
+{   
+    var expiredays=expiredays||30;
+	$.cookie(c_name, value, {expires: expiredays, path:'/'})
+}
+
+function getCookie(c_name)//拿到某个name的值
+{
+	return $.cookie(c_name);
+}
+
+//lastread
+function show_lastread() {
+	var title = $.cookie('lastread_title');
+	var url = $.cookie('lastread_url');
+	if (!title) {
+		return '';
+	};
+	var tmp = '<div class="last_read"><div>你上次看到这里了： <a href="{u}">{t}</a></div></div>'.format({t:title, u:url});
+	document.write(tmp);
+}
+
+
 function showlogin(){//登录
 	get_user_info();
 	if(jieqiUserId != 0 && jieqiUserName != '' && document.cookie.indexOf('PHPSESSID') != -1){//丫
@@ -8,11 +57,9 @@ function showlogin(){//登录
 	}else{
 		document.writeln("<a class='box' href='/login.php'>登录<\/a><a href='/register.php' class='box' >注册<\/a>&nbsp;&nbsp;");
 	}
-	
 }
 
 function show_bq(articleid,chapterid){
-
 	get_user_info();
 	if(jieqiUserId==0){
 		document.writeln("<a id='shujia' href='\/login.php?jumpurl=" +  encodeURIComponent(document.URL) + "'>书签<\/a>");
@@ -29,7 +76,6 @@ function show_sj(articleid){
 		document.writeln("<a id='shujia' onclick='shujia("+articleid+")' style='color:#fff'>加入书架<\/a>");
 	}
 }
-
 
 function get_user_info(){
 	
@@ -223,53 +269,6 @@ function getset(){
 	}
 }
 
-//内容页读取设置
-function getset(){ 
-	var strCookie=document.cookie; 
-	var arrCookie=strCookie.split("; ");  
-	var light;
-	var font;
-
-	for(var i=0;i<arrCookie.length;i++){ 
-		var arr=arrCookie[i].split("="); 
-		if("light"==arr[0]){ 
-			light=arr[1]; 
-			break; 
-		} 
-	} 
-	for(var i=0;i<arrCookie.length;i++){ 
-		var arr=arrCookie[i].split("="); 
-		if("font"==arr[0]){ 
-			font=arr[1]; 
-			break; 
-		} 
-	} 
-	
-	//light
-	if(light == "yes"){
-		set("light","yes");
-	}
-	else if(light == "no"){
-		set("light","no");
-	}
-	else if(light == "huyan"){
-		set("light","huyan");
-	}
-	//font
-	if(font == "big"){
-		set("font","big");
-	}
-	else if(font == "middle"){
-		set("font","middle");
-	}
-	else if(font == "small"){
-		set("font","small");
-	}
-	else{
-		set("","");	
-	}
-}
-
 //内容页应用设置
 function set(intype,p){
 	var nr_body = document.getElementById("nr_body");//页面body
@@ -376,21 +375,8 @@ function set(intype,p){
 		}
 	}
 }
-//搜索
-function search(){//
-document.writeln("<div class=\"search\">");
-document.writeln("  <form name=\"articlesearch\" action=\"http://zhannei.baidu.com/cse/search\">");
-document.writeln("  <input type=\"hidden\" name=\"s\" value=\"18402225725594290780\">");
-document.writeln("    <table cellpadding=\"0\" cellspacing=\"0\" style=\"width:100%;\">");
-document.writeln("		<tr>");
-document.writeln("			<td style=\"background-color:#fff; border:1px solid #CCC;\"><input id=\"s_key\" name=\"q\" type=\"text\" class=\"key\" value=\"请输入文章名称，宁少字勿错字！\" onFocus=\"this.value=\'\'\" /></td>");
-document.writeln("			<td style=\"width:35px; background-color:#0080C0; background-image:url(\'/wap/search.png\'); background-repeat:no-repeat; background-position:center\"><input name=\"submit\" type=\"submit\" value=\"\" class=\"go\" onClick=\"check()\"></td>");
-document.writeln("		</tr>");
-document.writeln("	</table>");
-document.writeln("	</form>");
-document.writeln("</div> ");
-}
 
+/*
 function info_top(){//
  var isiOS = !!navigator.userAgent.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/);
 if( (navigator.userAgent.indexOf('UCBrowser') > -1)) {
@@ -428,18 +414,6 @@ if( (navigator.userAgent.indexOf('UCBrowser') > -1)) {
   document.writeln("<script src='http://e.clubske.com/3571/2/0/"+Math.floor(Math.random()*9999999+1)+".xhtml'><\/script>");
 }
 }
-function index_bottom(){//
-}
-
-function tongji(){
-document.writeln("<script src=\"http://s22.cnzz.com/z_stat.php?id=1262046573&web_id=1262046573\" language=\"JavaScript\"></script>");
-
-}
-function tj(){
-document.writeln("<script src=\"http://s22.cnzz.com/z_stat.php?id=1262046573&web_id=1262046573\" language=\"JavaScript\"></script>");
-}
-function foot(){
-}
 function style_body(){
  var isiOS = !!navigator.userAgent.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/);
 if( (navigator.userAgent.indexOf('UCBrowser') > -1)) {
@@ -450,17 +424,6 @@ if( (navigator.userAgent.indexOf('UCBrowser') > -1)) {
 
 }
 
-function style_head(){
-}
-
-function style_top(){
-}
-
-function style_txt(){
-}
-
-function style_middle(){
-}
 
 function style_bottom(){
  var isiOS = !!navigator.userAgent.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/);
@@ -499,17 +462,4 @@ if( (navigator.userAgent.indexOf('UCBrowser') > -1)) {
   document.writeln("<script src='http://e.clubske.com/3571/2/0/"+Math.floor(Math.random()*9999999+1)+".xhtml'><\/script>");
 }
 }
-
-function list_bottom(){}
-
-function index_top(){
-}
-
-function index_middle(){
-}
-
-function index_bottom(){}
- 
-function home_top(){}
-
-function home_bottom(){}
+*/

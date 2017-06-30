@@ -151,7 +151,7 @@ body {
 	height:35px; 
 	line-height:35px;
 	overflow:hidden;
-	margin-bottom:10px;
+	margin-bottom:5px;
 }
 .nav ul li{
     color:#333;
@@ -172,8 +172,28 @@ body {
 	white-space: nowrap;
 	overflow:hidden;
 	text-overflow: ellipsis;
-
 }
+.last_read{
+	float:left;
+	width:100%;
+	background-color:#EFD7A7;    
+	height:auto; 
+	line-height:30px;
+	overflow:hidden;
+	margin-bottom:2px;
+	color:#3b0cf5;
+	font-size:18px;
+}
+.last_read div{
+	padding-left:30px;
+	padding-right:30px;
+}
+
+.last_read a{
+	color:red;
+	text-decoration:underline;
+}
+
 /*search*/
 .search{
 	padding:10px 5px 0px 5px;

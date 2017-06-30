@@ -8,7 +8,9 @@
 	<meta name="description" content="超级小说免费为大家提供{{ book.title }}最新章节阅读,如果你想第一时间观看下一章节,请留意以及收藏超级小说,方便你下次阅读{{ book.title }}最新章节。">
     <meta name="format-detection" content="telephone=no">
 {% endblock meta_description %}
-
+{% block script %}
+	<script src="{% static 'mobile/js/read.js' %}"></script>
+{% endblock script %}
 {% block nav %}
 	<div class="nr_set">
 		<div id="lightdiv" class="set1" onclick="nr_setbg('light')">关灯</div>
@@ -25,6 +27,7 @@
 
 {% block main %}
     <div class="c_nr" id="nr_body">
+		<div display="none" id="book_name">{{ book.title }}</div>
         <div class="nr_title" id="nr_title">{{ book.chapter }}</div>
         <div class="report">
             <a rel="nofollow" href="" style="color:red">章节错误/点此举报</a>

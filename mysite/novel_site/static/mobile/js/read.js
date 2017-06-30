@@ -1,3 +1,11 @@
+$(window).load(function(){  // 页面加载完后就设置cookie
+		var tmp = $('#book_name').text() + '  ' + $('#nr_title').text();
+		
+		setCookie('lastread_title', tmp, 365);
+		setCookie('lastread_url', window.location.pathname, 365);
+});
+
+
 function LastRead(){this.bookList="bookList"}
 LastRead.prototype={
 	set:function(bid,tid,title,texttitle,author,sortname){
