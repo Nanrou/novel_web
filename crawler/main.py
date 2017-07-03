@@ -17,7 +17,8 @@ import collections
 # sys.path.append('./')
 import redis
 
-from my_crawler import InfoCrawler, DetailCrawler, run_crawler
+from crawler.db.operateDB import insert_to_detail, insert_to_info
+from crawler.crawler.my_crawler import InfoCrawler, DetailCrawler, run_crawler
 from operateDB import insert_to_detail, insert_to_info
 from my_logger import MyLogger
 from my_decorate import time_clock
@@ -63,7 +64,6 @@ def download_detail(detail_urls):
     detailc = DetailCrawler(urls=detail_urls, parse_rule=DETAIL_RULE, store_path='./book')
     run_crawler(detailc)
     return detailc.store_path
-
 
 
 if __name__ == '__main__':

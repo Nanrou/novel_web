@@ -29,9 +29,9 @@ import os.path
 import pickle
 import asyncio
 import random
-from async_timeout import timeout
 from asyncio import Queue
 from functools import wraps
+from async_timeout import timeout
 import time
 import codecs
 
@@ -41,7 +41,7 @@ from lxml.etree import XPathError
 import redis
 import requests
 
-from my_logger import MyLogger
+from crawler.utls.my_logger import MyLogger
 
 
 HEADERS = {'user-agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:51.0) Gecko/20100101 Firefox/51.0 '}
