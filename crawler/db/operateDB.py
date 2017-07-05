@@ -1,9 +1,16 @@
 # -*- coding:utf-8 -*-
 
-import os, sys
+import os
+import sys
 import datetime
+import pickle
+import re
 
-sys.path.append('../mysite/')
+from my_crawler import image_download
+from crawler.utls.my_logger import MyLogger
+
+PROJECT_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+sys.path.append(os.path.join(PROJECT_DIR, 'mysite/'))
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'mysite.settings')
 
 import django
@@ -14,20 +21,13 @@ try:
 except ImportError:
     from novel_site import models
 
-import pickle
-import re
-
 from django.db.models import ObjectDoesNotExist
 
-
-from my_crawler import image_download
-from my_logger import MyLogger
 
 Logger = MyLogger('DB_log')
 
 MODIFIED_TEXT = [r'一秒记住.*?。', r'(看书.*?)', r'纯文字.*?问', r'热门.*?>', r'最新章节.*?新',
                  r'は防§.*?e',
-                 # r'&.*?>', r'c.*?>',
                  r'复制.*?>', r'字-符.*?>', r'最新最快，无.*?。',
                  r'    .Shumilou.Co  M.Shumilou.Co<br /><br />', r'[Ww]{3}.*[mM]',
                  r'&amp;nbsp;    &amp;nbsp;    &amp;nbsp;    &amp;nbsp;  ',
@@ -35,7 +35,7 @@ MODIFIED_TEXT = [r'一秒记住.*?。', r'(看书.*?)', r'纯文字.*?问', r'�
                  ]
 
 
-def product_cate():
+def product_cate():  # 这是初始化的时候做的
     category = ['玄幻修真', '科幻网游', '都市重生', '架空历史', '恐怖灵异', '全本小说']
     cate = ['xuanhuan', 'kehuan', 'dushi', 'jiakong', 'kongbu', 'quanben']
     res = []
@@ -44,7 +44,10 @@ def product_cate():
     return res
 
 
-def insert_to_category():
+def insert_to_category():  # 将分类插入数据库，加了一个防止重复插入的判断
+    if models.CategoryTable.objects.all().exsits():
+        Logger.warning('category table is none null, maybe already inserted')
+        return
     res = product_cate()
     for r in res:
         models.CategoryTable.objects.create(**r)

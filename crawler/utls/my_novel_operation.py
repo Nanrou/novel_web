@@ -20,11 +20,11 @@ import random
 
 import requests
 
-from crawler.my_decorate import time_clock
+from crawler.utls.my_decorate import time_clock
 from crawler.my_crawler import search_novel
-from crawler.operateDB import get_infotable_count, get_title_id
-from crawler.my_logger import MyLogger
-from crawler.operateDB import insert_to_detail, insert_to_info, get_infotable_count
+from crawler.db.operateDB import get_infotable_count, get_title_id
+from crawler.utls.my_logger import MyLogger
+from crawler.db.operateDB import insert_to_detail, insert_to_info, get_infotable_count
 
 
 Logger = MyLogger('novel_operation')
