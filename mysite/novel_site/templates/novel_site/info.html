@@ -52,7 +52,7 @@
             </div>
         </div>
         <div id="sidebar">
-            <div id="fmimg"><img alt="{{ object.title }}" src="{% static object.image %}"  width="120" height="150"/></div>
+            <div id="fmimg"><img alt="{{ object.title }}" src="{% static object.image %}" onerror="this.src={% static 'novel_site/images/miss.jpg' %}" width="120" height="150"/></div>
         </div>
         <div id="listtj">推荐阅读：
             {% comment %} 还没想好这里怎么推荐，这里也可以和下面合并 {% endcomment %}

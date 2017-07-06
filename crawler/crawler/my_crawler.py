@@ -34,17 +34,13 @@ import pickle
 import asyncio
 import random
 from asyncio import Queue
-from functools import wraps
 from async_timeout import timeout
-import time
 import codecs
-from collections import namedtuple
 
 
 import aiohttp
 from lxml import etree
 from lxml.etree import XPathError
-import redis
 import requests
 
 from crawler.utls.my_logger import MyLogger
@@ -150,7 +146,7 @@ class AsyncCrawlerBase(object):
 
     def store(self, name, res):
         _file_name = os.path.join(self._store_path, name)
-        with open(_file_name, 'w') as wf:
+        with open(_file_name, 'wb') as wf:
             pickle.dump(res, wf)
 
     def fetch(self, body):
@@ -200,7 +196,7 @@ class ImageDownload(DownloadCrawler):  # 图片下载模块
         super(ImageDownload, self).__init__(name_tuple_urls, store_path=store_path, *args, **kwargs)
 
     def store(self, name, res):
-        _file_name = os.path.join(self._store_path, name+'s.jpg')
+        _file_name = os.path.join(self._store_path, name+'.jpg')
         with open(_file_name, 'wb') as wf:
             wf.write(res)
 
@@ -222,9 +218,9 @@ def run_crawler(crawler):
     loop.close()
 
 
-def my_search(file, url, parse_rule, key_word, data, store_path='./', cookie=None):
+def my_search(title, url, parse_rule, key_word=None, data=None, store_path='./', cookie=None):
     """
-    :param file: 存放小说名字的文件，这个文件的格式，纯文本，一行一个标题
+    :param title: 小说名字
     :param url: 目标搜索网址
     :param parse_rule: 具体的xpath路径，约定这个格式为{'title': , 'info_url': }
     :param key_word: 关键字在data中的键名
@@ -233,63 +229,41 @@ def my_search(file, url, parse_rule, key_word, data, store_path='./', cookie=Non
     :param cookie: 请求中带的cookie
     :return:
     """
-    with open(file, 'r') as rf:  # 从文件里提取书名
-        title_list = rf.readlines()
-        for title in title_list:
-            title = title.strip()
-            data[key_word] = title
-            ans = ''
-            try:  # 构造请求去找书
-                response = requests.get(url, data=data, header=HEADERS, cookie=cookie)
-            except requests.exceptions.ConnectionError:
-                msg = 'failure, request fail in {}'.format(title)
+    # with open(file, 'r') as rf:  # 从文件里提取书名
+    #     title_list = rf.readlines()
+    #     for title in title_list:
+    h, _, w, *_ = url.split('/')
+    domain_url = h + '//' + w
+    title = title.strip()
+    if key_word:
+        data[key_word] = title
+    ans = ''
+    try:  # 构造请求去找书
+        response = requests.get(url, data=data, headers=HEADERS, cookies=cookie)
+    except requests.exceptions.ConnectionError:
+        msg = 'failure, request fail in {}'.format(title)
+    else:
+        body = etree.HTML(response.text)  # 用xpath去找
+        try:
+            for index, fetch_title in enumerate(body.xpath(parse_rule['title'])):
+                if fetch_title == title:  # 对比书名是否一致
+                    info_url = body.xpath(parse_rule['info_url'])[index]
+                    if info_url.startswith('/'):
+                        info_url = domain_url + info_url
+                    ans = msg = 'success, {title}, {url}'.format(
+                        title=title, url=info_url)
+                    break
             else:
-                body = etree.HTML(response.text)  # 用xpath去找
-                try:
-                    for index, fetch_title in enumerate(body.xpath(parse_rule['title'])):
-                        if fetch_title is title:  # 对比书名是否一致
-                            ans = msg = 'success, {title}, {url}'.format(
-                                title=title, url=body.xpath(parse_rule['info_url'])[index])
-                            break
-                    else:
-                        msg = 'failure, cant search {}'.format(title)
-                except etree.XPathError:
-                    msg = 'failure, wrong xpath in {}'.format(title)
+                msg = 'failure, cant search {}'.format(title)
+        except etree.XPathError:
+            msg = 'failure, wrong xpath in {}'.format(title)
 
-            with open(os.path.join(store_path, 'search.log'), 'a') as af:
-                af.write(msg + '\n')
-            if ans:
-                with open(os.path.join(store_path, 'download_urls.log'), 'a') as f:
-                    f.write(ans + '\n')
+    with open(os.path.join(store_path, 'search.log'), 'a') as af:
+        af.write(msg + '\n')
+    if ans:
+        with open(os.path.join(store_path, 'info_urls.log'), 'a') as f:
+            f.write(ans + '\n')
 
 
 if __name__ == '__main__':
-
-    DETAIL_RULE = {
-        'title': '//div[@class="con_top"]/a[3]/text()',
-        'chapter': '//div[@class="bookname"]/h1/text()',
-        'content': ['//div[@id="content"]', ],
-    }
-    DETAIL_URLS = [[0, 'http://www.ranwen.org/files/article/56/56048/10973525.html'],
-                   [1, 'http://www.ranwen.org/files/article/56/56048/11281440.html']]
-
-    INFO_URLS = 'http://www.ranwen.org/files/article/19/19388/'
-    INFO_RULE = {
-        'urls': '//div[@class="box_con"]/div[@id="list"]/dl/dd/a/@href',
-        'title': '//div[@id="maininfo"]/div[@id="info"]/h1/text()',
-        'author': '//div[@id="maininfo"]/div[@id="info"]/p[1]/text()',
-        'status': '//div[@id="maininfo"]/div[@id="info"]/p[2]/text()',
-        'category': '//div[@class="con_top"]/a[2]/text()',
-        'resume': '//div[@id="maininfo"]/div[@id="intro"]/p[1]/text()',
-        'img_url': '//div[@id="fmimg"]/img/@src',
-    }
-    SEARCH_URL = 'http://www.ranwenw.com/modules/article/search.php'
-    RULE = {
-        'download_url': '//div[@id="maininfo"]/div[@id="info"]/p[last()]/a/@href',
-        'title': '//div[@id="maininfo"]/div[@id="info"]/h1/text()',
-        'author': '//div[@id="maininfo"]/div[@id="info"]/p[1]/text()',
-        # 'status': '//div[@id="maininfo"]/div[@id="info"]/p[2]/text()',
-        'category': '//div[@class="con_top"]/a[2]/text()',
-        'resume': '//div[@id="maininfo"]/div[@id="intro"]/p[1]/text()',
-        # 'img_url': '//div[@id="fmimg"]//img/@src',
-    }
+    print('i am in crawler')
