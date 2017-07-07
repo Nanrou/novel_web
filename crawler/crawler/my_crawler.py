@@ -5,7 +5,9 @@
 1 处理info页面：接收一个url，去该页面收集所有url，将url带上index传入redis
 2 处理detail页面：接收[index, url]，去该页面采集内容，然后按index的名字存到本地
 
-对于parse rule来讲，如果存入的是list形式，就代表要将其爬取部分转换了带html标签的
+
+AsyncCrawlerBase 基类
+
 --------------------------------------
 5.17
 模块功能细化，将两个功能独立成不同的子模块
@@ -36,6 +38,8 @@ import random
 from asyncio import Queue
 from async_timeout import timeout
 import codecs
+from collections import namedtuple
+import time
 
 
 import aiohttp
@@ -76,16 +80,30 @@ class AsyncCrawlerBase(object):
     """
     异步下载主逻辑
     接收urls，然后就安排工人下载
-    要求传入的urls必须是name_tuple,['name', 'url']
+    要求传入的urls必须是list,['name', 'url']
     """
 
-    def __init__(self, urls, loop=None, max_tasks=5, store_path='./'):
+    def __init__(self, urls, name=None, loop=None, max_tasks=5, store_path='./', headers=None):
+        """
+
+        :param urls:
+        :param name: 下载保存的文件名
+        :param loop:
+        :param max_tasks:
+        :param store_path:
+        :param headers:
+        """
         if loop is None:
             loop = asyncio.get_event_loop()
         self._loop = loop
         self._urls = urls
         self._max_tasks = max_tasks
-        self._session = aiohttp.ClientSession(loop=self._loop, headers=HEADERS)
+        if name is None:
+            name = 'tmp'
+        self._name = name
+        if headers is None:
+            headers = HEADERS
+        self._session = aiohttp.ClientSession(loop=self._loop, headers=headers)
         self._q = Queue(loop=self._loop)
 
         if isinstance(self._urls, list):
@@ -95,9 +113,9 @@ class AsyncCrawlerBase(object):
             self.add_url(self._urls)
 
         assert isinstance(store_path, str) is True, 'must input store_path'
-        if not store_path.endswith('/'):  # 确保储存位置存在
-            store_path += '/'
-        self._store_path = os.path.join(BASE_DIR, store_path)
+        # if not store_path.endswith('/'):  # 确保储存位置存在
+        #     store_path += '/'
+        self._store_path = store_path #os.path.join(BASE_DIR, store_path)
         if not os.path.exists(self._store_path):
             os.mkdir(self._store_path)
 
@@ -114,19 +132,23 @@ class AsyncCrawlerBase(object):
     async def work(self):  # 工人工作
         try:
             while True:
-                asyncio.sleep(random.randint(1, 3))
-                name, url = await self._q.get()  # 在这里拆包
+                # asyncio.sleep(random.randint(1, 3))
+                url = await self._q.get()  # 在这里拆包
                 body = await self.my_request(url)
-                if body is None:
-                    LOGGER.warning('download None in [{}]'.format(url))
-                else:
-                    try:
-                        res = self.fetch(body)
-                    except FetchError as e:  # 捕捉剥取异常
-                        LOGGER.warning('{} in [{}]'.format(e, url))
-                    else:
-                        self.store(name, res)
                 self._q.task_done()
+
+                self.store(body)
+                # if body is None:
+                #     print(time.time())
+                #     LOGGER.warning('download None in [{}]'.format(url))
+                # else:
+                #     try:
+                #         res = self.fetch(body)
+                #     except FetchError as e:  # 捕捉剥取异常
+                #         LOGGER.warning('{} in [{}]'.format(e, url))
+                #     else:
+                #         self.store(res)
+
                 LOGGER.debug('done with {}'.format(url))
         except asyncio.CancelledError:
             pass
@@ -138,14 +160,16 @@ class AsyncCrawlerBase(object):
                     if resp.status != 200:
                         LOGGER.warning('get an invalid response in {}'.format(url))
                         return
-                    return await resp.text()
+                    body = await resp.text()
+                    res = self.fetch(body)  # 为什么一定要放这里
+                    return res
         except asyncio.TimeoutError:  # 注意捕捉的类别
             LOGGER.warning('timeout in {}'.format(url))
         finally:
             return
 
-    def store(self, name, res):
-        _file_name = os.path.join(self._store_path, name)
+    def store(self, res):
+        _file_name = os.path.join(self._store_path, self._name)
         with open(_file_name, 'wb') as wf:
             pickle.dump(res, wf)
 
@@ -184,29 +208,29 @@ class XpathCrawler(AsyncCrawlerBase):
 
 
 class DownloadCrawler(AsyncCrawlerBase):  # 下载模块
-    def __init__(self, name_tuple_urls, *args, **kwargs):
-        super(DownloadCrawler, self).__init__(name_tuple_urls, *args, **kwargs)
+    def __init__(self, urls, *args, **kwargs):
+        super(DownloadCrawler, self).__init__(urls, *args, **kwargs)
 
     def fetch(self, body):  # 下载模块的fetch直接返回response本体就行了
         return body
 
 
 class ImageDownload(DownloadCrawler):  # 图片下载模块
-    def __init__(self, name_tuple_urls, store_path='./image/', *args, **kwargs):
-        super(ImageDownload, self).__init__(name_tuple_urls, store_path=store_path, *args, **kwargs)
+    def __init__(self, urls, store_path='./image/', *args, **kwargs):
+        super(ImageDownload, self).__init__(urls, store_path=store_path, *args, **kwargs)
 
-    def store(self, name, res):
-        _file_name = os.path.join(self._store_path, name+'.jpg')
+    def store(self, res):
+        _file_name = os.path.join(self._store_path, self._name+'.jpg')
         with open(_file_name, 'wb') as wf:
             wf.write(res)
 
 
 class NovelDownload(DownloadCrawler):  # 小说下载模块
-    def __init__(self, name_tuple_urls, store_path='./novel/', *args, **kwargs):
-        super(NovelDownload, self).__init__(name_tuple_urls, store_path=store_path, *args, **kwargs)
+    def __init__(self, urls, store_path='./novel/', *args, **kwargs):
+        super(NovelDownload, self).__init__(urls, store_path=store_path, *args, **kwargs)
 
-    def store(self, name, res):
-        _file_name = os.path.join(self._store_path, name+'.txt')
+    def store(self, res):
+        _file_name = os.path.join(self._store_path, self._name+'.txt')
         with codecs.open(_file_name, 'w', encoding='utf-8') as wf:
             wf.write(res)
 
