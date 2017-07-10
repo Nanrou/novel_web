@@ -134,10 +134,11 @@ class AsyncCrawlerBase(object):
             while True:
                 # asyncio.sleep(random.randint(1, 3))
                 url = await self._q.get()  # 在这里拆包
-                body = await self.my_request(url)
+                res, body = await self.my_request(url)
+                # await print('work:', body is None)
                 self._q.task_done()
 
-                self.store(body)
+                self.store(res)
                 # if body is None:
                 #     print(time.time())
                 #     LOGGER.warning('download None in [{}]'.format(url))
@@ -162,7 +163,7 @@ class AsyncCrawlerBase(object):
                         return
                     body = await resp.text()
                     res = self.fetch(body)  # 为什么一定要放这里
-                    return res
+                    return res, body
         except asyncio.TimeoutError:  # 注意捕捉的类别
             LOGGER.warning('timeout in {}'.format(url))
         finally:

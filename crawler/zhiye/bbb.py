@@ -3,6 +3,7 @@
 import sys
 import codecs
 from collections import namedtuple
+import logging
 
 sys.path.append('F:\\Git\\novel_web')
 
@@ -12,6 +13,8 @@ from lxml import etree
 
 from crawler.crawler.my_crawler import XpathCrawler
 from crawler.crawler.my_crawler import run_crawler
+
+PYTHONASYNCIODEBUG = 1
 
 DATA = {
     'jl': '珠海',
