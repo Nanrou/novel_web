@@ -43,6 +43,7 @@ import time
 
 
 import aiohttp
+from aiohttp.web_exceptions import HTTPError
 from lxml import etree
 from lxml.etree import XPathError
 import requests
@@ -71,9 +72,11 @@ info表的表头为
 
 HEADERS = {'user-agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:51.0) Gecko/20100101 Firefox/51.0 '}
 
-LOGGER = MyLogger('crawler_log')
+LOGGER = MyLogger('crawler')
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+PYTHONASYNCIODEBUG = 1
 
 
 class AsyncCrawlerBase(object):
@@ -107,15 +110,20 @@ class AsyncCrawlerBase(object):
         self._q = Queue(loop=self._loop)
 
         if isinstance(self._urls, list):
+            self._sum_urls = len(self._urls)
             for url in self._urls:
-                self.add_url(url)
+                self.add_url((url, 3))  # 增加了重试次数功能
         else:
-            self.add_url(self._urls)
+            self.add_url((self._urls, 3))
+            self._sum_urls = 1
 
-        assert isinstance(store_path, str) is True, 'must input store_path'
+        self._success_times = 0  这个要加锁
+        self._failed_times = 0
+
+        assert isinstance(store_path, str), 'must input store_path'
         # if not store_path.endswith('/'):  # 确保储存位置存在
         #     store_path += '/'
-        self._store_path = store_path #os.path.join(BASE_DIR, store_path)
+        self._store_path = store_path  # os.path.join(BASE_DIR, store_path)
         if not os.path.exists(self._store_path):
             os.mkdir(self._store_path)
 
@@ -132,42 +140,57 @@ class AsyncCrawlerBase(object):
     async def work(self):  # 工人工作
         try:
             while True:
-                # asyncio.sleep(random.randint(1, 3))
-                url = await self._q.get()  # 在这里拆包
-                res, body = await self.my_request(url)
-                # await print('work:', body is None)
+                asyncio.sleep(random.randint(1, 3))
+                url = await self._q.get()
+                # body = await self.my_request(url)
+                await self.my_request(url)
+
                 self._q.task_done()
+                # self.fetch(body)  # 为什么这里拿到的body为空
+                # self.store(res)
 
-                self.store(res)
-                # if body is None:
-                #     print(time.time())
-                #     LOGGER.warning('download None in [{}]'.format(url))
-                # else:
-                #     try:
-                #         res = self.fetch(body)
-                #     except FetchError as e:  # 捕捉剥取异常
-                #         LOGGER.warning('{} in [{}]'.format(e, url))
-                #     else:
-                #         self.store(res)
-
-                LOGGER.debug('done with {}'.format(url))
+                # LOGGER.debug('done with {}'.format(url))
         except asyncio.CancelledError:
             pass
 
     async def my_request(self, url):  # 发送请求
-        try:
-            with timeout(3, loop=self._loop):
-                async with self._session.get(url) as resp:
-                    if resp.status != 200:
-                        LOGGER.warning('get an invalid response in {}'.format(url))
-                        return
-                    body = await resp.text()
-                    res = self.fetch(body)  # 为什么一定要放这里
-                    return res, body
-        except asyncio.TimeoutError:  # 注意捕捉的类别
-            LOGGER.warning('timeout in {}'.format(url))
-        finally:
-            return
+        u, r_times = url
+        if r_times > 0:  # 判断是否还有重试次数
+            try:
+                with timeout(5, loop=self._loop):
+                    async with self._session.get(u) as resp:
+                        if resp.status != 200:
+                            LOGGER.warning('get an invalid response in {}'.format(u))
+                            self._failed_times += 1
+                            return
+                        body = await resp.text()
+                        # --------------------------------------------------------
+                        # 为什么这一块放在work中就不行，在work中拿不到body的返回值
+                        if body is None:
+                            LOGGER.warning('download None in [{}]'.format(u))
+                        else:
+                            try:
+                                res = self.fetch(body)
+                            except Exception as e:  # 捕捉异常
+                                LOGGER.warning('{} in [{}]'.format(e, u))
+                            else:
+                                self.store(res)
+                                LOGGER.debug('done with {}'.format(u))
+                                self._success_times += 1
+                        # -----------------------------------------------------
+                        # return body
+            except asyncio.TimeoutError:  # 注意捕捉的类别
+                LOGGER.warning('timeout in {}'.format(u))
+                self.add_url((u, r_times-1))  # 超时后重试
+            except HTTPError:
+                LOGGER.warning('http error 400 or 500 in {}'.format(u))
+                self._failed_times += 1
+            finally:
+                return  # 这个return应该是可以不要的啊
+        else:
+            LOGGER.warning('outnumber of max retry time in {}'.format(u))
+            self._failed_times += 1
+        return
 
     def store(self, res):
         _file_name = os.path.join(self._store_path, self._name)
@@ -179,6 +202,8 @@ class AsyncCrawlerBase(object):
 
     def close(self):
         self._session.close()
+        LOGGER.info('prepend: {} urls, success: {}, failed: {}'
+                    .format(self._sum_urls, self._success_times, self._failed_times))
 
 
 class XpathCrawler(AsyncCrawlerBase):
