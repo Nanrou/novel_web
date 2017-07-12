@@ -35,7 +35,7 @@ import os.path
 import pickle
 import asyncio
 import random
-from asyncio import Queue
+from asyncio import Queue, Lock
 from async_timeout import timeout
 import codecs
 from collections import namedtuple
@@ -108,6 +108,7 @@ class AsyncCrawlerBase(object):
             headers = HEADERS
         self._session = aiohttp.ClientSession(loop=self._loop, headers=headers)
         self._q = Queue(loop=self._loop)
+        self._lock = Lock()  # 增加了锁的功能
 
         if isinstance(self._urls, list):
             self._sum_urls = len(self._urls)
@@ -117,7 +118,7 @@ class AsyncCrawlerBase(object):
             self.add_url((self._urls, 3))
             self._sum_urls = 1
 
-        self._success_times = 0  这个要加锁
+        self._success_times = 0
         self._failed_times = 0
 
         assert isinstance(store_path, str), 'must input store_path'
@@ -140,7 +141,7 @@ class AsyncCrawlerBase(object):
     async def work(self):  # 工人工作
         try:
             while True:
-                asyncio.sleep(random.randint(1, 3))
+                # await asyncio.sleep(random.randint(1, 3))
                 url = await self._q.get()
                 # body = await self.my_request(url)
                 await self.my_request(url)
@@ -158,33 +159,59 @@ class AsyncCrawlerBase(object):
         if r_times > 0:  # 判断是否还有重试次数
             try:
                 with timeout(5, loop=self._loop):
-                    async with self._session.get(u) as resp:
-                        if resp.status != 200:
-                            LOGGER.warning('get an invalid response in {}'.format(u))
-                            self._failed_times += 1
-                            return
-                        body = await resp.text()
-                        # --------------------------------------------------------
-                        # 为什么这一块放在work中就不行，在work中拿不到body的返回值
-                        if body is None:
-                            LOGGER.warning('download None in [{}]'.format(u))
-                        else:
-                            try:
-                                res = self.fetch(body)
-                            except Exception as e:  # 捕捉异常
-                                LOGGER.warning('{} in [{}]'.format(e, u))
+                    try:
+                        async with self._session.get(u) as resp:
+                            if resp.status != 200:
+                                LOGGER.warning('get an invalid response in {}'.format(u))
+                                self._failed_times += 1
+                                return
+
+                            body = await resp.read()
+                            try:  # 手动转码
+                                body = body.decode('utf-8')
+                            except UnicodeDecodeError as e:
+                                try:
+                                    body = body.decode('gbk').encode('utf-8').decode('utf-8')
+                                except UnicodeDecodeError:
+                                    try:
+                                        body = await resp.text()
+                                    except UnicodeDecodeError:
+                                        LOGGER.warning('[code error] {} in {}'.format(e, u))
+
+                            # -------------------------
+                            #
+                            # _encoding = await resp.()
+                            # if _encoding is 'gb2312':
+                            #     _encoding = 'gbk'
+                            # body = await resp.text()
+                            # -------------------------
+                            # --------------------------------------------------------
+                            # 为什么这一块放在work中就不行，在work中拿不到body的返回值
+                            if body is None:
+                                LOGGER.warning('download None in [{}]'.format(u))
                             else:
-                                self.store(res)
-                                LOGGER.debug('done with {}'.format(u))
-                                self._success_times += 1
-                        # -----------------------------------------------------
-                        # return body
+                                await self._lock  # 暂时不清楚这个锁是否必要
+                                try:
+                                    res = self.fetch(body)
+                                except Exception as e:  # 捕捉异常
+                                    LOGGER.warning('[fetch error] {} in [{}]'.format(e, u))
+                                else:
+                                    self.store(res)
+                                    LOGGER.debug('done with {}'.format(u))
+                                    self._success_times += 1
+                                finally:
+                                    self._lock.release()
+                            # -----------------------------------------------------
+                            # return body
+                    except ValueError as e:  # 捕捉无效网址的异常
+                        LOGGER.warning('[response error]{} in {}'.format(e, u))
+                        self._failed_times += 1
+                    except Exception as e:  # 暂时还不知道会有什么其他的异常
+                        LOGGER.warning('[response error]{} in {}'.format(e, u))
+                        self._failed_times += 1
             except asyncio.TimeoutError:  # 注意捕捉的类别
                 LOGGER.warning('timeout in {}'.format(u))
                 self.add_url((u, r_times-1))  # 超时后重试
-            except HTTPError:
-                LOGGER.warning('http error 400 or 500 in {}'.format(u))
-                self._failed_times += 1
             finally:
                 return  # 这个return应该是可以不要的啊
         else:

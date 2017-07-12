@@ -150,13 +150,13 @@ class QCWYDownloadComment(XpathCrawler):
             try:
                 if k is 'content':  # 处理一下字符串
                     res[k] = ''.join(page_body.xpath(v)) \
-                        .replace('\n', '').replace('\t', '').replace('\r', '')
+                        .replace('\n', '').replace('\t', '').replace('\r', '').replace('\xa0', '')
                 else:
                     res[k] = page_body.xpath(v)[0].replace('\t', '')
             except IndexError:  # 抛出剥取异常
                 res[k] = 'wrong context xpath'
             except XPathError:  # 为什么这个异常没有捕捉到
-                res[k] = 'other wrong xpath'
+                res[k] = 'wrong xpath'
         return res
 
     def store(self, res):
@@ -208,4 +208,10 @@ def qianchengwuyou():
 if __name__ == '__main__':
     # zhilian()
     # qianchengwuyou()
-    run_crawler(QCWYDownloadURL, 'http://www.google.com', {})
+    # urls =[]
+    # for _ in range(5):
+    #     urls.append('http://www.google.com')
+    #     urls.append('www.google.com')
+    # run_crawler(QCWYDownloadURL, urls, {})
+    u = 'http://jobs.51job.com/zhuhai/91147464.html?s=01&t=0'
+    run_crawler(QCWYDownloadComment, u, QIANCHENGWUYOU_DETAIL_RULE)
