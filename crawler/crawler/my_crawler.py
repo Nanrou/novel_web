@@ -28,6 +28,9 @@ AsyncCrawlerBase 基类
 --------------------------------------
 7.3
 重构最核心部分
+--------------------------------------
+7.5
+完善细节，增加锁，异常判断等
 
 """
 
@@ -50,6 +53,7 @@ import requests
 
 from crawler.utls.my_logger import MyLogger
 from crawler.crawler.my_exception import FetchError
+from crawler.utls.my_decorate import time_clock
 
 
 """
@@ -120,6 +124,7 @@ class AsyncCrawlerBase(object):
 
         self._success_times = 0
         self._failed_times = 0
+        self._failed_urls = []
 
         assert isinstance(store_path, str), 'must input store_path'
         # if not store_path.endswith('/'):  # 确保储存位置存在
@@ -141,7 +146,7 @@ class AsyncCrawlerBase(object):
     async def work(self):  # 工人工作
         try:
             while True:
-                # await asyncio.sleep(random.randint(1, 3))
+                await asyncio.sleep(random.randint(1, 3))
                 url = await self._q.get()
                 # body = await self.my_request(url)
                 await self.my_request(url)
@@ -163,7 +168,10 @@ class AsyncCrawlerBase(object):
                         async with self._session.get(u) as resp:
                             if resp.status != 200:
                                 LOGGER.warning('get an invalid response in {}'.format(u))
+                                await self._lock
                                 self._failed_times += 1
+                                self._failed_urls.append(u)
+                                self._lock.release()
                                 return
 
                             body = await resp.read()
@@ -179,12 +187,13 @@ class AsyncCrawlerBase(object):
                                         LOGGER.warning('[code error] {} in {}'.format(e, u))
 
                             # -------------------------
-                            #
+                            # 编码有时有问题
                             # _encoding = await resp.()
                             # if _encoding is 'gb2312':
                             #     _encoding = 'gbk'
                             # body = await resp.text()
                             # -------------------------
+
                             # --------------------------------------------------------
                             # 为什么这一块放在work中就不行，在work中拿不到body的返回值
                             if body is None:
@@ -205,10 +214,14 @@ class AsyncCrawlerBase(object):
                             # return body
                     except ValueError as e:  # 捕捉无效网址的异常
                         LOGGER.warning('[response error]{} in {}'.format(e, u))
-                        self._failed_times += 1
+                        await self._lock
+                        self._failed_times += 1  # 公用部分要加锁
+                        self._lock.release()
                     except Exception as e:  # 暂时还不知道会有什么其他的异常
                         LOGGER.warning('[response error]{} in {}'.format(e, u))
+                        await self._lock
                         self._failed_times += 1
+                        self._lock.release()
             except asyncio.TimeoutError:  # 注意捕捉的类别
                 LOGGER.warning('timeout in {}'.format(u))
                 self.add_url((u, r_times-1))  # 超时后重试
@@ -216,7 +229,10 @@ class AsyncCrawlerBase(object):
                 return  # 这个return应该是可以不要的啊
         else:
             LOGGER.warning('outnumber of max retry time in {}'.format(u))
+            await self._lock
             self._failed_times += 1
+            self._failed_urls.append(u)
+            self._lock.release()
         return
 
     def store(self, res):
@@ -231,6 +247,8 @@ class AsyncCrawlerBase(object):
         self._session.close()
         LOGGER.info('prepend: {} urls, success: {}, failed: {}'
                     .format(self._sum_urls, self._success_times, self._failed_times))
+        if len(self._failed_urls):
+            LOGGER.info('[failed urls] {}'.format(self._failed_urls))
 
 
 class XpathCrawler(AsyncCrawlerBase):
@@ -288,10 +306,18 @@ class NovelDownload(DownloadCrawler):  # 小说下载模块
             wf.write(res)
 
 
-def run_crawler(crawler):
+# def run_crawler(crawler, *args, **kwargs):
+#     loop = asyncio.get_event_loop()
+#     loop.run_until_complete(crawler.crawl())
+#     crawler.close()
+#     loop.close()
+
+@time_clock
+def run_crawler(crawler, url, *args, **kwargs):  # 运行爬虫函数
     loop = asyncio.get_event_loop()
-    loop.run_until_complete(crawler.crawl())
-    crawler.close()
+    dd = crawler(url, loop=loop, *args, **kwargs)
+    loop.run_until_complete(dd.crawl())
+    dd.close()
     loop.close()
 
 
