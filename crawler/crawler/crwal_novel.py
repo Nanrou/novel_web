@@ -64,31 +64,4 @@ def content_filter(content):
     return m_content
 
 if __name__ == '__main__':
-    # crwal(URL)
-    # with codecs.open('test.html', 'r', encoding='utf-8') as f:
-    #     body = etree.HTML(f.read())
-    #     content = body.xpath('//div[@id="content"]')[0]
-    #     print(type(content))
-    #     print(etree.tounicode(content).split('<div id="content">')[-1].split('</div>')[0])
-
-    from orm import insert
-    import time
-    from random import randint
-    import redis
-    conn = redis.Redis()
-    # urls = crawl_urls(URL)
-    i = 1171
-    # for _, u in urls:
-    #     conn.lpush('url', u)
-    # for pk_id, url in urls:
-    while True:
-        url = conn.rpop('url')
-        if not url:
-            break
-        time.sleep(randint(1, 3))
-        pk_id = i
-        c, t, n = crwal(url)
-        insert(pk_id=str(pk_id), chapter=c, content=t, need_confirm=n)
-        print('finish: {}'.format(url) + '\n')
-        i += 1
-
+    pass

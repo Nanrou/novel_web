@@ -14,7 +14,7 @@ from django.http import Http404
 # Create your views here.
 
 
-def get_book_from_cate():
+def get_book_from_cate():  # 返回每个分类下的书
     cate_list = []
     for index in range(1, 7):
         books = CategoryTable.objects.get(id=index).get_random_ele(6)
@@ -27,7 +27,6 @@ class HomeView(TemplateView):
     template_name = 'novel_site/home.html'
 
     def get_context_data(self, **kwargs):
-        # context = super(HomeView, self).get_context_data(**kwargs)
         context = dict()
         context['top_four'] = InfoTable.objects.all()[0:4]
 
@@ -79,7 +78,7 @@ class BookView(DetailView):
     template_name = 'novel_site/detail.html'
     pk_url_kwarg = 'index'
 
-    def get_adjacent_page(self):  # ??????????
+    def get_adjacent_page(self):  # 这个是通过判断序号是否超出范围来决定前后的url
         ll = list(self.book_info.all_chapters_id_only)  # 这里是通过找所有的id来判断是否有前后
         index = ll.index(self.object)
         if index - 1 < 0:
@@ -103,10 +102,6 @@ class BookView(DetailView):
         context['book_info'] = self.book_info
         context['last_page'], context['next_page'] = self.get_adjacent_page()
         return context
-
-    # def get_object(self):
-    #     self.book_info = InfoTable.objects.select_related.get(pk=self.kwargs['pk'])
-    #     return self.book_info.all_chapters
 
 
 class QuanbenView(ListView):
@@ -157,7 +152,7 @@ class MobileBookView(DetailView):
     pk_url_kwarg = 'index'
     context_object_name = 'book'
 
-    def get_adjacent_page(self):
+    def get_adjacent_page(self):  # 这里是直接构造前后的url，然后回db里判断是否存在
         try:
             index = int(self.kwargs['index'])
             if self.queryset.filter(pk=index-1).exists():
@@ -177,10 +172,6 @@ class MobileBookView(DetailView):
         self.mulu_url = shili.get_mobile_url()
         self.queryset = shili.all_chapters_detail
         return self.queryset
-
-    # def get_queryset(self):
-    #     self.book_info = InfoTable.objects.defer('resume', 'image', 'update_time', '_status').select_related().get(pk=self.kwargs['pk'])
-    #     return self.book_info.all_chapters_detail  # 传给父类的get object，再寻找对应的条目
 
     def get_context_data(self, **kwargs):
         context = super(MobileBookView, self).get_context_data(**kwargs)

@@ -1,13 +1,6 @@
 # -*-coding:utf-8 -*-
 
 """
-workflow:
-1，生成一个有很多标题的txt
-2，根据这个txt，去搜，并下载info资料，和小说下载的URL  get_novel_urls
-3，把info塞到db里  insert_info
-4，根据之前的url，去下载整本小说  download_novel
-5，将小说分割成章节  product_split_rule --> bbb
-6，把detail塞到db里  insert_detail
 
 """
 
@@ -20,104 +13,114 @@ import random
 
 import requests
 
-from crawler.my_decorate import time_clock
-from crawler.my_crawler import search_novel
-from crawler.operateDB import get_infotable_count, get_title_id
-from crawler.my_logger import MyLogger
-from crawler.operateDB import insert_to_detail, insert_to_info, get_infotable_count
+from crawler.utls.my_decorate import time_clock
+from crawler.db.operateDB import get_infotable_count, get_title_id
+from crawler.utls.my_logger import MyLogger
+from crawler.db.operateDB import insert_to_detail, insert_to_info, get_infotable_count
 
 
 Logger = MyLogger('novel_operation')
 
 
 @time_clock
-def split_txt(txt_path, title, chapter_index, store_path, title_split=' ', title_rule=None):
+def split_book(txt_path, title, chapter_index, store_path, chapter_split=' ', chapter_rule=None):
     """
     将全本小说分割成独立章节，然后放到一个文件夹里
-    t_rule = r'第一篇'  #  如果有多种方式，则传入list形式的rule
+    t_rule = r'第一篇'  如果有多种方式，则传入list形式的rule
     t_path = 'test/xue.txt'
-    title = book_name
+    title = book_name  书名
     split_txt(t_path, title, t_rule, 1, store_path='./book/01')
 
     目前发现，正文部分前面都是有四个空格的，所以直接对首字判断即可
+    书的格式一般为
+        《书名》
+
+        第一章 章节名
+            正文
+            。。。
+        第二章 章节名
+            正文
+            。。。
+
+    :param txt_path: 书的位置
+    :param title: 书名
+    :param chapter_index: 序号，也就是书的pk
+    :param store_path: 分割完后的存放位置
+    :param chapter_split: 章节名那一行的分隔符
+    :param chapter_rule: 特殊的分割条件，因为一般情况下，章节那一行是没有空格的，而正文都是有空格在前面的
+    :return:
     """
+
     if not store_path.endswith('/'):  # 保证路径的存在
         store_path += '/'
     if not os.path.exists(store_path):
         os.mkdir(store_path)
+
     try:
-        chapter_index = int(chapter_index)
+        chapter_index = int(chapter_index) * 10000 + 1
     except TypeError:
-        print('index require num')
-    chapter_index = chapter_index * 10000 + 1
+        raise TypeError
 
     with codecs.open(txt_path, 'r', encoding='utf-8') as f:
-        ls = f.readlines()
+        book = f.readlines()
         start_index = None
-        for index, line in enumerate(ls):
-            flag = False
-            if title_rule:  # 传入rule的话
-                if isinstance(title_rule, list):
-                    for tt in title_rule:
-                        if re.match(tt, line):
-                            flag = True
-                            break
-                else:
-                    if re.match(title_rule, line):
-                        flag = True
+        chapter_title = ''
+        for index, line in enumerate(book):
+            if chapter_rule:  # 传入rule的话
+                raise RuntimeError('wait to finish')
+                # if isinstance(chapter_rule, list):
+                #     for tt in chapter_rule:
+                #         if re.match(tt, line):
+                #             flag = True  # 看一下这个flag怎么处理比较好
+                #             break
+                # else:
+                #     assert isinstance(chapter_rule, str) is True, 'title rule must be str, if it is not a list'
+                #     if re.match(chapter_rule, line):
+                #         flag = True
             else:
                 if '\u4e00' <= line[0] <= '\u9fff' \
                         or '\u4e00' <= line[1] <= '\u9fff' and line[0] != '《':
-                    # 1，中字开头的，2，标题是书名号开头的，所以没影响
-                    flag = True
+                    # 1，中文编码开头的，2，由于书名是书名号开头的，所以只要不是书名号开头的，就是章节行
+                    # 从这一行开始标记
+                    if start_index is None:
+                        start_index = index
+                        tmp_ll = line.strip().split(chapter_split)
+                        if len(tmp_ll) == 2:
+                            chapter_title = tmp_ll[-1]
+                        elif len(tmp_ll) < 5:
+                            chapter_title = ' '.join(tmp_ll[-2:])
+                        else:
+                            chapter_title = ' '.join(tmp_ll[2:])
+                        continue  # 跳过第一次
 
-            if flag:
-                if start_index is None:
-                    start_index = index
-                    tmp_ll = line.strip().split(title_split)
-                    if not tmp_ll[-1]:
-                        tmp_ll = tmp_ll[:-1]
+                    end_index = index
+                    res = {
+                        'id': chapter_index,
+                        'title': title,
+                        'chapter': chapter_title,
+                        'content': ''.join(book[start_index + 2: end_index - 1]).replace('\r\n\r\n', '<br/>').replace('  ', '　'),
+                    }
+                    with open(os.path.join(store_path, str(chapter_index)), 'wb') as wf:
+                        pickle.dump(res, wf)
+                    chapter_index += 1
+
+                    start_index = end_index  # 将当前行标记为新的开始
+                    tmp_ll = line.strip().split(chapter_split)
                     if len(tmp_ll) == 2:
                         chapter_title = tmp_ll[-1]
                     elif len(tmp_ll) < 5:
                         chapter_title = ' '.join(tmp_ll[-2:])
-                    # elif len(tmp_ll) == 5:
-                    #     chapter_title = ' '.join(tmp_ll[-3:])
                     else:
                         chapter_title = ' '.join(tmp_ll[2:])
-                    continue  # 跳过第一次
-
-                end_index = index
-                res = {
-                    'id': chapter_index,
-                    'title': title,
-                    'chapter': chapter_title,
-                    'content': ''.join(ls[start_index + 1:end_index-2]).replace('\r\n\r\n', '<br/>').replace('  ', '　'),
-                }
-                with open(store_path + str(chapter_index), 'wb') as wf:
-                    pickle.dump(res, wf)
-                chapter_index += 1
-                start_index = end_index
-                tmp_ll = line.strip().split(title_split)
-                if not tmp_ll[-1]:
-                    tmp_ll = tmp_ll[:-1]
-                if len(tmp_ll) == 2:
-                    chapter_title = tmp_ll[-1]
-                elif len(tmp_ll) < 5:
-                    chapter_title = ' '.join(tmp_ll[-2:])
-                # elif len(tmp_ll) == 5:
-                #     chapter_title = ' '.join(tmp_ll[-3:])
-                else:
-                    chapter_title = ' '.join(tmp_ll[2:])
 
         else:  # 最后一章
             res = {
                 'id': chapter_index,
                 'title': title,
                 'chapter': chapter_title,
-                'content': ''.join(ls[start_index + 1:end_index-2]).replace('\r\n\r\n', '<br/>').replace('  ', '　'),
+                'content': ''.join(book[start_index + 1:]).replace('\r\n\r\n', '<br/>').replace('  ', '　'),
             }
-            with open(store_path + str(chapter_index), 'wb') as wf:
+            with open(os.path.join(store_path, str(chapter_index)), 'wb') as wf:
                 pickle.dump(res, wf)
 
 
@@ -261,20 +264,6 @@ def start_insert_detail(start, path='./book/chapter/'):
     for book_path in book_paths:
         insert_detail(book_path)
 
-
-# @time_clock
-# def get_url_from_redis(table_index):  # 这里的逻辑是一次只下载一本
-#     if isinstance(table_index, list):
-#         table_index = table_index[0]
-#
-#     conn = redis.StrictRedis()
-#     length = conn.llen(table_index)
-#     items = conn.lrange(table_index, 0, length-1)
-#     detail_urls = []
-#     for item in items:
-#         index, url = str(item).split('!')
-#         detail_urls.append([index[2:], url[:-1]])
-#     download_detail(detail_urls)
 
 
 @time_clock

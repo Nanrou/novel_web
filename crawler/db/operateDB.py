@@ -1,9 +1,15 @@
 # -*- coding:utf-8 -*-
 
-import os, sys
+import os
+import sys
 import datetime
+import pickle
+import re
 
-sys.path.append('../mysite/')
+from crawler.utls.my_logger import MyLogger
+
+PROJECT_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+sys.path.append(os.path.join(PROJECT_DIR, 'mysite/'))
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'mysite.settings')
 
 import django
@@ -14,28 +20,48 @@ try:
 except ImportError:
     from novel_site import models
 
-import pickle
-import re
-
 from django.db.models import ObjectDoesNotExist
 
 
-from my_crawler import image_download
-from my_logger import MyLogger
+"""
+约定
+info的pickle文件的dict结构应为
+{
+    'title': ,
+    'author': ,
+    'category': ,
+    'resume': ,
+
+}
+
+detail的pickle文件的dict结构应为
+{
+    'id': ,
+    'title': ,
+    'chapter': ,
+    'content': ,
+}
+"""
 
 Logger = MyLogger('DB_log')
 
 MODIFIED_TEXT = [r'一秒记住.*?。', r'(看书.*?)', r'纯文字.*?问', r'热门.*?>', r'最新章节.*?新',
                  r'は防§.*?e',
-                 # r'&.*?>', r'c.*?>',
                  r'复制.*?>', r'字-符.*?>', r'最新最快，无.*?。',
                  r'    .Shumilou.Co  M.Shumilou.Co<br /><br />', r'[Ww]{3}.*[mM]',
                  r'&amp;nbsp;    &amp;nbsp;    &amp;nbsp;    &amp;nbsp;  ',
                  r'.*\u3000\u3000第.*?章.*?<br/>',
                  ]
 
+CATEGORY_DICT = {
+    '言情': '都市',
+    '军事': '架空',
+    '武侠': '架空',
+    '仙侠': '玄幻',
+}
 
-def product_cate():
+
+def product_cate():  # 这是初始化的时候做的
     category = ['玄幻修真', '科幻网游', '都市重生', '架空历史', '恐怖灵异', '全本小说']
     cate = ['xuanhuan', 'kehuan', 'dushi', 'jiakong', 'kongbu', 'quanben']
     res = []
@@ -44,33 +70,37 @@ def product_cate():
     return res
 
 
-def insert_to_category():
+def insert_to_category():  # 将分类插入数据库，加了一个防止重复插入的判断
+    if models.CategoryTable.objects.all().exsits():
+        Logger.warning('category table is none null, maybe already inserted')
+        return
     res = product_cate()
     for r in res:
         models.CategoryTable.objects.create(**r)
 
 
-def insert_to_info(files, store_des=1, pk=None):
+def insert_to_info(files, store_des=1):  # 将info信息插入db
     """
     col: id | title | status | update_time | store_des | image | resume | author_id | category_id
 
+    这里只处理pickle文件，而pickle文件又是以pk命名的，所以直接拿文件名做pk就可以了
 
-    :param files:
-    :param store_des:
-    :param pk:
+    :param files: 包含文件名的列表
+    :param store_des: 存到哪个数据库
+    :param pk: 指定的pk
     :return:
     """
     if isinstance(files, list):  # 判断传入是单个还是多个
         info_list = []
-        for file in files:
+        for file in files:  # 如果传入的是文件名的列表，就用一次插入多条
             with open(file, 'rb') as rf:
-                res = operate_info_res(pickle.load(rf), store_des, pk)
-                info_list.append(models.InfoTable(**res))
+                res = operate_info_res(pickle.load(rf), store_des, pk=file.split('/')[-1])  # 读取pickle文件，并逐项操作
+                info_list.append(models.InfoTable(**res))  # 生成那一行的实例
             Logger.debug('insert {}'.format(file))
-        models.InfoTable.objects.bulk_create(info_list)
+        models.InfoTable.objects.bulk_create(info_list)  # 一次插入
     else:
         with open(files, 'rb') as rf:
-            res = operate_info_res(pickle.load(rf), store_des, pk)
+            res = operate_info_res(pickle.load(rf), store_des, pk=files.split('/')[-1])
             models.InfoTable.objects.update_or_create(**res)
             Logger.debug('insert {}'.format(files))
 
@@ -83,16 +113,16 @@ def operate_info_res(res, store_des, pk):  # 修正res中的内容
     :param pk:
     :return:
     """
-    if pk:
+    if pk:  # 传入pk的话就指定，否则让orm自己指定
         res['id'] = pk
 
-    if 'status' in res:
+    if 'status' in res:  # 连载或者完结的值，只是换了个键名
+        if ('：' or ':') in res['status']:
+            res['status'] = res['status'][0].split('：')[-1][:3]
         res['_status'] = res['status']
         res.pop('status')
 
-    if '：' in res['_status']:
-        res['_status'] = res['_status'][0].split('：')[-1][:3]
-
+    # 去掉摘要中的空格
     if '\xa0' in res['resume']:
         res['resume'] = res['resume'].replace('\xa0', '')
     if '\u3000' in res['resume']:
@@ -101,25 +131,27 @@ def operate_info_res(res, store_des, pk):  # 修正res中的内容
     res['store_des'] = store_des
 
     name = res['author']
-    res['author_id'] = get_author_id(name)
+    res['author_id'] = get_author_id(name)  # 拿到作者表中的id
     res.pop('author')
 
     category = res['category']
-    res['category_id'] = get_category_id(category)
+    res['category_id'] = get_category_id(category)  # 拿到分类中的id
     res.pop('category')
 
-    img_url = res['img_url']
-    img_path = 'miss'
-    if img_url:
-        index = res.get('id', 'tmp')
-        img_path = image_download(index, img_url)
-    res['image'] = img_path
-    res.pop('img_url')
+    # 输入image的路径
+    if pk:
+        res['image'] = pk + '.jpg'
+    else:
+        res['image'] = res['title'] + '.jpg'
 
+    # 把状态转换成0和1
     if res['_status'] == '连载中':
         res['_status'] = 0
     else:
         res['_status'] = 1
+
+    # 输入更新时间
+    res['update_time'] = datetime.datetime.now().isoformat(' ', timespec='seconds')
 
     return res
 
@@ -138,9 +170,8 @@ def insert_to_detail(files, **kwargs):
                     try:
                         res = operate_detail_res(pickle.load(rf))
                     except RuntimeError:
-                        with open('miss_chapter.txt', 'a') as wf:
-                            wf.write('{}:wrong in {}'.format(datetime.datetime.now(), file))  # res会使用上次的
-                    res['id'] = file.split('/')[-1]
+                        Logger.warning('{}:wrong in {}'.format(datetime.datetime.now(), file))
+                    res['id'] = file.split('/')[-1]  # 就拿章节文件名来做pk
                     res.update(kwargs)
                     detail_list.append(models.BookTableOne(**res))  # 创建实例，放到list里
             models.BookTableOne.objects.bulk_create(detail_list)  # 一次插入list里的所有实例
@@ -154,18 +185,13 @@ def insert_to_detail(files, **kwargs):
         Logger.debug('insert {}'.format(files))
 
 
-def operate_detail_res(res):
+def operate_detail_res(res):  # 处理细节
     """
     col: id | chapter | content | need_confirm | book_id | title_id
 
+    attr_list = ['id', 'chapter', 'content']
     """
 
-    attr_list = ['id', 'chapter', 'content']
-
-    # while True:
-    #     if '\u4e00' <= res['chapter'][0] <= '\u9fff':  # 只是过滤章节名前的空格
-    #         break
-    #     res['chapter'] = res['chapter'][1:]
     res['chapter'] = res['chapter'].strip()
     res['content'], res['need_confirm'] = filter_content(res['content'])
 
@@ -174,19 +200,24 @@ def operate_detail_res(res):
     return res
 
 
-def get_author_id(name):
+def get_author_id(name):  # 拿到author的id
     name = name if '：' not in name else name.split('：')[-1]
     obj, created = models.AuthorTable.objects.get_or_create(author=name)
     return obj.id
 
 
-def get_category_id(category):
-    category = category[:2]
-    obj = models.CategoryTable.objects.get(category__contains=category)
-    return obj.id
+def get_category_id(category):  # 拿到分类的id
+    if category in CATEGORY_DICT:
+        category = CATEGORY_DICT[category]
+    for cate in category:
+        obj = models.CategoryTable.objects.get(category__contains=cate)
+        if obj:
+            return obj.id
+    Logger.warning('miss category')
+    return 'miss'
 
 
-def get_title_id(title):
+def get_title_id(title):  # 拿到title的id
     try:
         obj = models.InfoTable.objects.only('id').get(title=title)
     except ObjectDoesNotExist:
@@ -247,7 +278,7 @@ def update_update_time(start=None, end=None):
     """
     t_list = models.InfoTable.objects.all()[start-1: end].only('update_time')
     for ins in t_list:
-        ins.update_time = datetime.datetime.now().isoformat(' ', 'seconds')
+        ins.update_time = datetime.datetime.now().isoformat(' ', timespec='seconds')
         ins.save()
 
 
@@ -257,13 +288,4 @@ def get_infotable_count():
 
 if __name__ == '__main__':
 
-    # file_name = './bbb/0'
-    # insert_to_info(file_name)
-
-    # file_name = './ccc/0'
-    # insert_to_detail(file_name)
-
-    # insert_to_category()
     print('i am in ORM')
-    # update_img_path()
-    # update_update_time()
