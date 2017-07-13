@@ -17,15 +17,20 @@ class MobileMiddleware(object):
         :return:
         """
         host = request.META.get('HTTP_HOST')
+        if 'www.' in host:
+            host = host.replace('www.', '')
         if host.startswith('m'):
             if any(ua for ua in MOBILE_UA if ua in request.META['HTTP_USER_AGENT']):
                 return self.get_response(request)
             else:
                 new_path = host[2:] + request.path
-                return redirect(new_path)
+                print('---------------', new_path)
+                return redirect('novel:home')
         else:
             if any(ua for ua in MOBILE_UA if ua in request.META['HTTP_USER_AGENT']):
                 new_path = 'm.' + host + request.path
-                return redirect(new_path)
+                # return redirect(new_path)
+                print('******************', new_path)
+                return redirect('mobile:home')
             else:
                 return self.get_response(request)
