@@ -23,12 +23,15 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '#qmln%+&shyq5*h*3flkg5&gn72*f5uxg2+tdm8c=!q@i*$!h2'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = [
-        #'120.25.3.34',
-        #'superxiaoshuo.com',
-        #'www.superxiaoshuo.com',
+    '127.0.0.1',
+    '120.25.3.34',
+    'superxiaoshuo.com',
+    'www.superxiaoshuo.com',
+    'www.m.superxiaoshuuo.com',
+    'm.superxiaoshuo.com',
         ]
 
 
@@ -42,7 +45,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'novel_site',
-    #'gunicorn',
+    'gunicorn',
 ]
 
 MIDDLEWARE = [
@@ -126,8 +129,8 @@ USE_TZ = False
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_ROOT =  os.path.join(BASE_DIR, 'static/')
-#STATICFILES_DIRS = (os.path.join(BASE_DIR, "static"), )
+STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
+# STATICFILES_DIRS = (os.path.join(BASE_DIR, "static"), )
 # STATICFILES_FINDERS = (
 #     "django.contrib.staticfiles.finders.FileSystemFinder",
 #     "django.contrib.staticfiles.finders.AppDirectoriesFinder",
