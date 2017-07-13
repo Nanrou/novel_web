@@ -3,6 +3,7 @@
 from random import sample
 from django.db import models
 from django.urls import reverse, reverse_lazy
+from django_hosts.resolvers import reverse as hosts_reverse
 
 
 # Create your models here.
@@ -23,7 +24,8 @@ class CategoryTable(models.Model):
         return reverse('novel_site:category', kwargs={'cate': self.cate})
 
     def get_mobile_url(self):
-        return reverse('novel_site:m_category', kwargs={'cate': self.cate})
+        # return reverse('novel_site:m_category', kwargs={'cate': self.cate})
+        return hosts_reverse('mobile:category', host='mobile_part', kwargs={'cate': self.cate})
 
     def get_random_ele(self, num):
         if self.pk is 6:
@@ -67,10 +69,11 @@ class InfoTable(models.Model):
         # return dd[str(self._status)]
 
     def get_absolute_url(self):
-        return reverse('novel_site:info', kwargs={'pk': self.pk})
+        # return reverse('novel_site:info', kwargs={'pk': self.pk})
+        return hosts_reverse('novel_site:info', host='www', kwargs={'pk': self.pk})
 
     def get_mobile_url(self):
-        return reverse('novel_site:m_info', kwargs={'pk': self.pk})
+        return hosts_reverse('mobile:info', host='mobile', kwargs={'pk': self.pk})
 
     @property
     def latest_chapter(self):
@@ -108,7 +111,8 @@ class Book(models.Model):
         return reverse('novel_site:detail', kwargs={'pk': self.book_id, 'index': self.pk})
 
     def get_mobile_url(self):
-        return reverse('novel_site:m_detail', kwargs={'pk': self.book_id, 'index': self.pk})
+        # return reverse('novel_site:m_detail', kwargs={'pk': self.book_id, 'index': self.pk})
+        return hosts_reverse('mobile:detail', host='moblie_part', kwargs={'pk': self.book_id, 'index': self.pk})
 
     class Meta:
         abstract = True

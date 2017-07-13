@@ -5,10 +5,7 @@
 <title>{{ object.chapter }} 正文 {{ object.chapter }}全文免费阅读 - 超级小说</title>
 <meta name="keywords" content="{{ object.chapter }}全文阅读。">
 <meta name="description" content="超级小说免费为大家提供{{ object.chapter }}全文阅读,如果你想第一时间观看下一章节,请留意以及收藏超级小说,方便你下次阅读择天记最新章节。">
-{% comment %}
-<meta http-equiv="mobile-agent" content="format=html5; url={{ object.get_absolute_url_mobile }}">
-<meta http-equiv="mobile-agent" content="format=xhtml; url={{ object.get_absolute_url_mobile }}">
-{% endcomment %}
+<link rel="alternate" href="http://www.m.superxiaoshuo.com/book/{{ object.book_id }}/{{ object.id }}">
 {% endblock meta_description %}
 
 {% block optional_script %}
