@@ -52,6 +52,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django_hosts.middleware.HostsRequestMiddleware',
+
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -68,7 +69,7 @@ ROOT_URLCONF = 'mysite.urls'
 
 ROOT_HOSTCONF = 'mysite.hosts'
 DEFAULT_HOST = 'www'
-PARENT_HOST = 'superxiaoshuo.com'
+# PARENT_HOST = 'superxiaoshuo.com'
 # PARENT_HOST = '127.0.0.1:8000'
 
 
@@ -139,7 +140,7 @@ USE_TZ = False
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_ROOT =  os.path.join(BASE_DIR, 'static/')
+STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
 #STATICFILES_DIRS = (os.path.join(BASE_DIR, "static"), )
 # STATICFILES_FINDERS = (
 #     "django.contrib.staticfiles.finders.FileSystemFinder",

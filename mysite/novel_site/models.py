@@ -112,7 +112,7 @@ class Book(models.Model):
 
     def get_mobile_url(self):
         # return reverse('novel_site:m_detail', kwargs={'pk': self.book_id, 'index': self.pk})
-        return hosts_reverse('mobile:detail', host='moblie', kwargs={'pk': self.book_id, 'index': self.pk})
+        return hosts_reverse('mobile:detail', host='mobile', kwargs={'pk': self.book_id, 'index': self.pk})
 
     class Meta:
         abstract = True

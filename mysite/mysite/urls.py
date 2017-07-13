@@ -17,5 +17,6 @@ from django.conf.urls import url, include
 from django.contrib import admin
 
 urlpatterns = [
-    url(r'', include('novel_site.urls')),
+    url(r'', include('novel_site.urls', namespace='novel_site')),
+    # url(r'^m/', include('mobile.urls', namespace='mobile')),
 ]
