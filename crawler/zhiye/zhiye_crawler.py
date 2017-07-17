@@ -222,18 +222,24 @@ def collect_detail(folder='./'):
                     print('{} in {}'.format(e, name))
                     continue
                 res.append(content)
-                # res.append(','.join([content['title'], content['company'],
-                #                     content['salary'], content['work_des'], content['content']]))
+                
             os.remove(file_name)
         with open(os.path.join(folder, '{}_sum'.format(s)), 'wb') as wf:
             pickle.dump(res, wf)
-        # with open('{}_sum.txt'.format(s), 'w') as wf:
-        #     wf.write('\n'.join(res))
+            
+        res_txt = []
+        for i in res:
+            res_txt.append(','.join([i['title'], i['company'],
+                                    i['salary'], i['work_des'], i['content']]))
+        
+        with open(os.path.join(folder, '{}_sum.txt'.format(s)), 'w') as wf:
+            wf.write('\n'.join(res_txt))
 
 
 def main():
     date_time = '{:%Y-%m-%d}'.format(datetime.datetime.today())
-    if os.path.exists(date_time):
+    print(date_time)
+    if not os.path.exists(date_time):
         zhilian()
         qianchengwuyou()
         collect_detail(date_time)
@@ -243,3 +249,4 @@ def main():
 
 if __name__ == '__main__':
     print('i in zhiye')
+    main()
