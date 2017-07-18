@@ -206,7 +206,7 @@ class AsyncCrawlerBase(object):
                                 try:
                                     res = self.fetch(body)
                                 except FetchError as e:  # 捕捉异常
-                                    LOGGER.warning('[fetch error] {} in [{}]'.format(e, u))
+                                    LOGGER.warning('[fetch error] {} in [{}]'.format(e.__str__(), u))  # 抛出什么值好呢
                                     self.add_url((u, r_times-1))  # 重试
                                 except Exception as e:  # 捕捉异常
                                     LOGGER.warning('[unknown error] {} in [{}]'.format(e, u))

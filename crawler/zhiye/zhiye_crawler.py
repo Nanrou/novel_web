@@ -53,7 +53,7 @@ QIANCHENGWUYOU_DETAIL_RULE = {
     'company': '//div[@class="cn"]/p[@class="cname"]/a/text()',
     'salary': '//div[@class="cn"]/strong/text()',
     'work_des': '//div[@class="bmsg inbox"]/p[@class="fp"]/text()[2]',
-    'content': '//div[@class="bmsg job_msg inbox"]/text()',
+    'content': '//div[@class="bmsg job_msg inbox"]',
 }
 
 LAGOU_DATA = ('user_trace_token', 'SEARCH_ID', 'JSESSIONID')
@@ -68,6 +68,11 @@ LAGOU_DETAIL_RULE = {
 
 
 def download_html(url):
+    """
+    下载html页面，做测试用
+    :param url:
+    :return:
+    """
     response = requests.get(url, headers=HEADERS)
     content = response.content.decode(response.apparent_encoding).encode('utf-8').decode('utf-8')
     try:
@@ -79,6 +84,9 @@ def download_html(url):
 
 
 class ZHILIANDownloadUrl(XpathCrawler):
+    """
+    爬取子页面的url
+    """
     def fetch(self, body):
         page_body = etree.HTML(body)
         res = []
@@ -100,19 +108,40 @@ class ZHILIANDownloadComment(XpathCrawler):
         self._prefix = 'z'
 
     def fetch(self, body):
+        """
+        抓取的逻辑，负责报异常
+        :param body:
+        :return:
+        """
         page_body = etree.HTML(body)
         res = {}
+        wrong_times = 0
         for k, v in self._parse_rule.items():
             try:
-                if k is 'content':
-                    res[k] = page_body.xpath(v)[0].xpath('string(.)')\
-                        .replace('\r\n', '').replace('\xa0', '').replace(' ', '')
-                else:
-                    res[k] = page_body.xpath(v)[0].replace('\xa0', '')
+                res.update(self.fetch_detail(page_body, k, v))
             except IndexError:  # 抛出剥取异常
-                raise FetchError
+                res[k] = 'miss {}'.format(k)
+                wrong_times += 1
             except XPathError:
                 res[k] = 'other wrong xpath'
+        if wrong_times > 3:
+            raise FetchError('{} items miss, so retry again'.format(wrong_times))
+        return res
+
+    def fetch_detail(self, page_body, k, v):
+        """
+        处理字符串的具体操作
+        :param page_body:
+        :param k:
+        :param v:
+        :return:
+        """
+        res = {}
+        if k is 'content':
+            res[k] = page_body.xpath(v)[0].xpath('string(.)') \
+                .replace('\r\n', '').replace('\xa0', '').replace(' ', '')
+        else:
+            res[k] = page_body.xpath(v)[0].replace('\xa0', '')
         return res
 
     def store(self, res):
@@ -128,6 +157,9 @@ class ZHILIANDownloadComment(XpathCrawler):
 
 
 class QCWYDownloadURL(XpathCrawler):
+    """
+    爬取子页面的url
+    """
     def fetch(self, body):
         page_body = etree.HTML(body)
         res = []
@@ -138,9 +170,9 @@ class QCWYDownloadURL(XpathCrawler):
         date_time = '{:%m-%d}'.format(datetime.datetime.today())
         for i, date in enumerate(page_body.xpath(self._parse_rule['pub_date'])):
             if date == date_time:
-                u = urls[i]
-                t = titles[i].replace('\r\n', '').replace(' ', '')
-                res.append([t, u])
+                _u = urls[i]
+                _t = titles[i].replace('\r\n', '').replace(' ', '')
+                res.append([_t, _u])
             # res.append(','.join([title.text, page_body.xpath(self._parse_rule['url'])[i]]))
         return res
 
@@ -150,20 +182,13 @@ class QCWYDownloadComment(ZHILIANDownloadComment):
         super(QCWYDownloadComment, self).__init__(*args, **kwargs)
         self._prefix = 'q'
 
-    def fetch(self, body):
-        page_body = etree.HTML(body)
+    def fetch_detail(self, page_body, k, v):
         res = {}
-        for k, v in self._parse_rule.items():
-            try:
-                if k is 'content':  # 处理一下字符串
-                    res[k] = ''.join(page_body.xpath(v)) \
-                        .replace('\n', '').replace('\t', '').replace('\r', '').replace('\xa0', '')
-                else:
-                    res[k] = page_body.xpath(v)[0].replace('\t', '')
-            except IndexError:
-                raise FetchError
-            except XPathError:
-                res[k] = 'wrong xpath'
+        if k is 'content':  # 处理一下字符串
+            res[k] = page_body.xpath(v)[0].xpath('string(.)') \
+                .replace('\n', '').replace('\t', '').replace('\r', '').replace('\xa0', '')
+        else:
+            res[k] = page_body.xpath(v)[0].replace('\t', '')
         return res
 
 
@@ -172,23 +197,35 @@ class LAGOUDownloadComment(ZHILIANDownloadComment):
         super(LAGOUDownloadComment, self).__init__(*args, **kwargs)
         self._prefix = 'l'
 
-    def fetch(self, body):
-        page_body = etree.HTML(body)
+    # def fetch(self, body):
+    #     page_body = etree.HTML(body)
+    #     res = {}
+    #     for k, v in self._parse_rule.items():
+    #         try:
+    #             if k is 'content':
+    #                 res[k] = page_body.xpath(v)[0].xpath('string(.)') \
+    #                     .replace('\n', '').replace(' ', '').replace('\xa0', '')
+    #             elif k is 'work_des':
+    #                 res[k] = ''.join(page_body.xpath(v)) \
+    #                     .replace('\n', '').replace('-', '').replace(' ', '')
+    #             else:
+    #                 res[k] = page_body.xpath(v)[0]
+    #         except IndexError:  # 抛出剥取异常
+    #             raise FetchError(v)
+    #         except XPathError:
+    #             res[k] = 'wrong xpath syntax'
+    #     return res
+
+    def fetch_detail(self, page_body, k, v):
         res = {}
-        for k, v in self._parse_rule.items():
-            try:
-                if k is 'content':
-                    res[k] = page_body.xpath(v)[0].xpath('string(.)') \
-                        .replace('\n', '').replace(' ', '').replace('\xa0', '')
-                elif k is 'work_des':
-                    res[k] = ''.join(page_body.xpath(v)) \
-                        .replace('\n', '').replace('-', '').replace(' ', '')
-                else:
-                    res[k] = page_body.xpath(v)[0]
-            except IndexError:  # 抛出剥取异常
-                raise FetchError
-            except XPathError:
-                res[k] = 'wrong xpath syntax'
+        if k is 'content':
+            res[k] = page_body.xpath(v)[0].xpath('string(.)') \
+                .replace('\n', '').replace(' ', '').replace('\xa0', '')
+        elif k is 'work_des':
+            res[k] = ''.join(page_body.xpath(v)) \
+                .replace('\n', '').replace('-', '').replace(' ', '')
+        else:
+            res[k] = page_body.xpath(v)[0]
         return res
 
 
@@ -357,6 +394,7 @@ def collect_detail(folder='./', namelist=('z', 'q', 'l')):
             wf.write('\n'.join(res_txt))
 
 
+@time_clock
 def main():
     date_time = '{:%Y-%m-%d}'.format(datetime.datetime.today())
     if not os.path.exists(date_time):
@@ -369,7 +407,8 @@ def main():
 
     remove_list = ['lagou_cookies.txt', 'lagou_info.json', 'qianchengwuyou', 'zhilian']
     for i in remove_list:
-        os.remove(i)
+        if os.path.exists(i):
+            os.remove(i)
 
 if __name__ == '__main__':
     print('i in zhiye')
