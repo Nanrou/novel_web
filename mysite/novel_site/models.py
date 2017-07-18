@@ -25,7 +25,7 @@ class CategoryTable(models.Model):
 
     def get_mobile_url(self):
         # return reverse('novel_site:m_category', kwargs={'cate': self.cate})
-        return hosts_reverse('mobile:category', host='mobile_part', kwargs={'cate': self.cate})
+        return hosts_reverse('mobile:category', host='mobile', kwargs={'cate': self.cate})
 
     def get_random_ele(self, num):
         if self.pk is 6:
@@ -112,7 +112,7 @@ class Book(models.Model):
 
     def get_mobile_url(self):
         # return reverse('novel_site:m_detail', kwargs={'pk': self.book_id, 'index': self.pk})
-        return hosts_reverse('mobile:detail', host='moblie_part', kwargs={'pk': self.book_id, 'index': self.pk})
+        return hosts_reverse('mobile:detail', host='mobile', kwargs={'pk': self.book_id, 'index': self.pk})
 
     class Meta:
         abstract = True

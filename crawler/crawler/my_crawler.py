@@ -41,7 +41,6 @@ import random
 from asyncio import Queue, Lock
 from async_timeout import timeout
 import codecs
-from collections import namedtuple
 import time
 
 
@@ -90,7 +89,7 @@ class AsyncCrawlerBase(object):
     要求传入的urls必须是list,['name', 'url']
     """
 
-    def __init__(self, urls, name=None, loop=None, max_tasks=5, store_path='./', headers=None):
+    def __init__(self, urls, name=None, loop=None, max_tasks=5, store_path='./', headers=None, waiting_time=3):
         """
 
         :param urls:
@@ -133,6 +132,9 @@ class AsyncCrawlerBase(object):
         if not os.path.exists(self._store_path):
             os.mkdir(self._store_path)
 
+        assert isinstance(waiting_time, int), 'must input a vaild number'
+        self._waiting_time = waiting_time
+
     def add_url(self, url):  # 塞url到队列里
         self._q.put_nowait(url)
 
@@ -146,7 +148,8 @@ class AsyncCrawlerBase(object):
     async def work(self):  # 工人工作
         try:
             while True:
-                await asyncio.sleep(random.randint(1, 3))
+                # await asyncio.sleep(random.randint(1, self._waiting_time))
+                await asyncio.sleep(self._waiting_time)
                 url = await self._q.get()
                 # body = await self.my_request(url)
                 await self.my_request(url)
@@ -202,8 +205,11 @@ class AsyncCrawlerBase(object):
                                 await self._lock  # 暂时不清楚这个锁是否必要
                                 try:
                                     res = self.fetch(body)
-                                except Exception as e:  # 捕捉异常
+                                except FetchError as e:  # 捕捉异常
                                     LOGGER.warning('[fetch error] {} in [{}]'.format(e, u))
+                                    self.add_url((u, r_times-1))  # 重试
+                                except Exception as e:  # 捕捉异常
+                                    LOGGER.warning('[unknown error] {} in [{}]'.format(e, u))
                                 else:
                                     self.store(res)
                                     LOGGER.debug('done with {}'.format(u))
@@ -215,11 +221,13 @@ class AsyncCrawlerBase(object):
                     except ValueError as e:  # 捕捉无效网址的异常
                         LOGGER.warning('[response error]{} in {}'.format(e, u))
                         await self._lock
+                        self._failed_urls.append(u)
                         self._failed_times += 1  # 公用部分要加锁
                         self._lock.release()
                     except Exception as e:  # 暂时还不知道会有什么其他的异常
-                        LOGGER.warning('[response error]{} in {}'.format(e, u))
+                        LOGGER.warning('[response unknown error]{} in {}'.format(e, u))
                         await self._lock
+                        self._failed_urls.append(u)
                         self._failed_times += 1
                         self._lock.release()
             except asyncio.TimeoutError:  # 注意捕捉的类别

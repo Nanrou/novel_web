@@ -6,6 +6,7 @@ import codecs
 import asyncio
 import datetime
 import pickle
+import json
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath('__file__')))))
 
@@ -15,6 +16,7 @@ from lxml import etree
 from lxml.etree import XPathError
 
 from crawler.crawler.my_crawler import XpathCrawler
+from crawler.crawler.my_exception import FetchError
 from crawler.utls.my_logger import MyLogger
 from crawler.utls.my_decorate import time_clock
 
@@ -27,20 +29,16 @@ HEADERS = {
     'Accept-Language': 'zh-CN'
 }
 
-COOKIES = {'td_cookie': '1636681570'}
-
-DURL = 'http://jobs.zhaopin.com/419981221250268.htm?ssidkey=y&ss=201&ff=03&sg=1e726a5b81a74d478ad9f0f7a6447b0a&so=1'
-
 ZHILIAN_INFO_RULE = {
     'title': '//table[@class="newlist"]/tr/td[@class="zwmc"]/div/a',
     'url': '//table[@class="newlist"]/tr/td[@class="zwmc"]/div/a/@href'
 }
 
 ZHILIAN_DETAIL_RULE = {
-    'title': '//div[@class="fixed-inner-box"]/div/h1',
-    'company': '//div[@class="fixed-inner-box"]/div/h2/a',
-    'salary': '//div[@class="terminalpage-left"]/ul[@class="terminal-ul clearfix"]/li[1]/strong',
-    'work_des': '//div[@class="terminalpage-left"]/ul[@class="terminal-ul clearfix"]/li[2]/strong/a',
+    'title': '//div[@class="fixed-inner-box"]/div/h1/text()',
+    'company': '//div[@class="fixed-inner-box"]/div/h2/a/text()',
+    'salary': '//div[@class="terminalpage-left"]/ul[@class="terminal-ul clearfix"]/li[1]/strong/text()',
+    'work_des': '//div[@class="terminalpage-left"]/ul[@class="terminal-ul clearfix"]/li[2]/strong/a/text()',
     'content': '//div[@class="tab-inner-cont"]',
 }
 
@@ -56,6 +54,16 @@ QIANCHENGWUYOU_DETAIL_RULE = {
     'salary': '//div[@class="cn"]/strong/text()',
     'work_des': '//div[@class="bmsg inbox"]/p[@class="fp"]/text()[2]',
     'content': '//div[@class="bmsg job_msg inbox"]/text()',
+}
+
+LAGOU_DATA = ('user_trace_token', 'SEARCH_ID', 'JSESSIONID')
+
+LAGOU_DETAIL_RULE = {
+    'title': '//span[@class="name"]/text()',
+    'company': '//div[@class="company"]/text()',
+    'salary': '//span[@class="salary"]/text()',
+    'work_des': '//div[@class="work_addr"]/text()',
+    'content': '//dd[@class="job_bt"]/div',
 }
 
 
@@ -89,6 +97,7 @@ class ZHILIANDownloadComment(XpathCrawler):
     def __init__(self, *args, **kwargs):
         super(ZHILIANDownloadComment, self).__init__(*args, **kwargs)
         self._file_num = 0
+        self._prefix = 'z'
 
     def fetch(self, body):
         page_body = etree.HTML(body)
@@ -99,10 +108,10 @@ class ZHILIANDownloadComment(XpathCrawler):
                     res[k] = page_body.xpath(v)[0].xpath('string(.)')\
                         .replace('\r\n', '').replace('\xa0', '').replace(' ', '')
                 else:
-                    res[k] = page_body.xpath(v)[0].text.replace('\xa0', '')
+                    res[k] = page_body.xpath(v)[0].replace('\xa0', '')
             except IndexError:  # 抛出剥取异常
-                res[k] = 'wrong context xpath'
-            except XPathError:  # 为什么这个异常没有捕捉到
+                raise FetchError
+            except XPathError:
                 res[k] = 'other wrong xpath'
         return res
 
@@ -113,7 +122,7 @@ class ZHILIANDownloadComment(XpathCrawler):
             os.mkdir(folder_name)
         # with open(folder_name + '/' + res.get('title'), 'wb') as wf:
         #     pickle.dump(res, wf)
-        with open(folder_name + '/z' + str(self._file_num), 'wb') as wf:
+        with open(folder_name + '/' + self._prefix + str(self._file_num), 'wb') as wf:
             pickle.dump(res, wf)
         self._file_num += 1
 
@@ -136,10 +145,10 @@ class QCWYDownloadURL(XpathCrawler):
         return res
 
 
-class QCWYDownloadComment(XpathCrawler):
+class QCWYDownloadComment(ZHILIANDownloadComment):
     def __init__(self, *args, **kwargs):
         super(QCWYDownloadComment, self).__init__(*args, **kwargs)
-        self._file_num = 0
+        self._prefix = 'q'
 
     def fetch(self, body):
         page_body = etree.HTML(body)
@@ -151,20 +160,131 @@ class QCWYDownloadComment(XpathCrawler):
                         .replace('\n', '').replace('\t', '').replace('\r', '').replace('\xa0', '')
                 else:
                     res[k] = page_body.xpath(v)[0].replace('\t', '')
-            except IndexError:  # 抛出剥取异常
-                res[k] = 'wrong context xpath'
-            except XPathError:  # 为什么这个异常没有捕捉到
+            except IndexError:
+                raise FetchError
+            except XPathError:
                 res[k] = 'wrong xpath'
         return res
+
+
+class LAGOUDownloadComment(ZHILIANDownloadComment):
+    def __init__(self, *args, **kwargs):
+        super(LAGOUDownloadComment, self).__init__(*args, **kwargs)
+        self._prefix = 'l'
+
+    def fetch(self, body):
+        page_body = etree.HTML(body)
+        res = {}
+        for k, v in self._parse_rule.items():
+            try:
+                if k is 'content':
+                    res[k] = page_body.xpath(v)[0].xpath('string(.)') \
+                        .replace('\n', '').replace(' ', '').replace('\xa0', '')
+                elif k is 'work_des':
+                    res[k] = ''.join(page_body.xpath(v)) \
+                        .replace('\n', '').replace('-', '').replace(' ', '')
+                else:
+                    res[k] = page_body.xpath(v)[0]
+            except IndexError:  # 抛出剥取异常
+                raise FetchError
+            except XPathError:
+                res[k] = 'wrong xpath syntax'
+        return res
+
+
+def run_phantomjs_to_get_cookies(url=None, js_script='lagou.js'):
+    if url is None:
+        url = 'https://www.lagou.com/jobs/list_Python?px=default%26 city=%E7%8F%A0%E6%B5%B7#order'
+    cmd = 'phantomjs' + ' ' + js_script + ' ' + url
+    os.system(cmd)
+
+
+def get_lagou_headers(filename='lagou_cookies.txt'):
+    _header = {
+        'Host': 'www.lagou.com',
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; rv:54.0) Gecko/20100101 Firefox/54.0',
+        'Accept': 'application/json, text/javascript, */*; q=0.01',
+        'Accept-Language': 'zh-CN,zh;q=0.8,en-US;q=0.5,en;q=0.3',
+        'Accept-Encoding': 'gzip, deflate, br',
+        'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+        'X-Requested-With': 'XMLHttpRequest',
+        'X-Anit-Forge-Token': 'None',
+        'X-Anit-Forge-Code': '0',
+        'Referer': 'https://www.lagou.com/jobs/list_Python?px=default&city=%E7%8F%A0%E6%B5%B7',
+        'Content-Length': '25',
+        'Connection': 'keep-alive',
+        'Cache-Control': 'max-age=0',
+    }
+    res = {}
+    with open(filename, 'r') as rf:
+        for line in rf.readlines():
+            k, v = line.strip().split('=')
+            # if k in LAGOU_DATA:
+            res[k] = v
+            # continue
+
+    _header.update(res)
+    return _header
+
+
+def get_lagou_info():
+    ajax_url = 'https://www.lagou.com/jobs/positionAjax.json?px=default&city=珠海&needAddtionalResult=false'
+    _data = {
+        'first': 'true',
+        'pn': '1',
+        'kd': 'Python',
+    }
+    _header = get_lagou_headers()
+    _session = requests.session()
+    resp = _session.post(ajax_url, _data, headers=_header)
+    with open('lagou_info.json', 'w') as wf:
+        wf.write(resp.text)
+    _session.close()
+
+
+class BTestLAGOU(LAGOUDownloadComment):
+    """
+    爬取拉钩的时候，触发了反爬虫，一部分网址访问不到，这个类作为测试用
+    """
+    def fetch(self, body):
+        return body
 
     def store(self, res):
         date_time = '{:%Y-%m-%d}'.format(datetime.datetime.today())
         folder_name = './' + date_time
         if not os.path.exists(folder_name):
             os.mkdir(folder_name)
-        with open(folder_name + '/q' + str(self._file_num), 'wb') as wf:
-            pickle.dump(res, wf)
+        try:
+            with open(self._prefix + str(self._file_num) + '.html', 'w') as wf:
+                wf.write(res)
+        except UnicodeError:
+            with codecs.open(self._prefix + str(self._file_num) + '.html', 'w', encoding='utf-8') as wf:
+                wf.write(res)
         self._file_num += 1
+
+
+def get_lagou_content(filename='lagou_info.json'):
+    with open(filename) as rf:
+        info_lists = json.load(rf)
+    info_lists = info_lists['content']['hrInfoMap'].keys()
+    urls = []
+    for info_id in info_lists:
+        urls.append('https://www.lagou.com/jobs/{}.html'.format(info_id))
+    run_crawler(LAGOUDownloadComment, urls, LAGOU_DETAIL_RULE, name='lagou', waiting_time=5)
+    # header = get_lagou_headers()
+    # run_crawler(BTestLAGOU, urls, LAGOU_DETAIL_RULE, name='lagou', waiting_time=3)
+
+
+@time_clock
+def lagou():
+    """
+    先通过phatomjs拿到cookies，然后用这个cookies去构造post拿到工作的id
+    然后用这个id去构造url，再爬细节
+    :return:
+    """
+    run_phantomjs_to_get_cookies()
+    get_lagou_info()
+    get_lagou_content()
 
 
 @time_clock
@@ -204,13 +324,14 @@ def qianchengwuyou():
 
 
 @time_clock
-def collect_detail(folder='./'):
+def collect_detail(folder='./', namelist=('z', 'q', 'l')):
     """
     收集文件夹中的信息，都存到一个文件中，并把其他的都删掉
     :param folder: 指定文件夹的位置
+    :param namelist:
     :return:
     """
-    for s in ['z', 'q']:
+    for s in namelist:
         res = []
         z_file_names = [i for i in os.listdir(folder) if i.startswith(s)]
         for name in z_file_names:
@@ -222,24 +343,34 @@ def collect_detail(folder='./'):
                     print('{} in {}'.format(e, name))
                     continue
                 res.append(content)
-                # res.append(','.join([content['title'], content['company'],
-                #                     content['salary'], content['work_des'], content['content']]))
+                
             os.remove(file_name)
         with open(os.path.join(folder, '{}_sum'.format(s)), 'wb') as wf:
             pickle.dump(res, wf)
-        # with open('{}_sum.txt'.format(s), 'w') as wf:
-        #     wf.write('\n'.join(res))
+            
+        res_txt = []
+        for i in res:
+            res_txt.append(','.join([i['title'], i['company'],
+                                    i['salary'], i['work_des'], i['content']]))
+        
+        with open(os.path.join(folder, '{}_sum.txt'.format(s)), 'w') as wf:
+            wf.write('\n'.join(res_txt))
 
 
 def main():
     date_time = '{:%Y-%m-%d}'.format(datetime.datetime.today())
-    if os.path.exists(date_time):
+    if not os.path.exists(date_time):
         zhilian()
         qianchengwuyou()
+        lagou()
         collect_detail(date_time)
     else:
         print('today already do it')
 
+    remove_list = ['lagou_cookies.txt', 'lagou_info.json', 'qianchengwuyou', 'zhilian']
+    for i in remove_list:
+        os.remove(i)
 
 if __name__ == '__main__':
     print('i in zhiye')
+    main()

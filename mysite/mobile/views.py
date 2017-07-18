@@ -54,11 +54,11 @@ class MobileBookView(DetailView):
         try:
             index = int(self.kwargs['index'])
             if self.queryset.filter(pk=index-1).exists():
-                last_page_url = reverse('novel_site:m_detail', kwargs={'pk': self.kwargs['pk'], 'index': str(index-1)})
+                last_page_url = reverse('mobile:detail', kwargs={'pk': self.kwargs['pk'], 'index': str(index-1)})
             else:
                 last_page_url = self.mulu_url
             if self.queryset.filter(pk=index+1).exists():
-                next_page_url = reverse('novel_site:m_detail', kwargs={'pk': self.kwargs['pk'], 'index': str(index+1)})
+                next_page_url = reverse('mobile:detail', kwargs={'pk': self.kwargs['pk'], 'index': str(index+1)})
             else:
                 next_page_url = self.mulu_url
             return last_page_url, next_page_url
