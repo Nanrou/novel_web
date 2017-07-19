@@ -1,3 +1,4 @@
+#!/usr/local/python3.6/bin/python3.6
 # -*- coding:utf-8 -*-
 
 import sys
@@ -232,7 +233,7 @@ class LAGOUDownloadComment(ZHILIANDownloadComment):
 def run_phantomjs_to_get_cookies(url=None, js_script='lagou.js'):
     if url is None:
         url = 'https://www.lagou.com/jobs/list_Python?px=default%26 city=%E7%8F%A0%E6%B5%B7#order'
-    cmd = 'phantomjs' + ' ' + js_script + ' ' + url
+    cmd = './phantomjs' + ' ' + js_script + ' ' + url
     os.system(cmd)
 
 
@@ -274,7 +275,7 @@ def get_lagou_info():
     _header = get_lagou_headers()
     _session = requests.session()
     resp = _session.post(ajax_url, _data, headers=_header)
-    with open('lagou_info.json', 'w') as wf:
+    with codecs.open('lagou_info.json', 'w', encoding='utf-8') as wf:
         wf.write(resp.text)
     _session.close()
 
@@ -301,7 +302,7 @@ class BTestLAGOU(LAGOUDownloadComment):
 
 
 def get_lagou_content(filename='lagou_info.json'):
-    with open(filename) as rf:
+    with codecs.open(filename, 'r', encoding='utf-8') as rf:
         info_lists = json.load(rf)
     info_lists = info_lists['content']['hrInfoMap'].keys()
     urls = []
@@ -380,17 +381,17 @@ def collect_detail(folder='./', namelist=('z', 'q', 'l')):
                     print('{} in {}'.format(e, name))
                     continue
                 res.append(content)
-                
+
             os.remove(file_name)
         with open(os.path.join(folder, '{}_sum'.format(s)), 'wb') as wf:
             pickle.dump(res, wf)
-            
+
         res_txt = []
         for i in res:
             res_txt.append(','.join([i['title'], i['company'],
                                     i['salary'], i['work_des'], i['content']]))
-        
-        with open(os.path.join(folder, '{}_sum.txt'.format(s)), 'w') as wf:
+
+        with codecs.open(os.path.join(folder, '{}_sum.txt'.format(s)), 'w', encoding='utf-8') as wf:
             wf.write('\n'.join(res_txt))
 
 
@@ -399,7 +400,7 @@ def main():
     date_time = '{:%Y-%m-%d}'.format(datetime.datetime.today())
     if not os.path.exists(date_time):
         zhilian()
-        qianchengwuyou()
+       #  qianchengwuyou()
         lagou()
         collect_detail(date_time)
     else:
