@@ -104,3 +104,4 @@ ENV/
 *.exe
 phantomjs
 2017-*/
+mysite/static/
