@@ -105,9 +105,13 @@ ENV/
 *.exe
 phantomjs
 2017-*/
+<<<<<<< HEAD
 =======
 # personal 
 *.exe
 phantomjs
 2017*/
 >>>>>>> server_side
+=======
+mysite/static/
+>>>>>>> 380ae69a350baa657caf1c9d67ceaae2a6558924
