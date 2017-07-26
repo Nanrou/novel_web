@@ -100,7 +100,14 @@ ENV/
 # Rope project settings
 .ropeproject
 
+<<<<<<< HEAD
 # personal
 *.exe
 phantomjs
 2017-*/
+=======
+# personal 
+*.exe
+phantomjs
+2017*/
+>>>>>>> server_side
