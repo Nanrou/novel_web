@@ -1,4 +1,4 @@
-#!/usr/local/python3.6/bin/python3.6
+#! /bin/python
 # -*- coding:utf-8 -*-
 
 import sys
@@ -21,7 +21,9 @@ from crawler.crawler.my_exception import FetchError
 from crawler.utls.my_logger import MyLogger
 from crawler.utls.my_decorate import time_clock
 
-LOGGER = MyLogger('zhiye')
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+# LOGGER = MyLogger('zhiye')
 
 HEADERS = {
     'user-agent': 'Mozilla/5.0 (Windows NT 10.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.79 Safari/537.36 Edge/14.14393',
@@ -400,7 +402,7 @@ def main():
     date_time = '{:%Y-%m-%d}'.format(datetime.datetime.today())
     if not os.path.exists(date_time):
         zhilian()
-       #  qianchengwuyou()
+        # qianchengwuyou()
         lagou()
         collect_detail(date_time)
     else:
@@ -414,3 +416,6 @@ def main():
 if __name__ == '__main__':
     print('i in zhiye')
     main()
+    # u = 'http://search.51job.com/list/030500,000000,0000,00,9,99,python,2,1.html?lang=c&stype=1&postchannel=0000&workyear=99&cotype=99&degreefrom=99&jobterm=99&companysize=99&lonlat=0%2C0&radius=-1&ord_field=1&confirmdate=9&fromType=&dibiaoid=0&address=&line=&specialarea=00&from=&welfare='
+    # resp = requests.get('http://www.51job.com/')
+    # print(resp.status_code)
