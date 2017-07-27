@@ -41,15 +41,13 @@
 	<!-- 搜索栏 -->
 	<div class="search">
 		<form name="articlesearch">
-			<input name="s" value="" type="hidden">
 			<table style="width:100%;">
 				<tbody>
 					<tr>
 						<td class="frame">
-						<input id="bdcsMain" class="key" value="请输入文章名称，宁少字勿错字！" onfocus="this.value=''" type="text">
-                        <input id="bdcsMain" class="key">
+						<input id="bdcsMain" class="key" name="q" value="请输入文章名称，宁少字勿错字！" onfocus="this.value=''" type="text">
 						<td class="button">
-						<input class="go" type="submit">
+						<input class="go" type="submit" value="">
 						</td>
 					</tr>
 				</tbody>
