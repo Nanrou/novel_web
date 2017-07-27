@@ -178,3 +178,7 @@ class MobileBookView(DetailView):
         context['last_page'], context['next_page'] = self.get_adjacent_page()
         context['mulu'] = self.mulu_url
         return context
+
+
+class SearchView(TemplateView):
+    template_name = 'novel_site/search.html'
