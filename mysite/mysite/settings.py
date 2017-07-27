@@ -69,8 +69,6 @@ ROOT_URLCONF = 'mysite.urls'
 
 ROOT_HOSTCONF = 'mysite.hosts'
 DEFAULT_HOST = 'www'
-# PARENT_HOST = 'superxiaoshuo.com'
-# PARENT_HOST = '127.0.0.1:8000'
 
 
 TEMPLATES = [
