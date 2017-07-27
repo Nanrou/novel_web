@@ -11,12 +11,8 @@ workflow:
 import os
 import sys
 import time
-from functools import wraps
 import asyncio
 
-# sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-print(sys.path)
-import redis
 
 from crawler.utls.my_logger import MyLogger
 from crawler.crawler.my_crawler import my_search

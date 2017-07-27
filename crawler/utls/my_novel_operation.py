@@ -79,7 +79,7 @@ def split_book(txt_path, title, chapter_index, store_path, chapter_split=' ', ch
                 #         flag = True
             else:
                 if '\u4e00' <= line[0] <= '\u9fff' \
-                        or '\u4e00' <= line[1] <= '\u9fff' and line[0] != '《':
+                        or ('\u4e00' <= line[1] <= '\u9fff' and line[0] != '《'):
                     # 1，中文编码开头的，2，由于书名是书名号开头的，所以只要不是书名号开头的，就是章节行
                     # 从这一行开始标记
                     if start_index is None:
@@ -123,96 +123,6 @@ def split_book(txt_path, title, chapter_index, store_path, chapter_split=' ', ch
             with open(os.path.join(store_path, str(chapter_index)), 'wb') as wf:
                 pickle.dump(res, wf)
 
-
-@time_clock
-def get_novel_urls(file):
-    """
-    去那个网站搜这n本小说，如果有就下载相关info(生成pickle)，并将小说url放到download_url的txt中
-
-    先去数据库中看info的index到多少了
-    然后每个title需要与数据库对比是否存在
-
-    只会保存下载成功的url
-
-    :return:
-    """
-
-    SEARCH_URL = 'http://www.ranwenw.com/modules/article/search.php'
-
-    book_index = get_infotable_count() + 1
-    novel_download_url = []
-
-    with codecs.open(file, 'r', encoding='utf-8') as rf:
-        for title in rf.readlines():
-
-            title = title.strip()
-
-            # if get_title_id(title):
-            #     Logger.warning('title is existed')
-            #     continue
-
-            url = search_novel(book_index, title, url=SEARCH_URL, store_path='./info/')
-            if url:
-                novel_download_url.append('{},{},{}'.format(str(book_index), title, url))
-                book_index += 1
-                Logger.debug('done {}'.format(title))
-            else:
-                Logger.debug('not found {}'.format(title))
-            time.sleep(12)
-        with codecs.open('novel_download_url.txt', 'w', encoding='utf-8') as wf:
-            wf.write('\n'.join(novel_download_url))
-
-
-@time_clock
-def download_novel(file):
-    """
-    去文件中，下载url的的小说
-
-    后面要用协程重写这一部分
-    :return:
-    """
-    HEADERS = {'user-agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:51.0) Gecko/20100101 Firefox/51.0 '}
-    with codecs.open(file, 'r', encoding='utf-8') as rf:
-        tt_list = rf.readlines()
-
-    not_finish_list = []
-    for line in tt_list:
-        index, title, url = line.strip().split(',')
-        try:
-            res = requests.get(url, headers=HEADERS)
-        except requests.exceptions.ConnectionError:
-            Logger.warning('wrong in {}, {}'.format(index, title))
-            not_finish_list.append(line)
-            continue
-        with codecs.open('./book/' + str(index) + '.txt', 'w', encoding='utf-8') as wf:
-            wf.write(res.text)
-        Logger.debug('done with {}, {}'.format(index, title))
-        time.sleep(random.randint(0, 12))
-
-    with open(file, 'w') as wf:
-        wf.write('\n'.join(not_finish_list))
-
-
-@time_clock
-def product_txt_split_rule(start, end=None, file_path='./info/'):
-    """
-    去info这个文件夹下面，遍历pickle文件
-    生成bbb函数的参数
-    :param start:从第几本开始生产参数
-    :param end:
-    :param file_path:
-    :return:
-    """
-    file_list = [file_path + str(i) for i in sorted(map(int, os.listdir(file_path)))]
-    rule_list = []
-    for i, file_name in enumerate(file_list[start-1:end], start=start):
-        with open(file_name, 'rb') as rf:
-            title = pickle.load(rf)['title']
-        s = "./book/{i}.txt,{title},{i},./book/chapter/{i:0>2}, ".format(i=i, title=title)
-        rule_list.append(s)
-    with open('txt_split_rule.txt', 'w') as wf:
-        wf.write('\n'.join(rule_list))
-    return 'txt_split_rule.txt'
 
 
 @time_clock

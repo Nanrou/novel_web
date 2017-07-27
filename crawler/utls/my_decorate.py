@@ -1,17 +1,20 @@
 # -*- coding:utf-8 -*-
 
 import time
+import logging
 from functools import wraps
+
+Logger = logging.getLogger('time-logger')
 
 
 def time_clock(func):
     @wraps(func)
     def wrapper(*args, **kwargs):
-        print('start {fun_name}({fun_args}{fun_kwargs})'
-              .format(fun_name=func.__name__, fun_args=args or '', fun_kwargs=kwargs or ''))
+        Logger.debug('start {fun_name}({fun_args}{fun_kwargs})'
+                     .format(fun_name=func.__name__, fun_args=args or '', fun_kwargs=kwargs or ''))
         start_time = time.time()
         res = func(*args, **kwargs)
-        print('--{}-- cost: {}'.format(func.__name__, my_round(time.time() - start_time)))
+        Logger.debug('--{}-- cost: {}'.format(func.__name__, my_round(time.time() - start_time)))
         return res
     return wrapper
 
