@@ -38,9 +38,9 @@
         <div class="header_logo">
             <a href="/">>超级小说</a>
         </div>
-        <form><!-- 以后增加站内搜 -->
+        <form target="_self" action="http://superxiaoshuo.com/search">
             <div class="search">
-                <input id = "bdcsMain" name="q" class="input" value="输入需要搜索的小说" onblur="if (value ==''){value='输入需要搜索的小说'}" onfocus="if (value =='输入需要搜索的小说'){value =''}" type="text">
+                <input name="q" class="input" value="输入需要搜索的小说" onblur="if (value ==''){value='输入需要搜索的小说'}" onfocus="if (value =='输入需要搜索的小说'){value =''}" type="text">
                 <span class="s_btn">
                     <input value=" 搜 索 " class="button" type="submit">
                 </span>
@@ -86,17 +86,6 @@
                 }
                 var s = document.getElementsByTagName("script")[0];
                 s.parentNode.insertBefore(bp, s);
-                })();
-            </script>
-            <script type="text/javascript">
-                (function(){
-                    document.write(unescape('%3Cdiv id="bdcs"%3E%3C/div%3E'));
-                    var bdcs = document.createElement('script');
-                    bdcs.type = 'text/javascript';
-                    bdcs.async = true;
-                    bdcs.src = 'http://znsv.baidu.com/customer_search/api/js?sid=13024648538113669062' + '&plate_url=' + encodeURIComponent(window.location.href) + '&t=' + Math.ceil(new Date()/3600000);
-                    var s = document.getElementsByTagName('script')[0];
-                    s.parentNode.insertBefore(bdcs, s);
                 })();
             </script>
         </div>
