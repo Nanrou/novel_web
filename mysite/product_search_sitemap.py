@@ -26,7 +26,7 @@ xml_txt = '''
                 <headline>{chapter_name}</headline>
                 <dateModified>{update_datetime}</dateModified>
             </newestChapter>
-            <chapter>{chapter_name}</chapter>
+            <chapter><headline>{chapter_name}</headline></chapter>
             <endingType>{category}</endingType>
             <collectedCount>999</collectedCount>
             <dateModified>{update_datetime}</dateModified>
