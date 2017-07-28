@@ -182,3 +182,6 @@ class MobileBookView(DetailView):
 
 class SearchView(TemplateView):
     template_name = 'novel_site/search.html'
+	
+class SearchTest(TemplateView):
+	template_name = 'novel_site/search_api_test.html'
