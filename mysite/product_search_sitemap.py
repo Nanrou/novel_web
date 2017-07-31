@@ -27,8 +27,6 @@ xml_txt = '''
                 <dateModified>{update_datetime}</dateModified>
                 <url><![CDATA[http://superxiaoshuo.com{chapter_url}]]></url>
             </newestChapter>
-            <chapter><headline>{chapter_name}</headline></chapter>
-            <endingType>{category}</endingType>
             <collectedCount>999</collectedCount>
             <dateModified>{update_datetime}</dateModified>
         </data>
