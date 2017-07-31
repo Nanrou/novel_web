@@ -6,7 +6,6 @@
 <meta http-equiv="Cache-Control" content="no-siteapp">
 <meta http-equiv="Cache-Control" content="no-transform">
 {% block meta_description %}
-<!-- meta_description -->
 {% endblock meta_description %}
 <link rel="stylesheet" href="{% static 'novel_site/css/style.css' %}">
 <script src="http://apps.bdimg.com/libs/jquery/1.4.2/jquery.min.js"></script>
@@ -16,87 +15,84 @@
 <link rel="shortcut icon" href="{% static 'novel_site/css/favicon.ico' %}">
 <link rel="bookmark" href="{% static 'novel_site/css/favicon.ico' %}">
 {% block optional_script %}
-<!-- optional_script -->
 {% endblock optional_script %}
 </head>
 
 <body>
-<div id="wrapper"> 
-    <div class="ywtop">
-    <!-- 页眉 -->
-        <div class="ywtop_con">
-            <div class="ywtop_sethome">
-                <a onclick="SetHome(this,window.location)" href="javascript:void(0);">将本站设为首页</a>
-            </div>
-            <div class="ywtop_addfavorite">
-                <a href="" onclick="addFavorite;" rel="sidebar">收藏超级小说</a>
-            </div>
+<div class="ywtop">
+<!-- 页眉 -->
+    <div class="ywtop_con">
+        <div class="ywtop_sethome">
+            <a onclick="SetHome(this,window.location)" href="javascript:void(0);">将本站设为首页</a>
+        </div>
+        <div class="ywtop_addfavorite">
+            <a href="" onclick="addFavorite;" rel="sidebar">收藏超级小说</a>
         </div>
     </div>
-    <div class="header">
-    <!-- 头部 -->
-        <div class="header_logo">
-            <a href="/">>超级小说</a>
+</div>
+<div class="header">
+<!-- 头部 -->
+    <div class="header_logo">
+        <a href="/">>超级小说</a>
+    </div>
+    <form target="_self" action="http://superxiaoshuo.com/search">
+        <div class="search">
+            <input name="q" class="input" value="输入需要搜索的小说" onblur="if (value ==''){value='输入需要搜索的小说'}" onfocus="if (value =='输入需要搜索的小说'){value =''}" type="text">
+            <span class="s_btn">
+                <input value=" 搜 索 " class="button" type="submit">
+            </span>
         </div>
-        <form target="_self" action="http://superxiaoshuo.com/search">
-            <div class="search">
-                <input name="q" class="input" value="输入需要搜索的小说" onblur="if (value ==''){value='输入需要搜索的小说'}" onfocus="if (value =='输入需要搜索的小说'){value =''}" type="text">
-                <span class="s_btn">
-                    <input value=" 搜 索 " class="button" type="submit">
-                </span>
-            </div>
-        </form>
+    </form>
+</div>
+<div class="nav">
+<!-- 导航栏 -->
+    <ul style="padding-left: 15px; padding-right: 35px; display:flex;">
+        <li><a href="/">首页</a></li>
+        <li><a href="/cate/xuanhuan/">玄幻修真</a></li>
+        <li><a href="/cate/dushi/">都市重生</a></li>
+        <li><a href="/cate/jiakong/">架空历史</a></li>
+        <li><a href="/cate/kehuan/">科幻网游</a></li>
+        <li><a href="/cate/kongbu/">恐怖灵异</a></li>
+        <li><a href="/cate/quanben/">全本小说</a></li>
+    </ul>
+</div>
+<script>show_lastread();</script>
+{% block main %}
+{% endblock main %}
+<div id="footer" class="footer">
+{% block footer_link %}
+{% endblock footer_link %}
+    <div class="footer_cont">
+        <p>本站所有小说为转载作品，所有章节均由网友上传，转载至本站只是为了宣传本书让更多读者欣赏。</p>
+        <p>粤ICP备17080006号</p>
+        <p>Copyright &#169; 2017 超级小说 All Rights Reserved.
+        </p>
     </div>
-    <div class="nav">
-    <!-- 导航栏 -->
-        <ul style="padding-left: 15px; padding-right: 35px; display:flex;">
-            <li><a href="/">首页</a></li>
-            <li><a href="/cate/xuanhuan/">玄幻修真</a></li>
-            <li><a href="/cate/dushi/">都市重生</a></li>
-            <li><a href="/cate/jiakong/">架空历史</a></li>
-            <li><a href="/cate/kehuan/">科幻网游</a></li>
-            <li><a href="/cate/kongbu/">恐怖灵异</a></li>
-            <li><a href="/cate/quanben/">全本小说</a></li>
-        </ul>
+    <div style="display:none">
+        <script src="https://s13.cnzz.com/z_stat.php?id=1262980855&web_id=1262980855"
+            language="JavaScript"></script>
+        <script>
+            (function(){
+            var bp = document.createElement('script');
+            var curProtocol = window.location.protocol.split(':')[0];
+            if (curProtocol === 'https'){
+            bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+            }
+            else{
+            bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+            }
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(bp, s);
+            })();
+        </script>
     </div>
-	<script>show_lastread();</script>
-    {% block main %}
-    {% endblock main %}
-    <div id="footer" class="footer">
-    {% block footer_link %}
-    {% endblock footer_link %}
-        <div class="footer_cont">
-            <p>本站所有小说为转载作品，所有章节均由网友上传，转载至本站只是为了宣传本书让更多读者欣赏。</p>
-            <p>粤ICP备17080006号</p>
-            <p>Copyright &#169; 2017 超级小说 All Rights Reserved.
-            </p>
-        </div>
-        <div style="display:none">
-            <script src="https://s13.cnzz.com/z_stat.php?id=1262980855&web_id=1262980855"
-                language="JavaScript"></script>
-            <script>
-                (function(){
-                var bp = document.createElement('script');
-                var curProtocol = window.location.protocol.split(':')[0];
-                if (curProtocol === 'https'){
-                bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
-                }
-                else{
-                bp.src = 'http://push.zhanzhang.baidu.com/push.js';
-                }
-                var s = document.getElementsByTagName("script")[0];
-                s.parentNode.insertBefore(bp, s);
-                })();
-            </script>
-        </div>
-    {% block move_widget %}
-	<div id="shangxia">
-        <div id="shang" title="↑ 返回顶部"></div>
-        <div id="comt" title="查看评论"></div>
-        <div id="xia" title="↓ 移至底部"></div>
-        <div id="myrss" title="Hi!看点不一样的?"></div>
-    </div>
-    {% endblock move_widget%}
-    </div>
+{% block move_widget %}
+<div id="shangxia">
+    <div id="shang" title="↑ 返回顶部"></div>
+    <div id="comt" title="查看评论"></div>
+    <div id="xia" title="↓ 移至底部"></div>
+    <div id="myrss" title="Hi!看点不一样的?"></div>
+</div>
+{% endblock move_widget%}
 </div>
 </body></html>
