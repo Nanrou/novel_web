@@ -15,8 +15,8 @@ xml_txt = '''
             <name>{book_name}</name>
             <author>
                 <name>{author}</name>
-                <url><![CDATA[http://superxiaoshuo.com]]></url>
             </author>
+            <description><![CDATA[{chapter_name}]]></description>
             <genre>{category}</genre>
             <url><![CDATA[http://superxiaoshuo.com/info/{id}]]></url>
             <updateStatus>{status}</updateStatus>
