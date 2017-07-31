@@ -2,22 +2,22 @@
 {% load staticfiles %}
 
 {% block meta_description %}
-	<meta name="format-detection" content="telephone=no">
-	<link rel="canonical" href="http://www.superxiaoshuo.com/info/{{ info.id }}">
-	<meta property="og:url" content="{{ info.get_absolute_url }}">
+    <meta name="format-detection" content="telephone=no">
+    <link rel="canonical" href="http://www.superxiaoshuo.com/info/{{ info.id }}">
+    <meta property="og:url" content="{{ info.get_absolute_url }}">
 
-	<title>{{ info.title }}最新章节列表_{{ info.title }}无弹窗全文阅读_超级小说</title>
-	<meta name="keywords" content="{{ info.title }},{{ info.title }}最新章节列表,{{ info.title }}无弹窗广告全文阅读,{{ info.title }}超级小说。">
-	<meta name="description" content="《{{ info.title }}》是{{ info.author }}的作品,超级小说提供{{ info.title }}最新章节列表全文阅读,超级小说保证比同类网站更新更快,绝无弹窗广告保证无章节错误100%正确保证无广告,《{{ info.title }}》无弹窗广告最佳全文阅读体验就在超级小说。">
+    <title>{{ info.title }}最新章节列表_{{ info.title }}无弹窗全文阅读_超级小说</title>
+    <meta name="keywords" content="{{ info.title }},{{ info.title }}最新章节列表,{{ info.title }}无弹窗广告全文阅读,{{ info.title }}超级小说。">
+    <meta name="description" content="《{{ info.title }}》是{{ info.author }}的作品,超级小说提供{{ info.title }}最新章节列表全文阅读,超级小说保证比同类网站更新更快,绝无弹窗广告保证无章节错误100%正确保证无广告,《{{ info.title }}》无弹窗广告最佳全文阅读体验就在超级小说。">
 {% endblock meta_description %}
 
 {% block main %}
-	<div class="cover">
-	  <div class="block">
-		<div class="block_img2">
+    <div class="cover">
+      <div class="block">
+        <div class="block_img2">
             <img src="{% static info.image %}"  width="80" height="100" border="0">
         </div>
-		<div class="block_txt2">
+        <div class="block_txt2">
             <p><a href="{{ info.get_mobile_url }}"></a></p>
             <h1><a href="{{ info.get_mobile_url }}"></a>{{ info.title }}</h1>
             <p>作者：{{ info.author }}</p>
@@ -25,32 +25,32 @@
             <p>状态：{{ info.status }}</p>
             <p>更新：{{ info.update_time|date:'Y-m-d H:i:s' }}</p>
             <p>最新：<a href="{{ latest_chapter.get_mobile_url }}">{{ latest_chapter.chapter }}</a></p>
-		</div>
-	  </div>
-	<div style="clear:both"></div>
-	<div class="ablum_read">
-		<span class="margin_right">
-			<a href="{{ info.earliest_chapter.get_mobile_url }}">阅读第一章</a>
-		</span>
-		<span class="margin_right">
-		<a href="">加入书架</a>
-		</span>
-	</div>
-	<div class="intro">{{ info.title }}小说简介</div>
-	<div class="intro_info">
+        </div>
+      </div>
+    <div style="clear:both"></div>
+    <div class="ablum_read">
+        <span class="margin_right">
+            <a href="{{ info.earliest_chapter.get_mobile_url }}">阅读第一章</a>
+        </span>
+        <span class="margin_right">
+        <a href="">加入书架</a>
+        </span>
+    </div>
+    <div class="intro">{{ info.title }}小说简介</div>
+    <div class="intro_info">
         {{ info.resume }}
-	</div>
-	<div class="intro">{{ info.title }}最新章节</div>
-	   <ul class="chapter">
+    </div>
+    <div class="intro">{{ info.title }}最新章节</div>
+       <ul class="chapter">
            {% for chapter in all_chapters %}
-			<li><span></span>
+            <li><span></span>
                 <a href="{{ chapter.get_mobile_url }}">{{ chapter.chapter }}</a>
             </li>
            {% endfor %}
-		</ul>
-	</div>
-	<div class="ablum_read">
-		<span class="margin_right" style="width: 100%;"><a href="http://m.ranwena.com/files/article/17/17543/list.html">点击查看更多</a></span>
-	</div>
+        </ul>
+    </div>
+    <div class="ablum_read">
+        <span class="margin_right" style="width: 100%;"><a href="http://m.superxiaoshuo.com">点击查看更多</a></span>
+    </div>
 
 {% endblock main %}

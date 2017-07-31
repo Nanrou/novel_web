@@ -21,6 +21,13 @@ from crawler.db.operateDB import insert_to_detail, insert_to_info, get_infotable
 
 Logger = MyLogger('novel_operation')
 
+MODIFIED_TEXT = [r'一秒记住.*?。', r'(看书.*?)', r'纯文字.*?问', r'热门.*?>', r'最新章节.*?新',
+                 r'は防§.*?e',
+                 r'复制.*?>', r'字-符.*?>', r'最新最快，无.*?。',
+                 r'&.*?;', r'(2|w|ｗ).*(g|m|t|ｍ|ｔ)', r'\u3000\u3000\n\n',
+                 r'。.*小说',
+                 ]
+
 
 @time_clock
 def split_book(txt_path, title, chapter_index, store_path, chapter_split=' ', chapter_rule=None):
@@ -50,9 +57,14 @@ def split_book(txt_path, title, chapter_index, store_path, chapter_split=' ', ch
     :param chapter_rule: 特殊的分割条件，因为一般情况下，章节那一行是没有空格的，而正文都是有空格在前面的
     :return:
     """
+    with open(txt_path, 'r', encoding='utf-8') as rf:
+        txt = rf.read()
 
-    if not store_path.endswith('/'):  # 保证路径的存在
-        store_path += '/'
+    with open('tmp', 'w', encoding='utf-8') as wf:
+        wf.write(filter_content(txt))
+
+    # if not store_path.endswith('/'):  # 保证路径的存在
+    #     store_path += '/'
     if not os.path.exists(store_path):
         os.mkdir(store_path)
 
@@ -61,7 +73,7 @@ def split_book(txt_path, title, chapter_index, store_path, chapter_split=' ', ch
     except TypeError:
         raise TypeError
 
-    with codecs.open(txt_path, 'r', encoding='utf-8') as f:
+    with codecs.open('tmp', 'r', encoding='utf-8') as f:
         book = f.readlines()
         start_index = None
         chapter_title = ''
@@ -78,7 +90,8 @@ def split_book(txt_path, title, chapter_index, store_path, chapter_split=' ', ch
                 #     if re.match(chapter_rule, line):
                 #         flag = True
             else:
-                if '\u4e00' <= line[0] <= '\u9fff' \
+                if '\u4e00' <= line[0] <= '\u9fff' and chapter_split in line \
+                    or '\u4e00' <= line[0] <= '\u9fff' and len(line) < 10 \
                         or ('\u4e00' <= line[1] <= '\u9fff' and line[0] != '《'):
                     # 1，中文编码开头的，2，由于书名是书名号开头的，所以只要不是书名号开头的，就是章节行
                     # 从这一行开始标记
@@ -98,7 +111,7 @@ def split_book(txt_path, title, chapter_index, store_path, chapter_split=' ', ch
                         'id': chapter_index,
                         'title': title,
                         'chapter': chapter_title,
-                        'content': ''.join(book[start_index + 2: end_index - 1]).replace('\r\n\r\n', '<br/>').replace('  ', '　'),
+                        'content': ''.join(book[start_index + 1: end_index]).replace('\r\n\r\n', '<br/>').replace('  ', '　'),
                     }
                     with open(os.path.join(store_path, str(chapter_index)), 'wb') as wf:
                         pickle.dump(res, wf)
@@ -114,6 +127,7 @@ def split_book(txt_path, title, chapter_index, store_path, chapter_split=' ', ch
                         chapter_title = ' '.join(tmp_ll[2:])
 
         else:  # 最后一章
+            print(start_index)
             res = {
                 'id': chapter_index,
                 'title': title,
@@ -123,6 +137,19 @@ def split_book(txt_path, title, chapter_index, store_path, chapter_split=' ', ch
             with open(os.path.join(store_path, str(chapter_index)), 'wb') as wf:
                 pickle.dump(res, wf)
 
+
+def filter_content(txt):
+    """
+    过滤文本
+    :param txt:
+    :return:
+    """
+    # if 'div' in txt:  # 去头尾标签
+    #     txt = txt.split('<div id="content">')[-1].split('</div>')[0]
+    for rule in MODIFIED_TEXT:  # 正则去广告
+        txt = re.sub(rule, '', txt, flags=re.I)
+    txt = re.sub(r'\n\n\n+', '\n\n', txt)
+    return txt
 
 
 @time_clock
@@ -156,8 +183,6 @@ def insert_info(start, store_path='./info/'):  # 要指明从第几本开始输�
 
 @time_clock
 def insert_detail(store_path):  # 这里逻辑改一下，每次只导入一本书
-    if not store_path.endswith('/'):
-        store_path += '/'
     detail_list = [store_path + str(i) for i in sorted(map(int, os.listdir(store_path)))]
     insert_to_detail(detail_list)
 
@@ -193,5 +218,7 @@ def main(file):
 
 
 if __name__ == '__main__':
-    main('bbb.txt')
-
+    # main('bbb.txt')
+    # split_book('160163.txt', '惊悚乐园', 30, './test/')
+    # insert_detail('./test/')
+    print('')

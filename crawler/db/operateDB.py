@@ -48,9 +48,7 @@ Logger = MyLogger('DB_log')
 MODIFIED_TEXT = [r'一秒记住.*?。', r'(看书.*?)', r'纯文字.*?问', r'热门.*?>', r'最新章节.*?新',
                  r'は防§.*?e',
                  r'复制.*?>', r'字-符.*?>', r'最新最快，无.*?。',
-                 r'    .Shumilou.Co  M.Shumilou.Co<br /><br />', r'[Ww]{3}.*[mM]',
-                 r'&amp;nbsp;    &amp;nbsp;    &amp;nbsp;    &amp;nbsp;  ',
-                 r'.*\u3000\u3000第.*?章.*?<br/>',
+                 r'&.*?;', r'(2|w|ｗ).*(g|m|ｍ) ',
                  ]
 
 CATEGORY_DICT = {
@@ -87,7 +85,6 @@ def insert_to_info(files, store_des=1):  # 将info信息插入db
 
     :param files: 包含文件名的列表
     :param store_des: 存到哪个数据库
-    :param pk: 指定的pk
     :return:
     """
     if isinstance(files, list):  # 判断传入是单个还是多个
@@ -156,7 +153,7 @@ def operate_info_res(res, store_des, pk):  # 修正res中的内容
     return res
 
 
-def insert_to_detail(files, **kwargs):
+def insert_to_detail(files, **kwargs):  # 插入章节
     if isinstance(files, list):
         part_list = []
         if len(files) > 50:  # 以50次为单位插入
@@ -175,14 +172,14 @@ def insert_to_detail(files, **kwargs):
                     res.update(kwargs)
                     detail_list.append(models.BookTableOne(**res))  # 创建实例，放到list里
             models.BookTableOne.objects.bulk_create(detail_list)  # 一次插入list里的所有实例
-            Logger.debug('insert {} - {}'.format(file_list[0], file_list[-1]))
+            Logger.info('insert {} - {}'.format(file_list[0], file_list[-1]))
     else:
         with open(files, 'rb') as rf:
             res = operate_detail_res(pickle.load(rf))
             res['id'] = files.split('/')[-1]
             res.update(kwargs)
             models.BookTableOne.objects.create(**res)
-        Logger.debug('insert {}'.format(files))
+        Logger.info('insert {}'.format(files))
 
 
 def operate_detail_res(res):  # 处理细节
@@ -233,20 +230,20 @@ def filter_content(txt):
     :return:
     """
     need_confirm = 0
-    if 'div' in txt:  # 去头尾标签
-        txt = txt.split('<div id="content">')[-1].split('</div>')[0]
-    if len(txt.strip()) > 0:  # 去头乱码
-        while True:
-            if txt.startswith(' ') or txt.startswith('　'):
-                break
-            try:
-                if '\u4e00' <= txt[0] <= '\u9fff':
-                    break
-            except IndexError:
-                raise RuntimeError(' i m here')
-            txt = txt[1:]
-        for ccc in MODIFIED_TEXT:  # 正则去广告
-            txt = re.sub(ccc, '', txt)
+    # if 'div' in txt:  # 去头尾标签
+    #     txt = txt.split('<div id="content">')[-1].split('</div>')[0]
+    # if len(txt.strip()) > 0:  # 去头乱码
+    #     while True:
+    #         if txt.startswith(' ') or txt.startswith('　'):
+    #             break
+    #         try:
+    #             if '\u4e00' <= txt[0] <= '\u9fff':
+    #                 break
+    #         except IndexError:
+    #             raise RuntimeError(' i m here')
+    #         txt = txt[1:]
+    #     for ccc in MODIFIED_TEXT:  # 正则去广告
+    #         txt = re.sub(ccc, '', txt)
     if '\\' in txt or len(txt) < 100:
         need_confirm = 1
     return txt, need_confirm
@@ -269,7 +266,7 @@ def update_img_path(start=None, end=None):
         ins.save()
 
 
-def update_update_time(start=None, end=None):
+def update_update_time(start=1, end=None):
     """
     批量参入更新时间
     :param start:因为现在书的序号是从1开始的，所以start值需要减1
@@ -289,3 +286,4 @@ def get_infotable_count():
 if __name__ == '__main__':
 
     print('i am in ORM')
+    update_update_time()
