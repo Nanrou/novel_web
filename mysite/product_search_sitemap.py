@@ -24,8 +24,8 @@ xml_txt = '''
             <newestChapter>
                 <articleSection>{book_name}</articleSection>
                 <headline>{chapter_name}</headline>
-                <dateModified>{update_datetime}</dateModified>
                 <url><![CDATA[http://superxiaoshuo.com{chapter_url}]]></url>
+                <dateModified>{update_datetime}</dateModified>
             </newestChapter>
             <collectedCount>999</collectedCount>
             <dateModified>{update_datetime}</dateModified>
