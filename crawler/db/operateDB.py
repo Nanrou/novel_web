@@ -283,6 +283,17 @@ def get_infotable_count():
     return models.InfoTable.objects.count()
 
 
+def del_book_chapters(num, table=models.BookTableOne):
+    """
+    删除指定书的章节
+    :param num: 书的序号
+    :param table:
+    :return:
+    """
+    _floor = num * 10000
+    _limit = (num + 1) * 10000
+    table.objects.filter(id__gt=_floor, id__lt=_limit).delete()
+
 if __name__ == '__main__':
 
     print('i am in ORM')

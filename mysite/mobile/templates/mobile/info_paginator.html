@@ -1,0 +1,39 @@
+{% extends 'mobile/info.html' %}
+{% load staticfiles %}
+
+
+{% block main %}
+    <div class="intro" style="font-size: 20px">{{ info.title }}</div>
+    <ul class="chapter">contacts
+        {% for contact in contacts %}
+            <li><span></span>
+                <a href="{{ contact .get_mobile_url }}">{{ contact .chapter }}</a>
+            </li>
+        {% endfor %}
+    </ul>
+    <div class="page">
+        <a href="http://superxiaoshuo.com/info/{{ info.id }}-1">首页</a>
+
+        {% if contacts.has_previous %}
+            <a href="http://superxiaoshuo.com/info/{{ info.id }}-{{ contacts.previous_page_number }}">上一页</a>
+        {% endif %}
+
+        {% if contacts.has_next %}
+        <a href="http://superxiaoshuo.com/info/{{ info.id }}-{{ contacts.next_page_number }}">下一页</a>
+        {% endif %}
+
+        <a href="http://superxiaoshuo.com/info/{{ info.id }}-{{ contacts.num_pages }}">尾页</a>
+    </div>
+    <div class="page">
+        <form>
+            输入页数
+            <input id="page_num" size="4" type="text" name="page_num">
+            <input value="GO" type="submit">
+            <br/>
+            第{{ contacts.number }}/{{ contacts.num_pages }}页
+        </form>
+    </div>
+
+
+
+{% endblock main %}

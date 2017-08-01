@@ -1,6 +1,7 @@
 from django.views.generic.detail import DetailView
 from django.views.generic.base import TemplateView
 from django.urls import reverse
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 from novel_site.views import CategoryView, InfoView
 
@@ -37,11 +38,32 @@ class MobileInfoView(InfoView):
     def get_context_data(self, **kwargs):
         context = super(InfoView, self).get_context_data(**kwargs)
         try:
-            all_chapters = self.object.all_chapters.order_by('-id')[:12]
-            context['all_chapters'] = all_chapters
+            all_chapters = self.object.all_chapters.order_by('-id')
+            context['all_chapters'] = all_chapters[:12]
             context['latest_chapter'] = all_chapters[0]
         except IndexError:
             pass
+        return context
+
+
+class MobileInfoPaginatorView(InfoView):
+    template_name = 'mobile/info_paginator.html'
+    context_object_name = 'info'
+
+    def get_context_data(self, **kwargs):
+        context = super(InfoView, self).get_context_data(**kwargs)
+
+        all_chapters = self.object.all_chapters.order_by('id')
+        page = self.kwargs['page']
+        paginator = Paginator(all_chapters, 20)
+        try:
+            contacts = paginator.page(page)
+        except PageNotAnInteger:
+            contacts = paginator.page(1)
+        except EmptyPage:
+            contacts = paginator.page(paginator.num_pages)
+
+        context['contacts'] = contacts
         return context
 
 
