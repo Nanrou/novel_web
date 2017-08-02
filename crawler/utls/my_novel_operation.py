@@ -25,7 +25,7 @@ MODIFIED_TEXT = [r'一秒记住.*?。', r'(看书.*?)', r'纯文字.*?问', r'�
                  r'は防§.*?e',
                  r'复制.*?>', r'字-符.*?>', r'最新最快，无.*?。',
                  r'&.*?;', r'(２|2|w|ｗ|s).*(g|m|t|ｍ|ｔ)', r'\u3000\u3000\n\n',
-                 r'。.*小说', r'(未完待续.*',
+                 r'\(?未完待续.*',
                  ]
 
 
@@ -150,7 +150,7 @@ def split_book(txt_path, title, chapter_index, store_path, chapter_split=' ', ch
                 pickle.dump(res, wf)
 
 
-def filter_content(txt):
+def filter_content(txt):  # 这个文本过滤放到章节中去，不要对章节名判断
     """
     过滤文本
     :param txt:
