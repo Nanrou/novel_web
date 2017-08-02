@@ -26,9 +26,6 @@ SECRET_KEY = '#qmln%+&shyq5*h*3flkg5&gn72*f5uxg2+tdm8c=!q@i*$!h2'
 DEBUG = True
 
 ALLOWED_HOSTS = [
-        #'120.25.3.34',
-        #'superxiaoshuo.com',
-        #'www.superxiaoshuo.com',
         ]
 
 
@@ -47,10 +44,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    # 'gunicorn',
 ]
 
-IDDLEWARE = [
+MIDDLEWARE = [
     'django_hosts.middleware.HostsRequestMiddleware',
 
     'django.middleware.security.SecurityMiddleware',
