@@ -22,12 +22,13 @@
         <a href="http://superxiaoshuo.com/info/{{ info.id }}-{{ contacts.next_page_number }}">下一页</a>
         {% endif %}
 
-        <a href="http://superxiaoshuo.com/info/{{ info.id }}-{{ contacts.num_pages }}">尾页</a>
+        <a href="http://superxiaoshuo.com/info/{{ info.id }}-{{ num_pages }}">尾页</a>
     </div>
     <div class="page">
-        <form>
+        <form action="">
             输入页数
             <input id="page_num" size="4" type="text" value=""/>
+            <input type="text" style="display:none"/>
             <input value="GO" type="button" onclick="goToPaginator()"/>
             <br/>
             第{{ contacts.number }}/{{ num_pages }}页

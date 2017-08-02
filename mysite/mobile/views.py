@@ -3,7 +3,7 @@ from django.views.generic.base import TemplateView
 from django.urls import reverse
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.shortcuts import redirect
-from django_hosts.resolvers import reverse
+# from django_hosts.resolvers import reverse
 
 from novel_site.views import CategoryView, InfoView
 from novel_site.views import get_book_from_cate
@@ -62,8 +62,10 @@ class MobileInfoPaginatorView(InfoView):
         except PageNotAnInteger:
             contacts = paginator.page(1)
         except EmptyPage:
-            return redirect(reverse('mobile:info_paginator', host='mobile',
-                                    kwargs={'pk': self.kwargs['pk'], 'page': 'paginator.num_pages'}))
+            contacts = paginator.page(paginator.num_pages)
+            # redirect(reverse('mobile:info_paginator', host='mobile',
+            #                           kwargs={'pk': self.kwargs['pk'],
+            #                                'page': paginator.num_pages}))
 
         context['contacts'] = contacts
         context['num_pages'] = paginator.num_pages
