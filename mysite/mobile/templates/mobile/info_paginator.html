@@ -25,10 +25,10 @@
         <a href="http://superxiaoshuo.com/info/{{ info.id }}-{{ contacts.num_pages }}">尾页</a>
     </div>
     <div class="page">
-        <form onclick="goToPaginator()">
+        <form>
             输入页数
             <input id="page_num" size="4" type="text" value="">
-            <input value="GO" type="submit">
+            <input value="GO" type="button" onclick="goToPaginator()">
             <br/>
             第{{ contacts.number }}/{{ contacts.num_pages }}页
         </form>
