@@ -140,7 +140,6 @@ body {
 .head_color {
     display: -webkit-box;
 	display: -moz-box;
-	display: box;
 }
 
 /*nav*/
@@ -157,8 +156,7 @@ body {
     color:#333;
 	display:block;
 	width:25%;
-	overflow:hidden
-	height:20px;
+	overflow:hidden;
 	float:left;
     text-align: center;
 }
@@ -325,7 +323,6 @@ body {
 	color: white;
 	border-radius:3px;
 	font-size:16px;
-	font-family:"microsoft yahei";
 	cursor:pointer;
 }
 
@@ -364,7 +361,7 @@ body {
 	padding-top:5px;
 	color:#999;display:list-item;
 }
-.chapter li a{display:block; border-radius:4px;overflow:hidden;display:list-item;}
+.chapter li a{border-radius:4px;overflow:hidden;display:list-item;}
 .chapter span {background: url(list.png) no-repeat scroll 0 0 transparent;display: block;float: right;height: 20px; margin-right: 10px;margin-top: 5px;width: 14px;}
 
 .ablum {
@@ -377,7 +374,6 @@ body {
 	padding: 2px;
 	border: 1px solid #DEDEDE;
 	overflow:hidden;
-	background:url(images/cover.jpg);
 }
 .ablum_img2 img {
     float: left;
@@ -386,7 +382,6 @@ body {
 	border: 1px solid #DEDEDE;
 	overflow:hidden;
 	width:70px;
-	background:url(images/cover.jpg);
 }
 
 .ablum_info{
@@ -538,7 +533,6 @@ h4.bookname a {color: #007BB1;}
 .content ul{ 
     display:-moz-box;
 	display:-webkit-box;
-	display:box;
 	margin-bottom:5px;
 	margin-top: 5px;
 }
@@ -546,7 +540,6 @@ h4.bookname a {color: #007BB1;}
     text-align:center;
 	-moz-box-flex:1;
 	-webkit-box-flex:1;
-	box-flex:1;
 }
 .content .prev{
     text-align:left;
@@ -562,7 +555,7 @@ h4.bookname a {color: #007BB1;}
 .prev a,.mulu a,.next a{
     display:block;
 	text-align:center;
-	padding:4px 0px; 
+	padding:4px 0;
 	background-color:#f4f0e9;
 	color:green;
 	border:1px solid #ece6da;
@@ -585,7 +578,7 @@ h4.bookname a {color: #007BB1;}
 }
 
 .index_block {
-    border: 0px;
+    border: 0;
     overflow: hidden;
     line-height: 20px;
 }
@@ -661,7 +654,7 @@ h4.bookname a {color: #007BB1;}
 	line-height:26px;
 	text-align:center;
 	padding-top:20px;
-	padding-bottom:20px;
+	padding-bottom:150px;
 }
 .footer li{
     float:left;
@@ -675,7 +668,7 @@ h4.bookname a {color: #007BB1;}
 }
 .footbar{
 	position: fixed;
-	bottom: 0px;
+	bottom: 0;
 	z-index: 2147483646;
 	cursor: pointer;
 	height: 90px;
@@ -693,9 +686,9 @@ h4.bookname a {color: #007BB1;}
 .nr_set .set1{float:right;border:1px solid #0065B5;padding:2px 10px;margin-left:10px;border-radius:5px;color:#0065B5}
 .nr_set .set2 div{border:1px solid #0065B5;float:left;padding:2px 7px;margin-left:5px;border-radius:3px;color:#0065B5}
 .nr_set .set2 p{border:1px solid #0065B5;float:left;padding:5px 5px;margin-left:5px;border-radius:3px;color:#0065B5}
-.cc{height:0px;clear:both;}
+.cc{height:0;clear:both;}
 .nr_title{padding:10px 5px;font-weight:bold;font-size:21px; text-align:center;color:#000;position:relative;z-index:999;}
-.nr_page{ margin:3px 0px;position:relative;z-index:999;padding-top: 8px;}
+.nr_page{ margin:3px 0;position:relative;z-index:999;padding-top: 8px;}
 .nr_page table{width:100%;}
 .nr_page table td{ text-align:center}
 .nr_page .prev{text-align:left;margin-left:7px;}

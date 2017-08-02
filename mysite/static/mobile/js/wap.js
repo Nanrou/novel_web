@@ -71,3 +71,15 @@ function addFavorite() {
 	alert('您的浏览器不支持,请按 Ctrl+D 手动收藏!');
 	}
 }
+
+function goToPaginator() {
+    var cur_url = window.location.href;
+    var page = document.getElementById("page_num").value;
+    if(isNaN(page) || page.length == 0){page="1";}
+    if(cur_url.indexOf('-') > -1){
+        location.href = cur_url.substring(0, cur_url.indexOf('-')+1) + page + '/';
+    }else{
+        location.href = cur_url.substring(0, cur_url.length-1) + "-" + page + '/';
+    }
+}
+

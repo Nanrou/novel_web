@@ -74,9 +74,12 @@ function addFavorite() {
 
 function goToPaginator() {
     var cur_url = window.location.href;
-    var len = cur_url.length;
     var page = document.getElementById("page_num").value;
-    if(isNaN(page)){page="1";}
-    location.href = cur_url.substring(0, len-1) + "-" + page + '/';
+    if(isNaN(page) || page.length == 0){page="1";}
+    if(cur_url.indexOf('-') > -1){
+        location.href = cur_url.substring(0, cur_url.indexOf('-')+1) + page + '/';
+    }else{
+        location.href = cur_url.substring(0, cur_url.length-1) + "-" + page + '/';
+    }
 }
 

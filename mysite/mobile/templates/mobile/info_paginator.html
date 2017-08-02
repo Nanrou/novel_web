@@ -4,10 +4,10 @@
 
 {% block main %}
     <div class="intro" style="font-size: 20px">{{ info.title }}</div>
-    <ul class="chapter">contacts
+    <ul class="chapter">
         {% for contact in contacts %}
             <li><span></span>
-                <a href="{{ contact .get_mobile_url }}">{{ contact .chapter }}</a>
+                <a href="{{ contact.get_mobile_url }}">{{ contact.chapter }}</a>
             </li>
         {% endfor %}
     </ul>
@@ -27,10 +27,10 @@
     <div class="page">
         <form>
             输入页数
-            <input id="page_num" size="4" type="text" value="">
-            <input value="GO" type="button" onclick="goToPaginator()">
+            <input id="page_num" size="4" type="text" value=""/>
+            <input value="GO" type="button" onclick="goToPaginator()"/>
             <br/>
-            第{{ contacts.number }}/{{ contacts.num_pages }}页
+            第{{ contacts.number }}/{{ num_pages }}页
         </form>
     </div>
 

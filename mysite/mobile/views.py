@@ -64,6 +64,7 @@ class MobileInfoPaginatorView(InfoView):
             contacts = paginator.page(paginator.num_pages)
 
         context['contacts'] = contacts
+        context['num_pages'] = paginator.num_pages
         return context
 
 
