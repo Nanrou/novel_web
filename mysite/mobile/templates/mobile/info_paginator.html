@@ -25,25 +25,22 @@
         <a href="http://superxiaoshuo.com/info/{{ info.id }}-{{ num_pages }}">尾页</a>
     </div>
     <div class="page">
-        <form action="">
-            输入页数
-            <input id="page_num" size="4" type="text" value=""/>
-            <input type="text" style="display:none"/>
-            <input value="GO" type="button" onclick="goToPaginator()"/>
+        <div style="font-size: 18px;">
+            <form action="">
+                请选择页数
+                <select id="page_num" style="width: 75px; height: 30px; font-size: 20px; margin-top: 5px;"  onchange="goToPaginator()">
+                    {% for page in page_range %}
+                        {% if page == contacts.number %}
+                        <option value="{{ page }}"  selected="selected">{{ page }}</option>
+                        {% else %}
+                        <option value="{{ page }}">{{ page }}</option>
+                        {% endif %}
+                    {% endfor %}
+                </select>
+                <button type="button" style="margin-left: 10px; padding: 2px 15px;"  onclick="goToPaginator()">GO</button>
+            </form>
+        </div>
             <br/>
             第{{ contacts.number }}/{{ num_pages }}页
-        </form>
-    </div>
-    <div class="page">
-        <form action="">
-            <select id="page_num" onchange="goToPaginator()">
-                {% for page in page_range%}
-                    {% if page == contacts.number %}
-                        <option selected="selected">page</option>
-                    {% else %}
-                        <option>page</option>
-                    {% endif %}
-                {% endfor %}
-            </select>
     </div>
 {% endblock main %}
