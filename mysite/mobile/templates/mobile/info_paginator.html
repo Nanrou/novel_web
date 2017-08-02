@@ -34,7 +34,16 @@
             第{{ contacts.number }}/{{ num_pages }}页
         </form>
     </div>
-
-
-
+    <div class="page">
+        <form action="">
+            <select id="page_num" onchange="goToPaginator()">
+                {% for page in page_range%}
+                    {% if page == contacts.number %}
+                        <option selected="selected">page</option>
+                    {% else %}
+                        <option>page</option>
+                    {% endif %}
+                {% endfor %}
+            </select>
+    </div>
 {% endblock main %}

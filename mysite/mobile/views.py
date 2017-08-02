@@ -2,7 +2,7 @@ from django.views.generic.detail import DetailView
 from django.views.generic.base import TemplateView
 from django.urls import reverse
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from django.shortcuts import redirect
+from django.shortcuts import redirect, render
 # from django_hosts.resolvers import reverse
 
 from novel_site.views import CategoryView, InfoView
@@ -69,7 +69,28 @@ class MobileInfoPaginatorView(InfoView):
 
         context['contacts'] = contacts
         context['num_pages'] = paginator.num_pages
+        context['page_range'] = paginator.page_range
         return context
+
+
+def info_paginator(request):
+    template_name = 'mobile/info_paginator.html'
+
+    pk = request.GET.get('pk')
+    page = request.GET.get('page')
+
+    info = InfoTable.objects.filter(id=pk)
+    all_chapters = info.all_chapters.order_by('id')
+    paginator = Paginator(all_chapters, 20)
+    if page > paginator.num_pages:
+        return redirect(reverse('mobile:info_paginator', kwargs={'pk': pk, 'page': page}))
+    try:
+        contacts = paginator.page(page)
+    except PageNotAnInteger:
+        return redirect(reverse('mobile:info_paginator', kwargs={'pk': pk, 'page': 1}))
+    except EmptyPage:
+        return redirect(reverse('mobile:info_paginator', kwargs={'pk': pk, 'page': page}))
+    return render(request, template_name, {'info': info, 'contacts': contacts})
 
 
 class MobileBookView(DetailView):
