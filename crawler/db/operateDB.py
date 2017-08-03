@@ -290,6 +290,7 @@ def del_book_chapters(num, table=models.BookTableOne):
     :param table:
     :return:
     """
+    assert isinstance(num, int)
     _floor = num * 10000
     _limit = (num + 1) * 10000
     table.objects.filter(id__gt=_floor, id__lt=_limit).delete()
@@ -297,4 +298,5 @@ def del_book_chapters(num, table=models.BookTableOne):
 if __name__ == '__main__':
 
     print('i am in ORM')
-    update_update_time()
+    # update_update_time()
+    del_book_chapters(30)

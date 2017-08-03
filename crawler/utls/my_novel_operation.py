@@ -25,7 +25,7 @@ MODIFIED_TEXT = [r'一秒记住.*?。', r'(看书.*?)', r'纯文字.*?问', r'�
                  r'は防§.*?e',
                  r'复制.*?>', r'字-符.*?>', r'最新最快，无.*?。',
                  r'&.*?;', r'(２|2|w|ｗ|s).*(g|m|t|ｍ|ｔ)', r'\u3000\u3000\n\n',
-                 r'\(?未完待续.*',
+                 r'\(?未完待续.*', r'div.*?\n', r'();<br/>　　();　　　　',
                  ]
 
 
@@ -65,7 +65,7 @@ def split_book(txt_path, title, chapter_index, store_path, chapter_split=' ', ch
             txt = txt.replace('《{}》\n\n'.format(title), '')
         else:
             txt = txt.replace('{}\n\n'.format(title), '')
-        wf.write(filter_content(txt))
+        wf.write(txt)
 
     # if not store_path.endswith('/'):  # 保证路径的存在
     #     store_path += '/'
@@ -99,7 +99,7 @@ def split_book(txt_path, title, chapter_index, store_path, chapter_split=' ', ch
                     # 只要是顶格中文开头的就标记
                     #  1，中文编码开头的，2，由于书名是书名号开头的，所以只要不是书名号开头的，就是章节行
                     # 从这一行开始标记
-                    if len(line) > 20:  # 过长的记录一下，后面再判断
+                    if len(line) > 20 or len(line) < 5:  # 过长的记录一下，后面再判断
                         Logger.warning('{} {}'.format(chapter_index, line))
                     if start_index is None:
                         start_index = index
@@ -118,12 +118,12 @@ def split_book(txt_path, title, chapter_index, store_path, chapter_split=' ', ch
                         continue  # 跳过第一次
 
                     end_index = index
+                    _txt = filter_content(''.join(book[start_index + 1: end_index]))
                     res = {
                         'id': chapter_index,
                         'title': title,
                         'chapter': chapter_title,
-                        'content': ''.join(
-                            book[start_index + 1: end_index]).replace('\r\n\r\n', '<br/>').replace('  ', '　'),
+                        'content': _txt.replace('\r\n\r\n', '<br/>').replace('  ', '　'),
                     }
                     with open(os.path.join(store_path, str(chapter_index)), 'wb') as wf:
                         pickle.dump(res, wf)
@@ -138,13 +138,12 @@ def split_book(txt_path, title, chapter_index, store_path, chapter_split=' ', ch
                         chapter_title = line.strip()
 
         else:  # 最后一章
-            print(start_index)
+            _txt = filter_content(''.join(book[start_index + 1:]))
             res = {
                 'id': chapter_index,
                 'title': title,
                 'chapter': chapter_title,
-                'content': ''.join(
-                    book[start_index + 1:]).replace('\r\n\r\n', '<br/>').replace('  ', '　'),
+                'content': _txt.replace('\r\n\r\n', '<br/>').replace('  ', '　'),
             }
             with open(os.path.join(store_path, str(chapter_index)), 'wb') as wf:
                 pickle.dump(res, wf)
@@ -159,6 +158,7 @@ def filter_content(txt):  # 这个文本过滤放到章节中去，不要对章�
     for rule in MODIFIED_TEXT:  # 正则去广告
         txt = re.sub(rule, '', txt, flags=re.I)
     txt = re.sub(r'\n\n\n+', '\n\n', txt)
+    txt = re.sub(r'\r\n\r\n(\r\n)+', '\r\n\r\n', txt)
     return txt
 
 
@@ -235,5 +235,5 @@ def main(file):
 if __name__ == '__main__':
     # main('bbb.txt')
     # split_book('160163.txt', '惊悚乐园', 30, './test/')
-    # insert_detail('./test/')
-    print('')
+    insert_detail('./test/')
+    # print('')
