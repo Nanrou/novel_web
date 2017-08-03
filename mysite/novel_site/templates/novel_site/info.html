@@ -22,7 +22,7 @@
                 <h1>{{ object.title }}</h1>
                 <p>作者：{{ object.author }}</p>
                 {# 这个加入收藏和到底部要重写 #}
-                <p>状态：{{ object.status }},  <a rel="nofollow" href="http://www.ranwen.org/modules/article/addbookcase.php?bid=56048" target="_blank">加入收藏</a>, <a href="#footer">直达底部</a></p>
+                <p>状态：{{ object.status }},  <a rel="nofollow" href="" target="_blank">加入收藏</a>, <a href="#footer">直达底部</a></p>
                 <p>最后更新：{{ object.update_time|date:'Y-m-d H:i:s' }}</p>
                 <p>最新章节：<a href="{{ latest_chapter.get_absolute_url }}" target="_blank">{{ latest_chapter.chapter }}</a></p>
 

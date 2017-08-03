@@ -1,6 +1,6 @@
 # -*- coding:utf-8 -*-
 
-from django.conf.urls import url, include
+from django.conf.urls import url
 from . import views
 
 
@@ -12,8 +12,7 @@ urlpatterns = [
     url(r'^info/(?P<pk>[0-9]+)/$', views.InfoView.as_view(), name='info'),
     url(r'^book/(?P<pk>[0-9]+)/(?P<index>[0-9]+)/$', views.BookView.as_view(), name='detail'),
     url(r'^search', views.SearchView.as_view(), name='search'),
-	url(r'^test', views.SearchTest.as_view(), name='test'),
+    url(r'^test', views.SearchTest.as_view(), name='test'),
+    url(r'^404$', views.page_not_found, name='404')
 ]
 
-
-handler404 = view.page_not_found

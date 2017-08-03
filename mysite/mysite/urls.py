@@ -18,5 +18,6 @@ from django.contrib import admin
 
 urlpatterns = [
     url(r'', include('novel_site.urls', namespace='novel_site')),
-    # url(r'^m/', include('mobile.urls', namespace='mobile')),
 ]
+
+handler404 = 'novel_site.views.page_not_found'
