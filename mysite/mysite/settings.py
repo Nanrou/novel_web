@@ -47,7 +47,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
-    'django_hosts.middleware.HostsRequestMiddleware',
+    # 'django_hosts.middleware.HostsRequestMiddleware',
 
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -57,10 +57,11 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 
-    'middleware.my_middleware.MobileMiddleware',
-    'django_hosts.middleware.HostsResponseMiddleware',
+    # 'middleware.my_middleware.MobileMiddleware',
+    # 'django_hosts.middleware.HostsResponseMiddleware',
 ]
 
+# django-host settings
 ROOT_URLCONF = 'mysite.urls'
 
 ROOT_HOSTCONF = 'mysite.hosts'
@@ -135,7 +136,7 @@ USE_TZ = False
 
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
-#STATICFILES_DIRS = (os.path.join(BASE_DIR, "static"), )
+# STATICFILES_DIRS = (os.path.join(BASE_DIR, "static"), )
 # STATICFILES_FINDERS = (
 #     "django.contrib.staticfiles.finders.FileSystemFinder",
 #     "django.contrib.staticfiles.finders.AppDirectoriesFinder",
@@ -156,3 +157,20 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
 #         },
 #     }
 # }
+if DEBUG:
+    try:
+        import debug_toolbar  # NOQA
+    except ImportError:
+        pass
+    else:
+        DEBUG_TOOLBAR_CONFIG = {
+            'JQUERY_URL': r"http://code.jquery.com/jquery-2.1.1.min.js",
+            
+        }
+        INSTALLED_APPS.append('debug_toolbar')
+        INTERNAL_IPS = ['127.0.0.1', '125.89.65.71']
+        MIDDLEWARE.insert(
+            MIDDLEWARE.index('django.middleware.common.CommonMiddleware') + 1,
+            'debug_toolbar.middleware.DebugToolbarMiddleware'
+        )
+
