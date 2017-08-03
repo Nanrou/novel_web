@@ -185,3 +185,7 @@ class SearchView(TemplateView):
 	
 class SearchTest(TemplateView):
 	template_name = 'novel_site/search_api_test.html'
+
+    
+def page_not_found(request):
+    return render(request, 'novel_site/404.html')

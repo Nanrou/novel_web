@@ -1,0 +1,24 @@
+{% extends 'novel_site/base.html' %}
+{% load staticfiles %}
+
+
+{% block main %}
+<div style="width: 970px">
+    <div style="margin-top: 25%; margin-left: -15px; margin-right: 15px">
+        <div style="width: 41%; float: left; position: relative; padding-left: 15px; padding-right: 15px;">
+            <img src="{% static novel_site/images/404.jpg %}"width="634" height="690"/>
+        </div>
+        <div style="width: 58%; float: left; position: relative; padding-left: 15px; padding-right: 15px;">
+            <h2>页面找不到啦</h2>
+            <p>
+                就是找不到啊，我也很绝望啊~
+            <br/>
+                <a href="/">回到首页</a>
+                <a href="window.history.go(-1)">回到上一页</a>
+            </p>
+        </div>
+    </div>
+</div>
+
+
+{% endblock main %}

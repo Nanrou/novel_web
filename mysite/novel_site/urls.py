@@ -14,3 +14,6 @@ urlpatterns = [
     url(r'^search', views.SearchView.as_view(), name='search'),
 	url(r'^test', views.SearchTest.as_view(), name='test'),
 ]
+
+
+handler404 = view.page_not_found
