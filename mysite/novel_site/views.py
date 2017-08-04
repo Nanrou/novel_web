@@ -1,15 +1,12 @@
 # -*- coding:utf-8 -*-
 
 from random import sample
-from django.shortcuts import render, loader, get_object_or_404, redirect
+from django.shortcuts import render
 from django.urls import reverse
-from django.http import HttpResponse
-from .models import CategoryTable, InfoTable, BookTableOne, MAP_DICT
-from django.core.exceptions import ObjectDoesNotExist
-from django.views.generic.detail import DetailView, SingleObjectMixin
+from .models import CategoryTable, InfoTable
+from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
 from django.views.generic.base import TemplateView
-from django.http import Http404
 
 # Create your views here.
 
@@ -68,6 +65,7 @@ class InfoView(DetailView):
         context['all_chapters'] = all_chapters
         try:
             context['latest_chapter'] = all_chapters[-1]
+            context['lasted_ten_chapters'] = all_chapters[-8:].reverse()
         except IndexError:
             pass
         return context

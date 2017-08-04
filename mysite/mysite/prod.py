@@ -26,7 +26,6 @@ SECRET_KEY = '#qmln%+&shyq5*h*3flkg5&gn72*f5uxg2+tdm8c=!q@i*$!h2'
 DEBUG = False
 
 ALLOWED_HOSTS = [
-        # '120.25.3.34',
         'superxiaoshuo.com',
         'www.superxiaoshuo.com',
         'm.superxiaoshuo.com',
@@ -53,6 +52,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django_hosts.middleware.HostsRequestMiddleware',
+
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -65,6 +65,7 @@ MIDDLEWARE = [
     'django_hosts.middleware.HostsResponseMiddleware',
 ]
 
+# django-host settings
 ROOT_URLCONF = 'mysite.urls'
 
 ROOT_HOSTCONF = 'mysite.hosts'
@@ -102,6 +103,23 @@ DATABASES = {
     }
 }
 
+# Caches
+
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://127.0.0.1:6379/1",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+            "PICKLE_VERSION": -1,
+            "IGNORE_EXCEPTIONS": True,
+        }
+    }
+}
+
+# Session
+SESSION_ENGINE = "django.contrib.sessions.backends.cache"
+SESSION_CACHE_ALIAS = "default"
 
 # Password validation
 # https://docs.djangoproject.com/en/1.11/ref/settings/#auth-password-validators
@@ -141,7 +159,7 @@ USE_TZ = False
 
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
-#STATICFILES_DIRS = (os.path.join(BASE_DIR, "static"), )
+# STATICFILES_DIRS = (os.path.join(BASE_DIR, "static"), )
 # STATICFILES_FINDERS = (
 #     "django.contrib.staticfiles.finders.FileSystemFinder",
 #     "django.contrib.staticfiles.finders.AppDirectoriesFinder",

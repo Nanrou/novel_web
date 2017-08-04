@@ -1,5 +1,6 @@
 {% extends 'novel_site/base.html' %}
 {% load staticfiles %}
+{% load cache %}
 
 {% block meta_description %}
 <title>超级小说_{{ object.title }}最新章节</title>
@@ -49,6 +50,18 @@
                 <a href="http://www.superxiaoshuo.com" target="_blank">三国之召唤猛将</a>
         </div>
 </div>
+
+{% cache 600 chapters %}
+<div class="box_con">
+    <div id="list">
+        <dl>
+            <dt>《{{ object.title }}》最新章节</dt>
+            {%  for n_chapter in lasted_ten_chapters %}
+                <dd><a href="{{ n_chapter.get_absolute_url }}">{{ n_chapter.chapter}}</a></dd>
+            {% endfor %}
+        </dl>
+    </div>
+</div>
 <div class="box_con">
     <div id="list">
         <dl>
@@ -64,4 +77,6 @@
         </dl>
     </div>
 </div>
+{% endcache %}
+
 {% endblock main %}
