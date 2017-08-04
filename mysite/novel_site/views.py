@@ -65,7 +65,7 @@ class InfoView(DetailView):
         context['all_chapters'] = all_chapters
         try:
             context['latest_chapter'] = all_chapters[-1]
-            context['lasted_ten_chapters'] = all_chapters[-8:].reverse()
+            context['latest_ten_chapters'] = reversed(all_chapters[-8:])
         except IndexError:
             pass
         return context

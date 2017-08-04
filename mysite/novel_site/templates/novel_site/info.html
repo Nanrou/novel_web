@@ -51,12 +51,11 @@
         </div>
 </div>
 
-{% cache 600 chapters %}
 <div class="box_con">
     <div id="list">
         <dl>
             <dt>《{{ object.title }}》最新章节</dt>
-            {%  for n_chapter in lasted_ten_chapters %}
+            {%  for n_chapter in latest_ten_chapters %}
                 <dd><a href="{{ n_chapter.get_absolute_url }}">{{ n_chapter.chapter}}</a></dd>
             {% endfor %}
         </dl>
@@ -77,6 +76,5 @@
         </dl>
     </div>
 </div>
-{% endcache %}
 
 {% endblock main %}
