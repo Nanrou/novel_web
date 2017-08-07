@@ -364,7 +364,7 @@ def qianchengwuyou():
 
 
 @time_clock
-def collect_detail(folder='./', namelist=('z', 'q', 'l')):
+def collect_detail(folder='./daily_data', namelist=('z', 'q', 'l')):
     """
     收集文件夹中的信息，都存到一个文件中，并把其他的都删掉
     :param folder: 指定文件夹的位置
@@ -403,12 +403,13 @@ def main():
     dir_path = './daily_data/' + date_time
     if not os.path.exists(dir_path):
         zhilian()
-        # qianchengwuyou()
+        qianchengwuyou()
         lagou()
         collect_detail(dir_path)
     else:
         print('today already do it')
 
+    collect_detail(dir_path)
     remove_list = ['lagou_cookies.txt', 'lagou_info.json', 'qianchengwuyou', 'zhilian']
     for i in remove_list:
         if os.path.exists(i):
@@ -417,6 +418,8 @@ def main():
 if __name__ == '__main__':
     print('-' * 20)
     main()
+    # collect_detail()
     # u = 'http://search.51job.com/list/030500,000000,0000,00,9,99,python,2,1.html?lang=c&stype=1&postchannel=0000&workyear=99&cotype=99&degreefrom=99&jobterm=99&companysize=99&lonlat=0%2C0&radius=-1&ord_field=1&confirmdate=9&fromType=&dibiaoid=0&address=&line=&specialarea=00&from=&welfare='
     # resp = requests.get('http://www.51job.com/')
+    # resp = requests.get(u)
     # print(resp.status_code)
