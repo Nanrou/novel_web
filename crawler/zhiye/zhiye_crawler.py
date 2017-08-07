@@ -400,11 +400,12 @@ def collect_detail(folder='./', namelist=('z', 'q', 'l')):
 @time_clock
 def main():
     date_time = '{:%Y-%m-%d}'.format(datetime.datetime.today())
-    if not os.path.exists(date_time):
+    dir_path = './daily_data/' + date_time
+    if not os.path.exists(dir_path):
         zhilian()
         # qianchengwuyou()
         lagou()
-        collect_detail(date_time)
+        collect_detail(dir_path)
     else:
         print('today already do it')
 
@@ -414,7 +415,7 @@ def main():
             os.remove(i)
 
 if __name__ == '__main__':
-    print('i in zhiye')
+    print('-' * 20)
     main()
     # u = 'http://search.51job.com/list/030500,000000,0000,00,9,99,python,2,1.html?lang=c&stype=1&postchannel=0000&workyear=99&cotype=99&degreefrom=99&jobterm=99&companysize=99&lonlat=0%2C0&radius=-1&ord_field=1&confirmdate=9&fromType=&dibiaoid=0&address=&line=&specialarea=00&from=&welfare='
     # resp = requests.get('http://www.51job.com/')
