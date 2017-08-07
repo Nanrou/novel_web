@@ -19,3 +19,6 @@ from django.contrib import admin
 urlpatterns = [
     url(r'', include('mobile.urls', namespace='mobile')),
 ]
+
+handler404 = 'mobile.views.page_not_found'
+
