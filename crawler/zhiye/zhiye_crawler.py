@@ -409,7 +409,6 @@ def main():
     else:
         print('today already do it')
 
-    collect_detail(dir_path)
     remove_list = ['lagou_cookies.txt', 'lagou_info.json', 'qianchengwuyou', 'zhilian']
     for i in remove_list:
         if os.path.exists(i):
@@ -418,7 +417,6 @@ def main():
 if __name__ == '__main__':
     print('-' * 20)
     main()
-    # collect_detail()
     # u = 'http://search.51job.com/list/030500,000000,0000,00,9,99,python,2,1.html?lang=c&stype=1&postchannel=0000&workyear=99&cotype=99&degreefrom=99&jobterm=99&companysize=99&lonlat=0%2C0&radius=-1&ord_field=1&confirmdate=9&fromType=&dibiaoid=0&address=&line=&specialarea=00&from=&welfare='
     # resp = requests.get('http://www.51job.com/')
     # resp = requests.get(u)
