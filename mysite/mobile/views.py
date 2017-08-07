@@ -130,6 +130,6 @@ class MobileBookView(DetailView):
 class MobileSearchView(TemplateView):
     template_name = 'mobile/search.html'
 
-    
+
 def page_not_found(request):
     return render(request, 'mobile/404.html')
