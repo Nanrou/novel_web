@@ -16,3 +16,5 @@ urlpatterns = [
     url(r'^book/(?P<pk>[0-9]+)/(?P<index>[0-9]+)/$', views.MobileBookView.as_view(), name='detail'),
     url(r'^search', views.MobileSearchView.as_view(), name='search'),
 ]
+
+handler404 = 'mobile.views.page_not_found'
