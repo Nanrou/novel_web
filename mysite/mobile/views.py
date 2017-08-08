@@ -3,7 +3,7 @@ from django.views.generic.base import TemplateView
 from django.urls import reverse
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.shortcuts import redirect, render
-from django.views.decorators.cache import cache_page
+# from django.views.decorators.cache import cache_page
 # from django_hosts.resolvers import reverse
 
 from novel_site.views import CategoryView, InfoView
@@ -73,7 +73,8 @@ class MobileInfoPaginatorView(InfoView):
         context['page_range'] = paginator.page_range
         return context
 
-@cache_page(60 * 120)
+
+# @cache_page(60 * 120)
 def info_paginator(request):
     template_name = 'mobile/info_paginator.html'
 

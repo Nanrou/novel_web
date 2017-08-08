@@ -26,6 +26,7 @@ SECRET_KEY = '#qmln%+&shyq5*h*3flkg5&gn72*f5uxg2+tdm8c=!q@i*$!h2'
 DEBUG = False
 
 ALLOWED_HOSTS = [
+        '127.0.0.1',
         'superxiaoshuo.com',
         'www.superxiaoshuo.com',
         'm.superxiaoshuo.com',
@@ -105,17 +106,17 @@ DATABASES = {
 
 # Caches
 
-CACHES = {
-    "default": {
-        "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": "redis://127.0.0.1:6379/1",
-        "OPTIONS": {
-            "CLIENT_CLASS": "django_redis.client.DefaultClient",
-            "PICKLE_VERSION": -1,
-            "IGNORE_EXCEPTIONS": True,
-        }
-    }
-}
+# CACHES = {
+#     "default": {
+#         "BACKEND": "django_redis.cache.RedisCache",
+#         "LOCATION": "redis://127.0.0.1:6379/1",
+#         "OPTIONS": {
+#             "CLIENT_CLASS": "django_redis.client.DefaultClient",
+#             "PICKLE_VERSION": -1,
+#             "IGNORE_EXCEPTIONS": True,
+#         }
+#     }
+# }
 
 # Session
 SESSION_ENGINE = "django.contrib.sessions.backends.cache"
