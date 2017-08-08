@@ -26,5 +26,6 @@ handler404 = 'novel_site.views.page_not_found'
 if settings.DEBUG:
     import debug_toolbar
     urlpatterns = [
-        url(r'^__debug__/', include(debug_toolbar.urls))
+        url(r'^__debug__/', include(debug_toolbar.urls)),
+        url(r'^m/', include('mobile.urls', namespace='mobile'))
     ] + urlpatterns
