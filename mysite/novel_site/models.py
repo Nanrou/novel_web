@@ -28,12 +28,12 @@ class CategoryTable(models.Model):
     def get_random_ele(self, num):
         if self.pk is 6:
             try:
-                res = sample(list(InfoTable.objects.filter(_status=True).only('title', 'author', 'resume')), num)
+                res = sample(list(InfoTable.objects.select_related('author').filter(_status=True).only('title', 'author', 'resume')), num)
             except ValueError:
                 res = InfoTable.objects.filter(_status=True).only('title', 'author', 'resume')
         else:
             try:
-                res = sample(list(self.cate_books.all().only('title', 'author', 'resume')), num)
+                res = sample(list(self.cate_books.all().select_related('author').only('title', 'author', 'resume')), num)
             except ValueError:
                 res = self.cate_books.all().only('title', 'author', 'resume')
         return res

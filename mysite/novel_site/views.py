@@ -13,10 +13,21 @@ from django.views.generic.base import TemplateView
 
 def get_book_from_cate():  # 返回每个分类下的书
     cate_list = []
-    for index in range(1, 7):
-        books = CategoryTable.objects.get(id=index).get_random_ele(6)
-        book = sample(list(books), 1)[0]
-        cate_list.append([book, books])
+    # for index in range(1, 6):
+    #     books = CategoryTable.objects.filter(id=index)[:1].cate_books.\
+    #         select_related('author', 'category').all()[:6].\
+    #         only('author', 'category', 'image', 'resume', 'id', 'title')
+    # for books in books_list:
+    #     cate_list.append([books[0], books])
+    for index in range(1, 6):
+        books = InfoTable.objects.filter(category_id=index)\
+            .select_related('author', 'category').all()[:6]\
+            .only('author', 'category', 'image', 'resume', 'id', 'title')
+        cate_list.append(books)
+    finished_books = InfoTable.objects.filter(_status=1)\
+        .select_related('author', 'category').all()[:6] \
+        .only('author', 'category', 'image', 'resume', 'id', 'title')
+    cate_list.append(finished_books)
     return cate_list
 
 
@@ -25,7 +36,8 @@ class HomeView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = dict()
-        context['top_four'] = InfoTable.objects.all()[0:4]
+        context['top_four'] = \
+            InfoTable.objects.select_related('author').filter(id__lt=5).only('title', 'author', 'resume', 'image')
 
         cate_list = get_book_from_cate()
         context['cate_list1'] = cate_list[0:3]
