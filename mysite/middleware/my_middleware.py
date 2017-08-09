@@ -1,9 +1,10 @@
 # -*- coding:utf-8 -*-
 
 from django.shortcuts import redirect
+from django.conf import settings
 
 
-MOBILE_UA = ("Mobile", "PlayStation", "Wii")
+MOBILE_UA = ("Mobile", "PlayStation", "Wii", 'iPhone')
 
 
 class MobileMiddleware(object):
@@ -24,12 +25,12 @@ class MobileMiddleware(object):
             if any(ua for ua in MOBILE_UA if ua in request.META['HTTP_USER_AGENT']):
                 return self.get_response(request)
             else:
-                new_path = 'http://www.superxiaoshuo.com' + request.path
+                new_path = 'http://www.' + settings.PARENT_HOST + request.path
                 return redirect(new_path)
 
         else:
             if any(ua for ua in MOBILE_UA if ua in request.META['HTTP_USER_AGENT']):
-                new_path = 'http://m.superxiaoshuo.com' + request.path
+                new_path = 'http://m.' + settings.PARENT_HOST + request.path
                 return redirect(new_path)
             else:
                 return self.get_response(request)

@@ -5,10 +5,8 @@ from django.db import models
 from django.urls import reverse, reverse_lazy
 from django_hosts.resolvers import reverse as hosts_reverse
 
-from django.conf import settings
 
 # Create your models here.
-
 
 class AuthorTable(models.Model):
     author = models.CharField(max_length=20, unique=True)
@@ -25,10 +23,7 @@ class CategoryTable(models.Model):
         return reverse('novel_site:category', kwargs={'cate': self.cate})
 
     def get_mobile_url(self):
-        if settings.DEBUG:
-            return reverse('mobile:category', kwargs={'cate': self.cate})
-        else:
-            return hosts_reverse('mobile:category', host='mobile', kwargs={'cate': self.cate})
+        return hosts_reverse('mobile:category', host='mobile', kwargs={'cate': self.cate})
 
     def get_random_ele(self, num):
         if self.pk is 6:
@@ -68,17 +63,12 @@ class InfoTable(models.Model):
             return '完结'
         else:
             return '连载中'
-        # dd = {'FALSE': '连载中', 'TRUE': '完结'}
-        # return dd[str(self._status)]
 
     def get_absolute_url(self):
         return reverse('novel_site:info', kwargs={'pk': self.pk})
 
     def get_mobile_url(self):
-        if settings.DEBUG:
-            return reverse('mobile:info', kwargs={'pk': self.pk})
-        else:
-            return hosts_reverse('mobile:info', host='mobile', kwargs={'pk': self.pk})
+        return hosts_reverse('mobile:info', host='mobile', kwargs={'pk': self.pk})
 
     @property
     def latest_chapter(self):

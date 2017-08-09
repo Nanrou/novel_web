@@ -15,6 +15,7 @@ Including another URLconf
 """
 from django.conf.urls import url, include
 from django.contrib import admin
+from django.conf import settings
 
 urlpatterns = [
     url(r'', include('mobile.urls', namespace='mobile')),
@@ -22,3 +23,8 @@ urlpatterns = [
 
 handler404 = 'mobile.views.page_not_found'
 
+if settings.DEBUG:
+    import debug_toolbar
+    urlpatterns = [
+        url(r'^__debug__/', include(debug_toolbar.urls)),
+        ] + urlpatterns
