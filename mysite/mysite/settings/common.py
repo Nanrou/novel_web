@@ -4,10 +4,14 @@ import os
 
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-if not os.path.exists(os.path.join(os.path.dirname(os.path.dirname(BASE_DIR)), 'site_log')):
-    os.mkdir(os.path.join(os.path.dirname(os.path.dirname(BASE_DIR)), 'site_log'))
+# Log path
+
+LOGGER_PATH = os.path.join(os.path.dirname(os.path.dirname(BASE_DIR)), 'site_log')
+
+if not os.path.exists(LOGGER_PATH):
+    os.mkdir(LOGGER_PATH)
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = '#qmln%+&shyq5*h*3flkg5&gn72*f5uxg2+tdm8c=!q@i*$!h2'
@@ -25,6 +29,8 @@ DATABASES = {
 
 
 # Application definition
+
+ROOT_URLCONF = 'mysite.urls.www'
 
 INSTALLED_APPS = [
     'novel_site',
@@ -117,8 +123,6 @@ AUTH_PASSWORD_VALIDATORS = [
 
 # django-host settings
 
-ROOT_URLCONF = 'mysite.urls'
-
 ROOT_HOSTCONF = 'mysite.hosts'
 
 DEFAULT_HOST = 'www'
@@ -165,9 +169,8 @@ LOGGING = {
 
         'default': {
             'level': 'DEBUG',
-            'class': 'logging.handlers.RotatingFIleHandler',
-            'filename': os.path.join(
-                os.path.join(os.path.dirname(os.path.dirname(BASE_DIR)), 'site_log'), 'site.log'),
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': os.path.join(LOGGER_PATH, 'site.log'),
             'maxBytes': 1024 * 1024 * 20,
             'backupCount': 5,
             'formatter': 'full',
