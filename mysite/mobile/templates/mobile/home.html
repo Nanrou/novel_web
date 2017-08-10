@@ -34,37 +34,39 @@
 
 {% endblock header %}
 {% block main %}
-    {% for book, books in cate_book %}
-    <div class="article">
-        <h2 class="title">
-            <span>
-                <a href="{{ book.category.get_mobile_url }}">{{ book.category }}</a>
-            </span>
-                <a href="{{ book.category.get_mobile_url }}">更多...</a>
-        </h2>
-        <div class="block">
-            <div class="block_img">
-                <a href="{{ book.get_mobile_url }}">
-                    <img src="{% static book.image %}" alt="{{ book.title }}" onerror="{% static 'novel_site/images/miss.jpg' %}" width="80" height="100">
-                </a>
-            </div>
-            <div class="block_txt">
-                <h2>
-                    <a href="{{ book.get_mobile_url }}" style="color: #007BB1;">{{ book.title }}</a>
-                </h2>
-                <p>{{ book.author }}</p>
-                <p>
-                <a href="{{ book.get_mobile_url }}">{{ book.resume }}</a>
-                </p>
-            </div>
-            <div style="clear:both"></div>
-            <ul>
-                {% for book in books %}
-                <li><a href="{{ book.get_mobile_url }}" class="blue">{{ book.title }}</a>/{{ book.author }}</li>
-                {% empty %}
-                <li><p>sorry, not found any book</p></li>
-                {% endfor %}
-            </ul>
+    {% for books in cate_book %}
+        {% for book in books %}
+            {% if forloop.first %}
+                <div class="article">
+                    <h2 class="title">
+                        <span>
+                            <a href="{{ book.category.get_mobile_url }}">{{ book.category }}</a>
+                        </span>
+                            <a href="{{ book.category.get_mobile_url }}">更多...</a>
+                    </h2>
+                    <div class="block">
+                        <div class="block_img">
+                            <a href="{{ book.get_mobile_url }}">
+                                <img src="{% static book.image %}" alt="{{ book.title }}" onerror="{% static 'novel_site/images/miss.jpg' %}" width="80" height="100">
+                            </a>
+                        </div>
+                        <div class="block_txt">
+                            <h2>
+                                <a href="{{ book.get_mobile_url }}" style="color: #007BB1;">{{ book.title }}</a>
+                            </h2>
+                            <p>{{ book.author }}</p>
+                            <p><a href="{{ book.get_mobile_url }}">{{ book.resume }}</a></p>
+                        </div>
+                        <div style="clear:both"></div>
+                        <ul>
+            {% endif %}
+            <li><a href="{{ book.get_mobile_url }}" class="blue">{{ book.title }}</a>/{{ book.author }}</li>
+        {% empty %}
+            <li><p>sorry, not found any book</p></li>
+            {% if forloop.last %}
+                </ul>
+            {% endif %}
+        {% endfor %}
         </div>
     </div>
     {% endfor %}
