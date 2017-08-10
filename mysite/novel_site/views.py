@@ -89,20 +89,6 @@ class BookView(DetailView):
     template_name = 'novel_site/detail.html'
     pk_url_kwarg = 'index'
 
-    # def get_adjacent_page(self):  # 这个是通过判断序号是否超出范围来决定前后的url
-    #     ll = list(self.object.all_chapters_id_only)  # 这里是通过找所有的id来判断是否有前后
-    #     index = ll.index(self.queryset)
-    #     if index - 1 < 0:
-    #         last_page_url = self.object.get_absolute_url()
-    #     else:
-    #         last_page_url = ll[index-1].get_absolute_url()
-    #     if index + 1 < len(ll):
-    #         next_page_url = ll[index+1].get_absolute_url()
-    #     else:
-    #         next_page_url = self.object.get_absolute_url()
-    #     return last_page_url, next_page_url
-
-# 可以通过直接构造前后的id来判断，若找不到就返回首页
     def get_adjacent_page(self):  # 这个是通过判断序号是否超出范围来决定前后的url
         paginator = Paginator(self.queryset.order_by('id'), 1)
 

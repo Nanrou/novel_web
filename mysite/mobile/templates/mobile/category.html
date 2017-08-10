@@ -45,7 +45,7 @@
         <div class="bookinfo">
             <h4 class="bookname"><a href="{{ book.get_mobile_url }}">{{ book.title }}</a></h4>
             <div class="author">作者：{{ book.author }}</div>
-            <div class="update"><span>更新至：</span><a href="{{ book.latest_chapter.get_mobile_url }}">{{ book.latest_chapter.chapter }}</a></div>
+            <div class="update"><span>更新至：</span><a href="{{ book.latest_chapter_url }}">{{ book.latest_chapter }}</a></div>
             <div class="intro_line">
                 <span>简介：</span>{{ book.resume|truncatechars:30 }}
             </div>

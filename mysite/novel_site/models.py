@@ -54,6 +54,9 @@ class InfoTable(models.Model):
     image = models.CharField(max_length=70, verbose_name='image_des', null=True)
     resume = models.CharField(max_length=300, null=True)
 
+    latest_chapter = models.CharField(max_length=70, null=True)
+    latest_chapter_url = models.CharField(max_length=70, null=True)
+
     def __str__(self):
         return self.title
 
@@ -70,13 +73,9 @@ class InfoTable(models.Model):
     def get_mobile_url(self):
         return hosts_reverse('mobile:info', host='mobile', kwargs={'pk': self.pk})
 
-    @property
-    def latest_chapter(self):
-        return MAP_DICT[str(self.store_des)].objects.filter(title=self.pk).defer('content', 'need_confirm').latest('id')
-
-    @property
-    def earliest_chapter(self):
-        return MAP_DICT[str(self.store_des)].objects.filter(title=self.pk).defer('content', 'need_confirm').earliest('id')
+    # @property
+    # def latest_chapter(self):
+    #     return MAP_DICT[str(self.store_des)].objects.filter(title=self.pk).defer('content', 'need_confirm').latest('id')
 
     @property
     def all_chapters(self):  # 看是否要放到view中去

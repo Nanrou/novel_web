@@ -10,7 +10,7 @@ from crawler.utls.my_logger import MyLogger
 
 PROJECT_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 sys.path.append(os.path.join(PROJECT_DIR, 'mysite/'))
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'mysite.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'mysite.settings.dev')
 
 import django
 django.setup()
@@ -295,8 +295,25 @@ def del_book_chapters(num, table=models.BookTableOne):
     _limit = (num + 1) * 10000
     table.objects.filter(id__gt=_floor, id__lt=_limit).delete()
 
+
+def add_latest_chapters_and_them_url(num):
+    books_num = get_infotable_count()
+    for pk in range(num, books_num+1):
+        try:
+            book = models.BookTableOne.objects.filter(title_id=pk).only('id', 'title').order_by('-id')[0]
+            info = models.InfoTable.objects.only('latest_chapter', 'latest_chapter_url').get(id=pk)
+
+            info.latest_chapter = book.chapter
+            info.latest_chapter_url = '/book/{}/{}/'.format(pk, book.id)
+            info.save()
+
+        except IndexError:
+            pass
+
+
 if __name__ == '__main__':
 
     print('i am in ORM')
     # update_update_time()
-    del_book_chapters(30)
+    # del_book_chapters(30)
+    # add_latest_chapters_and_them_url(3)
