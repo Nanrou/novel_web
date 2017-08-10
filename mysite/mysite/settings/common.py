@@ -181,6 +181,14 @@ LOGGING = {
             'class': 'logging.StreamHandler',
             'formatter': 'django.server',
         },
+
+        'syslog': {
+            "formatter": "full",
+            "level": "DEBUG",
+            "class": "logging.handlers.SysLogHandler",
+            "address": "/dev/log",
+            "facility": "local4",
+        },
     },
 
     'loggers': {

@@ -46,13 +46,13 @@ CACHES = {
 
 # Loggers
 
-LOGGING["handlers"]["syslog"] = {
-    "formatter": "full",
-    "level": "DEBUG",
-    "class": "logging.handlers.SysLogHandler",
-    "address": "/dev/log",
-    "facility": "local4",
-}
+# LOGGING["handlers"]["syslog"] = {
+#     "formatter": "full",
+#     "level": "DEBUG",
+#     "class": "logging.handlers.SysLogHandler",
+#     "address": "/dev/log",
+#     "facility": "local4",
+# }
 
 LOGGING["loggers"]["django.request"]["handlers"].append("syslog")
 
