@@ -71,7 +71,11 @@
                 <div class="content">
                     {% for book in books %}
                         {% if forloop.first %}
-                            <h2><a href="{{ book.category.get_absolute_url }}">{{ book.category }}</a></h2>
+                            {% if forloop.parentloop.last %}
+                                <h2><a href="/cate/quanben/">全本小说</a></h2>
+                            {% else %}
+                                <h2><a href="{{ book.category.get_absolute_url }}">{{ book.category }}</a></h2>
+                            {% endif %}
                             <div class="top">
                                 <div class="image"><a href="{{ book.get_absolute_url }}" target="_blank"><img src="{% static book.image %}" alt="{{ book.title }}" width="67" height="82"></a></div>
                                 <dl>

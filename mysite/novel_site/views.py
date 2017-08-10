@@ -2,12 +2,13 @@
 
 from random import sample
 from django.shortcuts import render
-from django.urls import reverse
 from .models import CategoryTable, InfoTable
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
 from django.views.generic.base import TemplateView
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
+from django_hosts import reverse as host_reverse
 # Create your views here.
 
 
@@ -24,9 +25,11 @@ def get_book_from_cate():  # 返回每个分类下的书
             .select_related('author', 'category').all()[:6]\
             .only('author', 'category', 'image', 'resume', 'id', 'title')
         cate_list.append(books)
+
     finished_books = InfoTable.objects.filter(_status=1)\
         .select_related('author', 'category').all()[:6] \
         .only('author', 'category', 'image', 'resume', 'id', 'title')
+
     cate_list.append(finished_books)
     return cate_list
 
@@ -51,25 +54,23 @@ class CategoryView(DetailView):
     context_object_name = 'cate'
 
     def get_object(self, queryset=None):
-        self.obj = CategoryTable.objects.get(cate=self.kwargs['cate'])
-        return self.obj
+        self.object = CategoryTable.objects.get(cate=self.kwargs['cate'])
+        return self.object
 
     def get_context_data(self, **kwargs):
         context = super(CategoryView, self).get_context_data(**kwargs)
-        context['cate_books'] = self.obj.cate_books.all()[:5]
+        context['cate_books'] = self.object.cate_books.select_related('author').all()[:6]\
+            .only('author', 'resume', 'image', 'title', 'id', 'category_id')
         return context
 
 
 class InfoView(DetailView):
 
     template_name = 'novel_site/info.html'
-    # context_object_name = 'all_chapters'
+    context_object_name = 'book'
 
-    # def get(self, request, *args, **kwargs):
-    #     self.object = self.get_object(queryset=InfoTable.objects.all())
-    #     return super(InfoView, self).get(request, *args, **kwargs)
     def get_queryset(self):
-        return InfoTable.objects.select_related()  # 返回所有的书
+        return InfoTable.objects.select_related('author', 'category')  # 返回所有的书
 
     def get_context_data(self, **kwargs):
         context = super(InfoView, self).get_context_data(**kwargs)  # 这里面已经将infotable的get(id=n)赋给self.object了
@@ -77,7 +78,7 @@ class InfoView(DetailView):
         context['all_chapters'] = all_chapters
         try:
             context['latest_chapter'] = all_chapters[-1]
-            context['latest_ten_chapters'] = reversed(all_chapters[-8:])
+            context['latest_eight_chapters'] = reversed(all_chapters[-8:])
         except IndexError:
             pass
         return context
@@ -88,106 +89,60 @@ class BookView(DetailView):
     template_name = 'novel_site/detail.html'
     pk_url_kwarg = 'index'
 
-    def get_adjacent_page(self):  # 这个是通过判断序号是否超出范围来决定前后的url
-        ll = list(self.book_info.all_chapters_id_only)  # 这里是通过找所有的id来判断是否有前后
-        index = ll.index(self.object)
-        if index - 1 < 0:
-            last_page_url = self.book_info.get_absolute_url()
-        else:
-            last_page_url = ll[index-1].get_absolute_url()
-        if index + 1 < len(ll):
-            next_page_url = ll[index+1].get_absolute_url()
-        else:
-            next_page_url = self.book_info.get_absolute_url()
-        return last_page_url, next_page_url
+    # def get_adjacent_page(self):  # 这个是通过判断序号是否超出范围来决定前后的url
+    #     ll = list(self.object.all_chapters_id_only)  # 这里是通过找所有的id来判断是否有前后
+    #     index = ll.index(self.queryset)
+    #     if index - 1 < 0:
+    #         last_page_url = self.object.get_absolute_url()
+    #     else:
+    #         last_page_url = ll[index-1].get_absolute_url()
+    #     if index + 1 < len(ll):
+    #         next_page_url = ll[index+1].get_absolute_url()
+    #     else:
+    #         next_page_url = self.object.get_absolute_url()
+    #     return last_page_url, next_page_url
 
 # 可以通过直接构造前后的id来判断，若找不到就返回首页
+    def get_adjacent_page(self):  # 这个是通过判断序号是否超出范围来决定前后的url
+        paginator = Paginator(self.queryset.order_by('id'), 1)
+
+        try:
+            _tmp = paginator.page(self.kwargs['index'])
+        except EmptyPage or PageNotAnInteger:
+            _tmp = paginator.page(paginator.num_pages)
+
+        if _tmp.has_next():
+            next_page_url = host_reverse('novel_site:detail', host='www',
+                                         kwargs={'pk': self.kwargs['pk'], 'index': str(_tmp.next_page_number())})
+        else:
+            next_page_url = host_reverse('novel_site:info', host='www', kwargs={'pk': self.kwargs['pk']})
+
+        if _tmp.has_previous():
+            previous_page_url = host_reverse('novel_site:detail', host='www',
+                                             kwargs={'pk': self.kwargs['pk'], 'index': str(_tmp.previous_page_number())})
+        else:
+            previous_page_url = host_reverse('novel_site:info', host='www', kwargs={'pk': self.kwargs['pk']})
+
+        return previous_page_url, next_page_url
 
     def get_queryset(self):
-        self.book_info = InfoTable.objects.defer('resume', 'image', 'update_time', '_status').select_related().get(pk=self.kwargs['pk'])
-        return self.book_info.all_chapters_detail  # 传给父类的get object，再寻找对应的条目
+        self.book_info = InfoTable.objects.select_related('category')\
+            .only('title', 'id', 'store_des', 'category_id').get(pk=self.kwargs['pk'])
+        self.queryset = self.book_info.all_chapters_detail
+        return self.queryset
 
     def get_context_data(self, **kwargs):
         context = super(BookView, self).get_context_data(**kwargs)
         context['book_info'] = self.book_info
-        context['last_page'], context['next_page'] = self.get_adjacent_page()
+        context['previous_page'], context['next_page'] = self.get_adjacent_page()
         return context
 
 
 class QuanbenView(ListView):
 
     template_name = 'novel_site/quanben.html'
-    queryset = InfoTable.objects.filter(_status=True).order_by('update_time')
+    queryset = InfoTable.objects.select_related('author', 'category').filter(_status=True).order_by('update_time')
     context_object_name = 'books'
-
-
-class MobileHomeView(TemplateView):
-    template_name = 'mobile/home.html'
-
-    def get_context_data(self, **kwargs):
-        # context = super(MobileHomeView, self).get_context_data(**kwargs)
-        # context['cate_book'] = get_book_from_cate()
-        # return context
-        return {'cate_book': get_book_from_cate()}
-
-
-class MobileQuanbenView(TemplateView):  # unfinished
-    template_name = 'mobile/quanben.html'
-
-
-class MobileCategoryView(CategoryView):
-    template_name = 'mobile/category.html'
-
-    def get_context_data(self, **kwargs):
-        return {'cate_books': self.obj.cate_books.all()[:10]}
-
-
-class MobileInfoView(InfoView):
-    template_name = 'mobile/info.html'
-    context_object_name = 'info'
-
-    def get_context_data(self, **kwargs):
-        context = super(InfoView, self).get_context_data(**kwargs)
-        try:
-            all_chapters = self.object.all_chapters.order_by('-id')[:12]
-            context['all_chapters'] = all_chapters
-            context['latest_chapter'] = all_chapters[0]
-        except IndexError:
-            pass
-        return context
-
-
-class MobileBookView(DetailView):
-    template_name = 'mobile/detail.html'
-    pk_url_kwarg = 'index'
-    context_object_name = 'book'
-
-    def get_adjacent_page(self):  # 这里是直接构造前后的url，然后回db里判断是否存在
-        try:
-            index = int(self.kwargs['index'])
-            if self.queryset.filter(pk=index-1).exists():
-                last_page_url = reverse('novel_site:m_detail', kwargs={'pk': self.kwargs['pk'], 'index': str(index-1)})
-            else:
-                last_page_url = self.mulu_url
-            if self.queryset.filter(pk=index+1).exists():
-                next_page_url = reverse('novel_site:m_detail', kwargs={'pk': self.kwargs['pk'], 'index': str(index+1)})
-            else:
-                next_page_url = self.mulu_url
-            return last_page_url, next_page_url
-        except TypeError:
-            pass
-
-    def get_queryset(self):
-        shili = InfoTable.objects.get(pk=self.kwargs['pk'])
-        self.mulu_url = shili.get_mobile_url()
-        self.queryset = shili.all_chapters_detail
-        return self.queryset
-
-    def get_context_data(self, **kwargs):
-        context = super(MobileBookView, self).get_context_data(**kwargs)
-        context['last_page'], context['next_page'] = self.get_adjacent_page()
-        context['mulu'] = self.mulu_url
-        return context
 
 
 class SearchView(TemplateView):

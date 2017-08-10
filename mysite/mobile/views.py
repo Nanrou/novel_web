@@ -6,7 +6,7 @@ from django.shortcuts import redirect, render
 from django.views.decorators.cache import cache_page
 # from django_hosts.resolvers import reverse
 
-from novel_site.views import CategoryView, InfoView
+from novel_site.views import CategoryView, InfoView, BookView
 from novel_site.views import get_book_from_cate
 from novel_site.models import InfoTable
 # Create your views here.
@@ -29,8 +29,8 @@ class MobileQuanbenView(TemplateView):  # unfinished
 class MobileCategoryView(CategoryView):
     template_name = 'mobile/category.html'
 
-    def get_context_data(self, **kwargs):
-        return {'cate_books': self.obj.cate_books.all()[:10]}
+    # def get_context_data(self, **kwargs):
+    #     return {'cate_books': self.obj.cate_books.all()[:10]}
 
 
 class MobileInfoView(InfoView):
@@ -38,54 +38,28 @@ class MobileInfoView(InfoView):
     context_object_name = 'info'
 
     def get_context_data(self, **kwargs):
-        context = super(InfoView, self).get_context_data(**kwargs)
-        try:
-            all_chapters = self.object.all_chapters.order_by('-id')
-            context['all_chapters'] = all_chapters[:12]
-            context['latest_chapter'] = all_chapters[0]
-        except IndexError:
-            pass
-        return context
-
-
-class MobileInfoPaginatorView(InfoView):
-    template_name = 'mobile/info_paginator.html'
-    context_object_name = 'info'
-
-    def get_context_data(self, **kwargs):
-        context = super(InfoView, self).get_context_data(**kwargs)
-
-        all_chapters = self.object.all_chapters.order_by('id')
-        page = self.kwargs['page']
-        paginator = Paginator(all_chapters, 20)
-        try:
-            contacts = paginator.page(page)
-        except PageNotAnInteger:
-            contacts = paginator.page(1)
-        except EmptyPage:
-            contacts = paginator.page(paginator.num_pages)
-            # redirect(reverse('mobile:info_paginator', host='mobile',
-            #                           kwargs={'pk': self.kwargs['pk'],
-            #                                'page': paginator.num_pages}))
-
-        context['contacts'] = contacts
-        context['num_pages'] = paginator.num_pages
-        context['page_range'] = paginator.page_range
+        context = super(MobileInfoView, self).get_context_data(**kwargs)
+        context['first_chapter'] = context['all_chapters'][0]
         return context
 
 
 @cache_page(60 * 120)
-def info_paginator(request):
+def info_paginator(request, pk, page):
     template_name = 'mobile/info_paginator.html'
 
-    pk = request.GET.get('pk')
-    page = request.GET.get('page')
+    # pk = request.GET.get('pk')
+    # page = request.GET.get('page')
+    try:
+        pk = int(pk)
+        page = int(page)
+    except ValueError:
+        redirect('/')
 
-    info = InfoTable.objects.filter(id=pk)
+    info = InfoTable.objects.select_related('author').only('id', 'store_des', 'title','author_id').get(id=pk)
     all_chapters = info.all_chapters.order_by('id')
     paginator = Paginator(all_chapters, 20)
     if page > paginator.num_pages:
-        return redirect(reverse('mobile:info_paginator', kwargs={'pk': pk, 'page': page}))
+        return redirect(reverse('mobile:info_paginator', kwargs={'pk': pk, 'page': paginator.num_pages}))
     try:
         contacts = paginator.page(page)
     except PageNotAnInteger:
@@ -95,37 +69,27 @@ def info_paginator(request):
     return render(request, template_name, {'info': info, 'contacts': contacts})
 
 
-class MobileBookView(DetailView):
+class MobileBookView(BookView):
     template_name = 'mobile/detail.html'
     pk_url_kwarg = 'index'
     context_object_name = 'book'
 
-    def get_adjacent_page(self):  # 这里是直接构造前后的url，然后回db里判断是否存在
-        try:
-            index = int(self.kwargs['index'])
-            if self.queryset.filter(pk=index-1).exists():
-                last_page_url = reverse('mobile:detail', kwargs={'pk': self.kwargs['pk'], 'index': str(index-1)})
-            else:
-                last_page_url = self.mulu_url
-            if self.queryset.filter(pk=index+1).exists():
-                next_page_url = reverse('mobile:detail', kwargs={'pk': self.kwargs['pk'], 'index': str(index+1)})
-            else:
-                next_page_url = self.mulu_url
-            return last_page_url, next_page_url
-        except TypeError:
-            pass
+    # def get_queryset(self):
+    #     shili = InfoTable.objects.get(pk=self.kwargs['pk'])
+    #     self.mulu_url = shili.get_mobile_url()
+    #     self.queryset = shili.all_chapters_detail
+    #     return self.queryset
 
     def get_queryset(self):
-        shili = InfoTable.objects.get(pk=self.kwargs['pk'])
-        self.mulu_url = shili.get_mobile_url()
-        self.queryset = shili.all_chapters_detail
+        self.book_info = InfoTable.objects.only('title', 'id', 'store_des').get(pk=self.kwargs['pk'])
+        self.queryset = self.book_info.all_chapters_detail
         return self.queryset
 
-    def get_context_data(self, **kwargs):
-        context = super(MobileBookView, self).get_context_data(**kwargs)
-        context['last_page'], context['next_page'] = self.get_adjacent_page()
-        context['mulu'] = self.mulu_url
-        return context
+    # def get_context_data(self, **kwargs):
+    #     context = super(MobileBookView, self).get_context_data(**kwargs)
+    #     context['last_page'], context['next_page'] = self.get_adjacent_page()
+    #     context['mulu'] = self.mulu_url
+    #     return context
 
 
 class MobileSearchView(TemplateView):

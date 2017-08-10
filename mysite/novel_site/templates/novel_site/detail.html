@@ -94,7 +94,7 @@
         <div class="bookname">
             <h1 id="chapter_name">{{ object.chapter }}</h1>
             <div class="bottem1">
-                <a href="{{ last_page }}">上一章</a>
+                <a href="{{ previous_page }}">上一章</a>
                 ← 
                 <a href="{{ book_info.get_absolute_url }}">章节列表</a>
                 →
@@ -121,7 +121,7 @@
         </div>
         <div class="bottem1">
         <!-- 这里看怎么复用 -->
-            <a href="{{ last_page }}">上一章</a>
+            <a href="{{ previous_page }}">上一章</a>
             ← 
             <a href="{{ book_info.get_absolute_url }}">章节列表</a>
             → 

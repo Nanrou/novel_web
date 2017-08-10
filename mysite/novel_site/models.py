@@ -65,7 +65,7 @@ class InfoTable(models.Model):
             return '连载中'
 
     def get_absolute_url(self):
-        return reverse('novel_site:info', kwargs={'pk': self.pk})
+        return hosts_reverse('novel_site:info', host='www', kwargs={'pk': self.pk})
 
     def get_mobile_url(self):
         return hosts_reverse('mobile:info', host='mobile', kwargs={'pk': self.pk})

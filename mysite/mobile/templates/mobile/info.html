@@ -24,16 +24,16 @@
             <p>分类：{{ info.category }}</p>
             <p>状态：{{ info.status }}</p>
             <p>更新：{{ info.update_time|date:'Y-m-d H:i:s' }}</p>
-            <p>最新：<a href="{{ latest_chapter.get_mobile_url }}">{{ latest_chapter.chapter }}</a></p>
+            <p>最新：{{ latest_chapter.chapter }}</p>
         </div>
       </div>
     <div style="clear:both"></div>
     <div class="ablum_read">
         <span class="margin_right">
-            <a href="{{ info.earliest_chapter.get_mobile_url }}">阅读第一章</a>
+            <a href="{{ first_chapter.get_mobile_url }}">阅读第一章</a>
         </span>
         <span class="margin_right">
-        <a href="">加入书架</a>
+        <a href="{{ latest_chapter.get_mobile_url }}">阅读最新一章</a>
         </span>
     </div>
     <div class="intro">{{ info.title }}小说简介</div>
@@ -42,7 +42,7 @@
     </div>
     <div class="intro">{{ info.title }}最新章节</div>
        <ul class="chapter">
-           {% for chapter in all_chapters %}
+           {% for chapter in latest_eight_chapters %}
             <li><span></span>
                 <a href="{{ chapter.get_mobile_url }}">{{ chapter.chapter }}</a>
             </li>
@@ -50,7 +50,7 @@
         </ul>
     </div>
     <div class="ablum_read">
-        <span class="margin_right" style="width: 100%;"><a href="http://m.superxiaoshuo.com/info/{{ info.id }}-1/">点击查看更多</a></span>
+        <span class="margin_right" style="width: 100%;"><a onclick="goToPaginator()">点击查看全部</a></span>
     </div>
 
 {% endblock main %}

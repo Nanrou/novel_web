@@ -3,9 +3,9 @@
 
 {% block meta_description %}
     <link rel="canonical" href="http://www.superxiaoshuo.com/book/{{ book.book_id }}/{{ book.id }}">
-    <title> {{ book.chapter }}-{{ book.title }}全文免费阅读 - 超级小说移动版</title>
-    <meta name="keywords" content=" {{ book.chapter }},{{ book.title }}全文阅读。">
-    <meta name="description" content="超级小说免费为大家提供{{ book.title }}最新章节阅读,如果你想第一时间观看下一章节,请留意以及收藏超级小说,方便你下次阅读{{ book.title }}最新章节。">
+    <title> {{ book.chapter }}-{{ book_info.title }}全文免费阅读 - 超级小说移动版</title>
+    <meta name="keywords" content=" {{ book.chapter }},{{ book_info.title }}全文阅读。">
+    <meta name="description" content="超级小说免费为大家提供{{ book_info.title }}最新章节阅读,如果你想第一时间观看下一章节,请留意以及收藏超级小说,方便你下次阅读{{ book_info.title }}最新章节。">
     <meta name="format-detection" content="telephone=no">
 {% endblock meta_description %}
 {% block script %}
@@ -27,7 +27,7 @@
 
 {% block main %}
     <div class="c_nr" id="nr_body">
-        <div style="display:none" id="book_name">{{ book.title }}</div>
+        <div style="display:none" id="book_name">{{ book_info.title }}</div>
         <div class="nr_title" id="nr_title">{{ book.chapter }}</div>
         <div class="report">
             <a rel="nofollow" href="" style="color:red">章节错误/点此举报</a>
@@ -36,8 +36,8 @@
             <table cellspacing="0" cellpadding="0">
                 <tbody>
                     <tr>
-                        <td class="prev"><a id="pt_prev" href="{{ last_page }}">上一章</a></td>
-                        <td class="mulu"><a id="pt_mulu" href="{{ mulu }}">返回目录</a></td>
+                        <td class="prev"><a id="pt_prev" href="{{ previous_page }}">上一章</a></td>
+                        <td class="mulu"><a id="pt_mulu" href="{{ book_info.get_absolute_url }}">返回目录</a></td>
                         <td class="next"><a id="pt_next" href="{{ next_page }}">下一章</a></td>
                         <td class="prev"><a rel="nofollow" href="" id="pt_shujia" style="color:red">书架</a></td>
                     </tr>
@@ -56,8 +56,8 @@
             <table cellspacing="0" cellpadding="0">
                 <tbody>
                     <tr>
-                        <td class="prev"><a id="pt_prev" href="{{ last_page }}">上一章</a></td>
-                        <td class="mulu"><a id="pt_mulu" href="{{ mulu }}">返回目录</a></td>
+                        <td class="prev"><a id="pt_prev" href="{{ previous_page }}">上一章</a></td>
+                        <td class="mulu"><a id="pt_mulu" href="{{ book_info.get_absolute_url }}">返回目录</a></td>
                         <td class="next"><a id="pt_next" href="{{ next_page }}">下一章</a></td>
                         <td class="prev"><a rel="nofollow" href="" id="pt_shujia" style="color:red">书架</a></td>
                     </tr>
