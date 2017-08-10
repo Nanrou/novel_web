@@ -8,6 +8,7 @@ import asyncio
 import datetime
 import pickle
 import json
+import shutil
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath('__file__')))))
 
@@ -364,7 +365,7 @@ def qianchengwuyou():
 
 
 @time_clock
-def collect_detail(folder='./daily_data', namelist=('z', 'q', 'l')):
+def collect_detail(folder='./', namelist=('z', 'q', 'l')):
     """
     收集文件夹中的信息，都存到一个文件中，并把其他的都删掉
     :param folder: 指定文件夹的位置
@@ -400,12 +401,13 @@ def collect_detail(folder='./daily_data', namelist=('z', 'q', 'l')):
 @time_clock
 def main():
     date_time = '{:%Y-%m-%d}'.format(datetime.datetime.today())
-    dir_path = './daily_data/' + date_time
-    if not os.path.exists(dir_path):
+    # dir_path = './daily_data/' + date_time
+    if not os.path.exists(date_time):
         zhilian()
         qianchengwuyou()
         lagou()
-        collect_detail(dir_path)
+        collect_detail(date_time)
+        shutil.move(date_time, os.path.join('./daily_data', date_time))
     else:
         print('today already do it')
 
@@ -421,3 +423,4 @@ if __name__ == '__main__':
     # resp = requests.get('http://www.51job.com/')
     # resp = requests.get(u)
     # print(resp.status_code)
+    # collect_detail('2017-08-08')
