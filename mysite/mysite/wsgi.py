@@ -12,8 +12,8 @@ import sys
 
 from django.core.wsgi import get_wsgi_application
 
-# os.environ.setdefault("DJANGO_SETTINGS_MODULE", "mysite.settings")
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "mysite.prod")
+# os.environ.setdefault("DJANGO_SETTINGS_MODULE", "mysite.settings.dev")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "mysite.settings.prod")
 
 # sys.path.insert(0, '/home/nan/code/novel_web/mysite')
 

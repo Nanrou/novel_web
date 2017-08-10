@@ -6,16 +6,17 @@ ALLOWED_HOSTS = [
     '127.0.0.1',
     'superxiaoshuo.dev',
     'm.superxiaoshuo.dev',
+    'www.superxiaoshuo.dev'
 ]
 
 DEBUG = True
 
-CACHES = {
-    'default': {
-        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
-        'LOCATION': 'lolololol',
-    },
-}
+# CACHES = {
+#     'default': {
+#         'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+#         'LOCATION': 'lolololol',
+#     },
+# }
 
 CSRF_COOKIE_SECURE = False
 
@@ -32,10 +33,9 @@ if DEBUG:
     else:
         DEBUG_TOOLBAR_CONFIG = {
             'JQUERY_URL': r"http://code.jquery.com/jquery-2.1.1.min.js",
-
         }
         INSTALLED_APPS.append('debug_toolbar')
-        INTERNAL_IPS = ['127.0.0.1', '125.89.65.71']
+        INTERNAL_IPS = ['127.0.0.1']
         MIDDLEWARE.insert(
             MIDDLEWARE.index('django.middleware.common.CommonMiddleware') + 1,
             'debug_toolbar.middleware.DebugToolbarMiddleware'

@@ -41,8 +41,10 @@
         </div>
 
         <div class="novelslist">
-        {% for book, books in cate_list1 %}
+        {% for books in cate_list1 %}
             <div class="content">
+                {% for book in books %}
+                    {% if forloop.first %}
                 <h2><a href="{{ book.category.get_absolute_url }}">{{ book.category }}</a></h2>
                 <div class="top">
                     <div class="image"><a href="{{ book.get_absolute_url }}" target="_blank"><img src="{% static book.image %}" alt="{{ book.title }}" width="67" height="82"></a></div>
@@ -53,33 +55,39 @@
                     <div class="clear"></div>
                 </div>
                 <ul>
-                    {% for book in books %}
+                    {% endif %}
                         <li><a href="{{ book.get_absolute_url }}" target="_blank">{{ book.title }}</a>/{{ book.author }}</li>
                     {% empty %}
                         <li><p>sorry, not found any book</p></li>
-                    {% endfor %}
+                    {% if forloop.last %}
                 </ul>
+                    {% endif %}
+                {% endfor %}
             </div>
         {% endfor %}
         </div>
         <div class="novelslist">
-            {% for book, books in cate_list2 %}
+            {% for books in cate_list2 %}
                 <div class="content">
-                    <h2><a href="{{ book.category.get_absolute_url }}">{{ book.category }}</a></h2>
-                    <div class="top">
-                        <div class="image"><a href="{{ book.get_absolute_url }}" target="_blank"><img src="{% static book.image %}" alt="{{ book.title }}" width="67" height="82"></a></div>
-                        <dl>
-                            <dt><a href="{{ book.get_absolute_url }}" target="_blank">{{ book.title }}</a></dt>
-                            <dd>{{ book.resume }}</dd>
-                        </dl>
-                        <div class="clear"></div>
-                    </div>
-                    <ul>
-                    </ul>
                     {% for book in books %}
-                        <li><a href="{{ book.get_absolute_url }}" target="_blank">{{ book.title }}</a>/{{ book.author }}</li>
+                        {% if forloop.first %}
+                            <h2><a href="{{ book.category.get_absolute_url }}">{{ book.category }}</a></h2>
+                            <div class="top">
+                                <div class="image"><a href="{{ book.get_absolute_url }}" target="_blank"><img src="{% static book.image %}" alt="{{ book.title }}" width="67" height="82"></a></div>
+                                <dl>
+                                    <dt><a href="{{ book.get_absolute_url }}" target="_blank">{{ book.title }}</a></dt>
+                                    <dd>{{ book.resume }}</dd>
+                                </dl>
+                                <div class="clear"></div>
+                            </div>
+                            <ul>
+                        {% endif %}
+                    <li><a href="{{ book.get_absolute_url }}" target="_blank">{{ book.title }}</a>/{{ book.author }}</li>
                     {% empty %}
-                        <p>sorry, not found any book</p>
+                    <li><p>sorry, not found any book</p></li>
+                    {% if forloop.last %}
+                        </ul>
+                    {% endif %}
                     {% endfor %}
                 </div>
             {% endfor %}
