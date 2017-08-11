@@ -29,12 +29,12 @@
                 <h2>上期强推</h2>
                 <ul>
                     {# 这里可以考虑写死 #}
-                    <li><span class="s1">[玄幻]</span><span class="s2"><a href="http://www.superxiaoshuo.com.org/files/article/56/56048/" target="_blank">择天记</a></span><span class="s5">猫腻</span></li>
-                    <li><span class="s1">[玄幻]</span><span class="s2"><a href="http://www.superxiaoshuo.com.org/files/article/77/77081/" target="_blank">雪鹰领主</a></span><span class="s5">我吃西红柿</span></li>
-                    <li><span class="s1">[玄幻]</span><span class="s2"><a href="http://www.superxiaoshuo.com.org/files/article/41/41211/" target="_blank">永夜君王</a></span><span class="s5">烟雨江南</span></li>
-                    <li><span class="s1">[玄幻]</span><span class="s2"><a href="http://www.superxiaoshuo.com.org/files/article/16/16866/" target="_blank">武炼巅峰</a></span><span class="s5">莫默</span></li>
-                    <li><span class="s1">[玄幻]</span><span class="s2"><a href="http://www.superxiaoshuo.com.org/files/article/71/71638/" target="_blank">天域苍穹</a></span><span class="s5">风凌天下</span></li>
-                    <li><span class="s1">[玄幻]</span><span class="s2"><a href="http://www.superxiaoshuo.com.org/files/article/75/75172/" target="_blank">太古神王</a></span><span class="s5">净无痕</span></li>
+                    <li><span class="s1">[玄幻修仙]</span><span class="s2"><a href="http://www.superxiaoshuo.com.org/files/article/56/56048/" target="_blank">择天记</a></span><span class="s5">猫腻</span></li>
+                    <li><span class="s1">[玄幻修仙]</span><span class="s2"><a href="http://www.superxiaoshuo.com.org/files/article/77/77081/" target="_blank">雪鹰领主</a></span><span class="s5">我吃西红柿</span></li>
+                    <li><span class="s1">[玄幻修仙]</span><span class="s2"><a href="http://www.superxiaoshuo.com.org/files/article/41/41211/" target="_blank">永夜君王</a></span><span class="s5">烟雨江南</span></li>
+                    <li><span class="s1">[玄幻修仙]</span><span class="s2"><a href="http://www.superxiaoshuo.com.org/files/article/16/16866/" target="_blank">武炼巅峰</a></span><span class="s5">莫默</span></li>
+                    <li><span class="s1">[玄幻修仙]</span><span class="s2"><a href="http://www.superxiaoshuo.com.org/files/article/71/71638/" target="_blank">天域苍穹</a></span><span class="s5">风凌天下</span></li>
+                    <li><span class="s1">[玄幻修仙]</span><span class="s2"><a href="http://www.superxiaoshuo.com.org/files/article/75/75172/" target="_blank">太古神王</a></span><span class="s5">净无痕</span></li>
                 </ul>
             </div>
             <div class="clear"></div>
@@ -100,26 +100,37 @@
             <div class="l">
                 <h2>最近更新小说</h2>
                 <ul>
-
-                    <li><span class="s1">[历史小说]</span><span class="s2"><a href="http://www.superxiaoshuo.com.org/files/article/86/86752/" target="_blank">诡三国</a></span><span class="s3"><a href="http://www.superxiaoshuo.com.org/files/article/86/86752/19277484.html" target="_blank">第三三七章 风起</a></span><span class="s4">马月猴年</span><span class="s5">05-11</span></li>
-
+                {% for book in latest_books %}
+                    <li>
+                        <span class="s1" style="width: 12%">[ {{ book.category }} ]</span>
+                        <span class="s2" style="width: 18%"><a href="{{ book.get_absolute_url }}" target="_blank">{{ book.title }}</a></span>
+                        <span class="s3" style="width: 45%"><a href="{{ book.latest_chapter_url }}" target="_blank">{{ book.latest_chapter }}</a></span>
+                        <span class="s4" style="width: 15%">{{ book.author }}</span>
+                        <span class="s5" style="padding-right: 10px; color: #555555">{{ book.update_time|date:"H:i" }}</span>
+                    </li>
+                {% endfor %}
                 </ul>
             </div>
             <div class="r">
                 <h2>最新入库小说</h2>
                 <ul>
-
-                    <li><span class="s1">[其他]</span><span class="s2"><a href="http://www.superxiaoshuo.com.org/files/article/86/86876/" target="_blank">穿梭时空的剑仙</a></span><span class="s5">04-05</span></li>
-
+                {% for book in newest_books %}
+                    <li>
+                        <span class="s1" style="width: 30%">[ {{ book.category }} ]</span>
+                        <span class="s2" style="width: 50%; text-align: right"><a href="{{ book.get_absolute_url }}" target="_blank">{{ book.title }}</a></span>
+                        <span class="s5">{{ book.update_time|date:"m-d" }}</span>
+                    </li>
+                {% endfor %}
                 </ul>
             </div>
         <div class="clear"></div>
     </div>
 </div>
 <div id="firendlink">
-友情连接：<a href="http://www.baidu.com/" target="_blank">百度</a>
-<a href="http://www.superxiaoshuo.com.org/" target="_blank">超级小说</a>
-<a href="https://www.githup.com/" target="_blank">全球最大同性交友平台</a>
+友情连接：
+    <a href="http://www.baidu.com/" target="_blank">百度</a>
+    <a href="http://www.superxiaoshuo.com.org/" target="_blank">超级小说</a>
+    <a href="https://www.githup.com/" target="_blank">全球最大同性交友平台</a>
 </div>
 {% endblock main %}
 

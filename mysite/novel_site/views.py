@@ -39,12 +39,20 @@ class HomeView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = dict()
-        context['top_four'] = \
-            InfoTable.objects.select_related('author').filter(id__lt=5).only('title', 'author', 'resume', 'image')
+        context['top_four'] = InfoTable.objects.select_related('author').filter(id__lt=5)\
+            .only('title', 'author', 'resume', 'image')
 
         cate_list = get_book_from_cate()
         context['cate_list1'] = cate_list[0:3]
         context['cate_list2'] = cate_list[3:]
+
+        context['latest_books'] = InfoTable.objects.select_related('author', 'category')\
+            .only('category', 'author', 'title', 'latest_chapter', 'latest_chapter_url', 'id', 'update_time') \
+            .order_by('update_time').all()[:20]
+
+        context['newest_books'] = InfoTable.objects.select_related('category')\
+            .only('author', 'title', 'id', 'category', 'update_time')\
+            .order_by('-id').all()[:20]
 
         return context
 
@@ -61,6 +69,12 @@ class CategoryView(DetailView):
         context = super(CategoryView, self).get_context_data(**kwargs)
         context['cate_books'] = self.object.cate_books.select_related('author').all()[:6]\
             .only('author', 'resume', 'image', 'title', 'id', 'category_id')
+        context['recommend_books'] = self.object.cate_books.select_related('author').all()[:20] \
+            .only('author', 'title', 'id', 'category')
+        context['latest_books'] = self.object.cate_books.select_related('author')\
+            .only('category', 'author', 'title', 'latest_chapter', 'latest_chapter_url', 'id', 'update_time')\
+            .order_by('update_time').all()[:20]
+
         return context
 
 

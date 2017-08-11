@@ -4,7 +4,7 @@ ul li{list-style:none outside none;}
 a{color:#6F78A7;text-decoration:none;}
 a:hover {text-decoration:underline; top:-1px;}
 .clear{clear:both;}
-.ywtop_sethome,.ywtop_addfavorite,.frii .int,.reader_mark0 a,.reader_mark1 a,#fmimg span{scroll 0 0 transparent;}
+.ywtop_sethome,.ywtop_addfavorite,.frii .int,.reader_mark0 a,.reader_mark1 a,#fmimg span{scroll: 0 0 transparent;}
 .ywtop{background-color:#E1ECED;border-bottom:1px solid #A6D3E8;color:gray;height:28px;min-width:960px;width:100%;}
 .ywtop_con{line-height:28px;text-indent:16px;vertical-align:middle;width:960px;margin:0 auto;}
 .ywtop_sethome{background-position:0 8px;display:inline;float:left;margin-right:20px;}
@@ -51,7 +51,7 @@ table.grid td { background-color: #FFFFFF !important; border: 1px solid #C3DFEA;
 #hotcontent .l .item dl{float:right;width:190px;padding:0 5px 0 0;}
 #hotcontent .l .item .image{float:left;width:120px;}
 #hotcontent .l .item .image img{background-color:#FFF;border:1px solid #DDD;padding:1px;}
-#hotcontent .ll{ background:#FBF6EC; border:3px solid #B8C3CF; margin: 10px auto; padding:5px;  float:left; width:964px; height:320px; overflow:hidden;}
+#hotcontent .ll{ background:#FBF6EC; border:3px solid #B8C3CF; margin-bottom: 10px; padding:5px;  float:left; width:964px; height:320px; overflow:hidden;}
 #hotcontent .ll .item{ width:315px; float:left; padding:2px 0px 0px 5px;border-right-width: 1px;border-color: #8585c9;border-right-style: solid;border-bottom-width: 1px;border-bottom-style: solid;}
 #hotcontent .ll .item .image{ float:left; width:120px;}
 #hotcontent .ll .item .image img{ border:solid 1px #DDDDDD; padding:1px; background-color:White;}
