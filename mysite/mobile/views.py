@@ -33,13 +33,29 @@ class MobileCategoryView(ListView):
 
     def get_queryset(self):
         self.cate = CategoryTable.objects.get(cate=self.kwargs['cate'])
-        self.queryset = self.cate.cate_books.select_related('author').all()[:6]\
-            .defer('_status', 'update_time', 'store_des')
+        _cate_books = self.cate.cate_books.select_related('author').all()\
+            .defer('_status', 'update_time', 'store_des').order_by('id')
+
+        page_num = self.kwargs.get('page')
+
+        paginator = Paginator(_cate_books, 10)
+        self._page_range = paginator.page_range
+        self._num_pages = paginator.num_pages
+
+        try:
+            self.queryset = paginator.page(page_num)
+        except EmptyPage:
+            self.queryset = paginator.page(self._num_pages)
+        except PageNotAnInteger:
+            self.queryset = paginator.page(1)
+
         return self.queryset  # 以后要改成翻页
 
     def get_context_data(self, **kwargs):
         context = super(MobileCategoryView, self).get_context_data(**kwargs)
         context['cate'] = self.cate
+        context['page_range'] = self._page_range
+        context['num_pages'] = self._num_pages
         return context
 
 
@@ -61,7 +77,6 @@ def info_paginator(request, pk, page):
     # page = request.GET.get('page')
     try:
         pk = int(pk)
-        page = int(page)
     except ValueError:
         return redirect('/')
 
@@ -74,7 +89,7 @@ def info_paginator(request, pk, page):
         return redirect(reverse('mobile:info_paginator', kwargs={'pk': pk, 'page': 1}))
     except EmptyPage:
         return redirect(reverse('mobile:info_paginator', kwargs={'pk': pk, 'page': paginator.num_pages}))
-    return render(request, template_name, {'info': info, 'contacts': contacts})
+    return render(request, template_name, {'info': info, 'contacts': contacts, 'page_range': paginator.page_range})
 
 
 class MobileBookView(BookView):

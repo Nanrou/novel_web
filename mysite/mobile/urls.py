@@ -10,6 +10,7 @@ urlpatterns = [
     url(r'^$', cache_page(60 * 30)(views.MobileHomeView.as_view()), name='home'),
     url(r'^cate/quanben/$', views.MobileQuanbenView.as_view(), name='quanben'),
     url(r'^cate/(?P<cate>[a-z]+)/$', cache_page(60 * 60)(views.MobileCategoryView.as_view()), name='category'),
+    url(r'^cate/(?P<cate>[a-z]+)-(?P<page>[0-9]+)/$', cache_page(60 * 60)(views.MobileCategoryView.as_view()), name='category'),
     url(r'^info/(?P<pk>[0-9]+)/$', cache_page(60 * 120)(views.MobileInfoView.as_view()), name='info'),
     url(r'^info/(?P<pk>[0-9]+)-(?P<page>[0-9]+)/$', views.info_paginator, name='info_paginator'),
     url(r'^book/(?P<pk>[0-9]+)/(?P<index>[0-9]+)/$', views.MobileBookView.as_view(), name='detail'),

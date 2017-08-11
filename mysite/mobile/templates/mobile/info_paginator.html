@@ -28,7 +28,7 @@
         <div style="font-size: 18px;">
             <form action="">
                 请选择页数
-                <select id="page_num" style="width: 75px; height: 30px; font-size: 20px; margin-top: 5px;"  onchange="goToPaginator()">
+                <select id="page_num" style="width: 75px; height: 30px; font-size: 20px; margin-top: 5px;"  onchange="Paginator()">
                     {% for page in page_range %}
                         {% if page == contacts.number %}
                         <option value="{{ page }}"  selected="selected">{{ page }}</option>
