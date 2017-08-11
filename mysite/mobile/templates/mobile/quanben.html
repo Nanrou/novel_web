@@ -1,24 +1,23 @@
 {% extends 'mobile/category.html' %}
 {% load staticfiles %}
 
-{% block meta_description %}
-    <link rel="canonical" href="http://www.superxiaoshuo.com/files/article/17/17543/">
-    <meta property="og:url" content="http://m.superxiaoshuo.com/files/article/17/17543/">
-
-    <title>绝世唐门最新章节列表_绝世唐门无弹窗全文阅读_绝世唐门燃文</title>
-    <meta name="keywords" content="绝世唐门,绝世唐门最新章节列表,绝世唐门无弹窗广告全文阅读,绝世唐门燃文小说。">
-    <meta name="description" content="《绝世唐门》是唐家三少的作品,燃文小说提供绝世唐门最新章节列表全文阅读,燃文小说保证比同类网站更新更快,绝无弹窗广告保证无章节错误100%正确保证无广告,《绝世唐门》无弹窗广告最佳全文阅读体验就在燃文小说。">
-{% endblock meta_description %}
-
-{% block main %}
-    <div class="toptab"><span class="active">玄幻小说</span></div>
-    <div class="bookbox"><div class="bookimg"><a href="http://m.superxiaoshuo.com/files/article/81/81234/"><img src="%E7%8E%84%E5%B9%BB%E5%B0%8F%E8%AF%B4%E5%B0%8F%E8%AF%B4%E6%8E%92%E8%A1%8C%E6%A6%9C-%E7%87%83%E6%96%87%E5%B0%8F%E8%AF%B4%E7%A7%BB%E5%8A%A8%E7%89%88_files/81234m.jpg" onerror="this.src='http://www.superxiaoshuo.com/modules/article/images/nocover.jpg'"></a></div><div class="bookinfo"><h4 class="bookname"><a href="http://m.superxiaoshuo.com/files/article/81/81234/">盖世帝尊</a></h4><div class="author">作者：一叶青天</div><div class="cl0"></div><div class="update"><span>更新至：</span><a href="http://m.superxiaoshuo.com/files/article/81/81234/19668057.html">第三千四百一十六章 无上战力！</a></div><div class="cl0"></div><div class="intro_line"><span>简介：</span>    乱古岁月，诸圣争霸。一个号称“睡神”的少年，因祸得福开启一门逆天功法。从此以后，一个肉体无双的奇才，横压天地，剑斩星辰，万千奇才在他脚下匍匐颤栗。群雄崛起的年代，唯我霸武独尊！VIP订阅群：434739889
-    </div></div></div>
-    <div class="bookbox"><div class="bookimg"><a href="http://m.superxiaoshuo.com/files/article/86/86274/"><img src="%E7%8E%84%E5%B9%BB%E5%B0%8F%E8%AF%B4%E5%B0%8F%E8%AF%B4%E6%8E%92%E8%A1%8C%E6%A6%9C-%E7%87%83%E6%96%87%E5%B0%8F%E8%AF%B4%E7%A7%BB%E5%8A%A8%E7%89%88_files/86274m.jpg" onerror="this.src='http://www.superxiaoshuo.com/modules/article/images/nocover.jpg'"></a></div><div class="bookinfo"><h4 class="bookname"><a href="http://m.superxiaoshuo.com/files/article/86/86274/">太古星帝</a></h4><div class="author">作者：烧刀</div><div class="cl0"></div><div class="update"><span>更新至：</span><a href="http://m.superxiaoshuo.com/files/article/86/86274/19668049.html">第940章 差点就死了</a></div><div class="cl0"></div><div class="intro_line"><span>简介：</span>    繁星大陆，星辰亿万，武道之人，可觉醒星魂，进而强化自身，变的无比强大，与天地争锋。
-        洛辰，一个无法觉醒星魂的废人，遵循母亲遗愿去认祖归宗，却遭遇凌辱，濒临死亡，但却也因此触动了父亲遗留之物，觉醒能够升级的奇异星魂。
-        从此踏上强者之路，与美...</div></div></div>
-
-    <div class="page"><a href="http://m.superxiaoshuo.com/xuanhuan/2">下页</a><a href="http://m.superxiaoshuo.com/xuanhuan/2785"> 尾页</a></div><div class="page"><form name="checklogin" method="post" action="">输入页数<input name="page" format="*N" size="4"><input name="submit" value="跳转" onclick="window.location='/xuanhuan/'+this.previousSibling.value;" type="button"> </form>(第1/2785页)当前15条/页</div>
-{% endblock main %}
+{% block content_part %}
+    <div class="toptab"><span class="active">{{ cate }}</span></div>
+    {% for book in cate_books %}
+        <div class="bookbox">
+            <div class="bookinfo">
+                <a href="{{ book.get_mobile_url }}">
+                    <h4 class="bookname">{{ book.title }}</h4>
+                    <div class="author">作者：{{ book.author }}</div>
+                    <div class="author">分类：{{ book.category }}</div>
+                    <div class="author">状态：已完结</div>
+                    <div class="intro_line">
+                        <span>简介：</span>{{ book.resume|truncatechars:80 }}
+                    </div>
+                </a>
+            </div>
+        </div>
+    {% endfor %}
+{% endblock content_part %}
 
 

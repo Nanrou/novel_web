@@ -24,7 +24,7 @@
             <p>分类：{{ info.category }}</p>
             <p>状态：{{ info.status }}</p>
             <p>更新：{{ info.update_time|date:'Y-m-d H:i:s' }}</p>
-            <p>最新：{{ latest_chapter.chapter }}</p>
+            <p>最新：{{ info.latest_chapter }}</p>
         </div>
       </div>
     <div style="clear:both"></div>
@@ -33,7 +33,7 @@
             <a href="{{ first_chapter.get_mobile_url }}">阅读第一章</a>
         </span>
         <span class="margin_right">
-        <a href="{{ latest_chapter.get_mobile_url }}">阅读最新一章</a>
+        <a href="{{ info.latest_chapter }}">阅读最新一章</a>
         </span>
     </div>
     <div class="intro">{{ info.title }}小说简介</div>

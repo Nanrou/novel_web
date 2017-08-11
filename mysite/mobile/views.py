@@ -23,18 +23,17 @@ class MobileHomeView(TemplateView):
         return {'cate_book': get_book_from_cate()}
 
 
-class MobileQuanbenView(TemplateView):  # unfinished
-    template_name = 'mobile/quanben.html'
-
-
 class MobileCategoryView(ListView):
     template_name = 'mobile/category.html'
     context_object_name = 'cate_books'
 
-    def get_queryset(self):
-        self.cate = CategoryTable.objects.get(cate=self.kwargs['cate'])
-        _cate_books = self.cate.cate_books.select_related('author').all()\
+    def _get_cate_books(self):
+        return self.cate.cate_books.select_related('author').all()\
             .defer('_status', 'update_time', 'store_des').order_by('id')
+
+    def get_queryset(self):
+        self.cate = CategoryTable.objects.get(cate=self.kwargs.get('cate', 'quanben'))
+        _cate_books = self._get_cate_books()
 
         page_num = self.kwargs.get('page')
 
@@ -57,6 +56,16 @@ class MobileCategoryView(ListView):
         context['page_range'] = self._page_range
         context['num_pages'] = self._num_pages
         return context
+
+
+class MobileQuanbenView(MobileCategoryView):
+    template_name = 'mobile/quanben.html'
+    context_object_name = 'cate_books'
+
+    def _get_cate_books(self):
+        return InfoTable.objects.select_related('author', 'category')\
+            .filter(_status=True).defer('image', 'store_des', 'latest_chapter_url')\
+            .order_by('update_time')
 
 
 class MobileInfoView(InfoView):

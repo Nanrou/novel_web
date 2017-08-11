@@ -4,7 +4,7 @@
 
 {% block meta_description %}
 <title>超级小说_{{ book.title }}最新章节</title>
-<meta name="keywords" content="{{ book.title }},{{ book.title }}txt下载，{{ book.title }}最新章节,{{ book.title }}无弹窗广告全文阅读,{{ book.title }}超级小说。">
+<meta name="keywords" content="{{ book.title }},{{ book.latest_chapter }},{{ book.title }}txt下载，{{ book.title }}最新章节,{{ book.title }}无弹窗广告全文阅读,{{ book.title }}超级小说。">
 <meta name="description" content="《{{ book.title }}》是{{ book.author }}的作品,超级小说提供{{ book.title }}最新章节列表全文阅读,超级小说保证比同类网站更新更快,绝无弹窗广告保证无章节错误100%正确保证无广告,《{{ book.title }}》无弹窗广告全文阅读就在超级小说。">
 <link rel="alternate" href="http://m.superxiaoshuo.com/info/{{ book.id }}">
 {% endblock meta_description %}
@@ -25,7 +25,7 @@
                 {# 这个加入收藏和到底部要重写 #}
                 <p>状态：{{ book.status }},  <a rel="nofollow" href="" target="_blank">加入收藏</a>, <a href="#footer">直达底部</a></p>
                 <p>最后更新：{{ book.update_time|date:'Y-m-d H:i:s' }}</p>
-                <p>最新章节：<a href="{{ latest_chapter.get_absolute_url }}" target="_blank">{{ latest_chapter.chapter }}</a></p>
+                <p>最新章节：<a href="{{ book.latest_chapter_url }}" target="_blank">{{ book.latest_chapter }}</a></p>
 
             </div>
             <div id="intro">
@@ -55,7 +55,7 @@
     <div id="list">
         <dl>
             <dt>《{{ book.title }}》最新章节</dt>
-            {%  for n_chapter in latest_ten_chapters %}
+            {%  for n_chapter in latest_eight_chapters %}
                 <dd><a href="{{ n_chapter.get_absolute_url }}">{{ n_chapter.chapter}}</a></dd>
             {% endfor %}
         </dl>
@@ -65,11 +65,6 @@
     <div id="list">
         <dl>
             <dt>《{{ book.title }}》正文</dt>
-            {% comment %}
-            {%  for chapter in book.all_chapters %}
-            <dd><a href="{{ chapter.get_absolute_url }}">{{ chapter.chapter}}</a></dd>
-            {% endfor %}
-            {% endcomment %}
             {%  for chapter in all_chapters %}
                 <dd><a href="{{ chapter.get_absolute_url }}">{{ chapter.chapter}}</a></dd>
             {% endfor %}

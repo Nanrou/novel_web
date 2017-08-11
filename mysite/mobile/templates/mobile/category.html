@@ -20,68 +20,60 @@
 {% endblock header %}
 
 {% block main %}
-    <div class="content">
-        <ul>
-            <li class="prev"><a href="/cate/xuanhuan/">玄幻修真</a></li>
-            <li class="prev"><a href="/cate/kehuan/">科幻网游</a></li>
-            <li class="prev"><a href="/cate/dushi/">都市重生</a></li>
-        </ul>
-        <ul>
-            <li class="prev"><a href="/cate/jiakong/">架空历史</a></li>
-            <li class="prev"><a href="/cate/kongbu/">恐怖网游</a></li>
-            <li class="prev"><a href="/cate/quanben/">全本小说</a></li>
-        </ul>
-    </div>
-
-    <div class="toptab"><span class="active">{{ cate }}小说</span></div>
-
-    {% for book in cate_books %}
-    <div class="bookbox">
-        <div class="bookimg">
-            <a href="{{ book.get_mobile_url }}">
-                <img src="{% static book.image %}" onerror="this.src='{% static book.miss_img_path %}'">
-            </a>
+    {% block content_part %}
+        <div class="content">
+            <ul>
+                <li class="prev"><a href="/cate/xuanhuan/">玄幻修真</a></li>
+                <li class="prev"><a href="/cate/kehuan/">科幻网游</a></li>
+                <li class="prev"><a href="/cate/dushi/">都市重生</a></li>
+            </ul>
+            <ul>
+                <li class="prev"><a href="/cate/jiakong/">架空历史</a></li>
+                <li class="prev"><a href="/cate/kongbu/">恐怖网游</a></li>
+                <li class="prev"><a href="/cate/quanben/">全本小说</a></li>
+            </ul>
         </div>
-        <div class="bookinfo">
-            <h4 class="bookname"><a href="{{ book.get_mobile_url }}">{{ book.title }}</a></h4>
-            <div class="author">作者：{{ book.author }}</div>
-            <div class="update"><span>更新至：</span><a href="{{ book.latest_chapter_url }}">{{ book.latest_chapter }}</a></div>
-            <div class="intro_line">
-                <span>简介：</span>{{ book.resume|truncatechars:30 }}
+
+        <div class="toptab"><span class="active">{{ cate }}小说</span></div>
+
+        {% for book in cate_books %}
+        <div class="bookbox">
+            <div class="bookimg">
+                <a href="{{ book.get_mobile_url }}">
+                    <img src="{% static book.image %}" onerror="this.src='{% static book.miss_img_path %}'">
+                </a>
+            </div>
+            <div class="bookinfo">
+                <h4 class="bookname"><a href="{{ book.get_mobile_url }}">{{ book.title }}</a></h4>
+                <div class="author">作者：{{ book.author }}</div>
+                <div class="update"><span>更新至：</span><a href="{{ book.latest_chapter_url }}">{{ book.latest_chapter }}</a></div>
+                <div class="intro_line">
+                    <span>简介：</span>{{ book.resume|truncatechars:30 }}
+                </div>
             </div>
         </div>
-    </div>
-    {% endfor %}
-
-    {% comment %}
-    <div class="page">
-        <a href="http://m.superxiaoshuo.com/xuanhuan/2">下页</a>
-        <a href="http://m.superxiaoshuo.com/xuanhuan/2785">尾页</a>
-    </div>
-    <div class="page">
-        <form name="checklogin" method="post" action="">输入页数<input name="page" format="*N" size="4"><input name="submit" value="跳转" onclick="window.location='/xuanhuan/'+this.previousSibling.value;" type="button">
-        </form>(第1/2785页)当前15条/页
-    </div>
-    {% endcomment %}
-
-    <div class="page">
-        <div style="font-size: 18px;">
-            <form action="">
-                请选择页数
-                <select id="page_num" style="width: 75px; height: 30px; font-size: 20px; margin-top: 5px;"  onchange="Paginator()">
-                    {% for page in page_range %}
-                        {% if page == cate_books.number %}
-                            <option value="{{ page }}"  selected="selected">{{ page }}</option>
-                        {% else %}
-                            <option value="{{ page }}">{{ page }}</option>
-                        {% endif %}
-                    {% endfor %}
-                </select>
-                <button type="button" style="margin-left: 10px; padding: 2px 15px;"  onclick="Paginator()">GO</button>
-            </form>
+        {% endfor %}
+    {% endblock content_part %}
+    {% block paginator_part %}
+        <div class="page">
+            <div style="font-size: 18px;">
+                <form action="">
+                    请选择页数
+                    <select id="page_num" style="width: 75px; height: 30px; font-size: 20px; margin-top: 5px;"  onchange="Paginator()">
+                        {% for page in page_range %}
+                            {% if page == cate_books.number %}
+                                <option value="{{ page }}"  selected="selected">{{ page }}</option>
+                            {% else %}
+                                <option value="{{ page }}">{{ page }}</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                    <button type="button" style="margin-left: 10px; padding: 2px 15px;"  onclick="Paginator()">GO</button>
+                </form>
+            </div>
+            <br/>
+            第{{ cate_books.number }}/{{ num_pages }}页
         </div>
-        <br/>
-        第{{ cate_books.number }}/{{ num_pages }}页
-    </div>
+    {% endblock paginator_part %}
 {% endblock main %}
 

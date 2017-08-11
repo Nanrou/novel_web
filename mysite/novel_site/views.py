@@ -77,7 +77,6 @@ class InfoView(DetailView):
         all_chapters = list(self.object.all_chapters)
         context['all_chapters'] = all_chapters
         try:
-            context['latest_chapter'] = all_chapters[-1]
             context['latest_eight_chapters'] = reversed(all_chapters[-8:])
         except IndexError:
             pass
@@ -125,7 +124,6 @@ class BookView(DetailView):
 
 
 class QuanbenView(ListView):
-
     template_name = 'novel_site/quanben.html'
     queryset = InfoTable.objects.select_related('author', 'category').filter(_status=True).order_by('update_time')
     context_object_name = 'books'
