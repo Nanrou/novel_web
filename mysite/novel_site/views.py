@@ -7,6 +7,7 @@ from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
 from django.views.generic.base import TemplateView
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.urls import reverse
 
 from django_hosts import reverse as host_reverse
 # Create your views here.
@@ -103,25 +104,28 @@ class BookView(DetailView):
     pk_url_kwarg = 'index'
 
     def get_adjacent_page(self):  # 这个是通过判断序号是否超出范围来决定前后的url
-        paginator = Paginator(self.queryset.order_by('id'), 1)
-
+        paginator = Paginator(self.queryset.order_by('-id'), 1)
+        # 注意这个分页函数生产的序号是从1开始的，而我章节的序号不是从1开始的
         try:
-            _tmp = paginator.page(self.kwargs['index'])
+            _tmp = paginator.page(self.kwargs['index'].replace(self.kwargs['pk'], '', 1))
         except EmptyPage or PageNotAnInteger:
             _tmp = paginator.page(paginator.num_pages)
 
         if _tmp.has_next():
             next_page_url = host_reverse('novel_site:detail', host='www',
-                                         kwargs={'pk': self.kwargs['pk'], 'index': str(_tmp.next_page_number())})
+                                         kwargs={'pk': self.kwargs['pk'], 'index': str(int(self.kwargs['index']) + 1)})
+            # next_page_url = reverse('novel_site:detail', kwargs={'pk': self.kwargs['pk'], 'index': str(_tmp.next_page_number())})
         else:
             next_page_url = host_reverse('novel_site:info', host='www', kwargs={'pk': self.kwargs['pk']})
+            # next_page_url = reverse('novel_site:info', kwargs={'pk': self.kwargs['pk']})
 
         if _tmp.has_previous():
             previous_page_url = host_reverse('novel_site:detail', host='www',
-                                             kwargs={'pk': self.kwargs['pk'], 'index': str(_tmp.previous_page_number())})
+                                             kwargs={'pk': self.kwargs['pk'], 'index': str(int(self.kwargs['index']) - 1)})
+            # previous_page_url = reverse('novel_site:detail', kwargs={'pk': self.kwargs['pk'], 'index': str(_tmp.next_page_number())})
         else:
             previous_page_url = host_reverse('novel_site:info', host='www', kwargs={'pk': self.kwargs['pk']})
-
+            # previous_page_url = reverse('novel_site:info', kwargs={'pk': self.kwargs['pk']})
         return previous_page_url, next_page_url
 
     def get_queryset(self):
