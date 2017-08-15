@@ -20,7 +20,7 @@
                     <newestChapter>
                         <articleSection>{{ url.item.title }}</articleSection>
                         <headline>{{ url.item.latest_chapter }}</headline>
-                        <dateModified>{{ url.lastmod|date:"Y-m-d\TH:i:s" }}</dateModified>
+                        <dateModified>{{ url.lastmod|date:"Y-m-d" }}</dateModified>
                     </newestChapter>
                     <chapter>
                         <headline>{{ url.item.latest_chapter }}</headline>
