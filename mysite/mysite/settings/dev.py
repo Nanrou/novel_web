@@ -10,12 +10,6 @@ ALLOWED_HOSTS = [
 ]
 
 
-# sites framework settings
-INSTALLED_APPS.append('django.contrib.sites')
-SITE_ID = 1
-
-# sitemaps settings
-INSTALLED_APPS.append('django.contrib.sitemaps')
 
 DEBUG = True
 

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset>
+    {% spaceless %}
+        {% for url in urlset %}
+            <url>
+                <loc><![CDATA[{{ url.location }}]]></loc>
+                <lastmod>{{ url.lastmod|date:"Y-m-d\TH:i:s" }}</lastmod>
+                <changefreq>{{ url.changefreq }}</changefreq>
+                <priority>{{ url.priority }}</priority>
+                <data>
+                    <name>{{ url.item.title }}</name>
+                    <author>
+                        <name>{{ url.item.author }}</name>
+                        <url><![CDATA[http://superxiaoshuo.com]]></url>
+                    </author>
+                    <genre>{{ url.item.category }}</genre>
+                    <url><![CDATA[{{ url.location }}]]></url>
+                    <updateStatus>{{ url.item.status }}</updateStatus>
+                    <trialStatus>免费</trialStatus>
+                    <newestChapter>
+                        <articleSection>{{ url.item.title }}</articleSection>
+                        <headline>{{ url.item.latest_chapter }}</headline>
+                        <dateModified>{{ url.lastmod|date:"Y-m-d\TH:i:s" }}</dateModified>
+                    </newestChapter>
+                    <chapter>
+                        <headline>{{ url.item.latest_chapter }}</headline>
+                    </chapter>
+                    <endingType>{{ url.item.category }}</endingType>
+                    <collectedCount>999</collectedCount>
+                    <dateModified>{{ url.lastmod|date:"Y-m-d" }}</dateModified>
+                </data>
+            </url>
+        {% endfor %}
+    {% endspaceless %}
+</urlset>

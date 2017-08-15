@@ -16,9 +16,23 @@ Including another URLconf
 from django.conf.urls import url, include
 from django.contrib import admin
 from django.conf import settings
+from django.contrib.sitemaps.views import sitemap
+
+from .novel_sitemaps import NovelSitemap
+from django.views.decorators.cache import cache_page
+
+
+sitemaps = {
+    'static': NovelSitemap,
+}
 
 urlpatterns = [
     url(r'', include('mobile.urls', namespace='mobile')),
+    url(r'^sitemap\.xml$', cache_page(86400)(sitemap),
+        {
+            'sitemaps': sitemaps,
+            'template_name': 'mobile/sitemap.xml',
+        }, name='sitemap'),
 ]
 
 handler404 = 'mobile.views.page_not_found'

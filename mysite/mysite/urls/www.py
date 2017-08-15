@@ -13,12 +13,26 @@ Including another URLconf
     1. Import the include() function: from django.conf.urls import url, include
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
-from django.conf.urls import url, include, handler404
+from django.conf.urls import url, include
 from django.contrib import admin
 from django.conf import settings
+from django.contrib.sitemaps.views import sitemap
+from django.views.decorators.cache import cache_page
+
+from .novel_sitemaps import NovelSitemap
+
+
+sitemaps = {
+    'static': NovelSitemap,
+}
 
 urlpatterns = [
     url(r'', include('novel_site.urls', namespace='novel_site')),
+    url(r'^sitemap\.xml$', cache_page(86400)(sitemap),
+        {
+            'sitemaps': sitemaps,
+            'template_name': 'novel_site/sitemap.xml',
+        }, name='sitemap'),
 ]
 
 handler404 = 'novel_site.views.page_not_found'
