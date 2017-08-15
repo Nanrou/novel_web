@@ -22,6 +22,12 @@
                 <headline>{{ url.item.latest_chapter }}</headline>
                 <dateModified>{{ url.lastmod|date:"Y-m-d" }}</dateModified>
             </newestChapter>
+            <chapter>
+                <headline>{{ url.item.latest_chapter }}</headline>
+            </chapter>
+            <endingType>{{ url.item.category }}</endingType>
+            <collectedCount>999</collectedCount>
+            <dateModified>{{ url.lastmod|date:"Y-m-d" }}</dateModified>
         </data>
     </url>
     {% endfor %}
