@@ -15,5 +15,6 @@ urlpatterns = [
     url(r'^info/(?P<pk>[0-9]+)/$', cache_page(60 * 60)(views.InfoView.as_view()), name='info'),
     url(r'^book/(?P<pk>[0-9]+)/(?P<index>[0-9]+)/$', cache_page(60 * 60)(views.BookView.as_view()), name='detail'),
     url(r'^search', views.SearchView.as_view(), name='search'),
+    url(r'^submit$', views.form_test, name='form_test'),
 ]
 

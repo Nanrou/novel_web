@@ -50,7 +50,7 @@ class InfoTableAdmin(admin.ModelAdmin):
     format_update_time.short_description = 'update_time'
     format_update_time.admin_order_field = 'update_time'
 
-    inlines = (BookInline, )
+    # inlines = (BookInline, )
 
 
 class BookTableAdmin(admin.ModelAdmin):

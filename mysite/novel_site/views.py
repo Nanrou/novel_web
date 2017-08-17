@@ -1,15 +1,17 @@
 # -*- coding:utf-8 -*-
 
 from random import sample
+from django.http import HttpResponseRedirect
 from django.shortcuts import render
-from .models import CategoryTable, InfoTable
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
 from django.views.generic.base import TemplateView
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.urls import reverse
-
 from django_hosts import reverse as host_reverse
+
+from .models import CategoryTable, InfoTable
+from .form_test import TestForm, TestFormSet
 # Create your views here.
 
 
@@ -158,3 +160,16 @@ class SearchTest(TemplateView):
 def page_not_found(request):
     return render(request, 'novel_site/404.html')
 
+
+def form_test(request):
+    if request.method == 'POST':
+        form = TestForm(request.POST)
+        if form.is_valid():
+            for data in form.cleaned_data:
+                print(data)
+            return HttpResponseRedirect('/')
+        else:
+            return HttpResponseRedirect('/')
+    else:
+        form = TestForm()
+        return render(request, 'novel_site/form_test.html', {'form': form})
