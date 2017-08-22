@@ -128,3 +128,21 @@ class BookTableThree(Book):
         return self.chapter
 
 MAP_DICT = {'1': BookTableOne, '2': BookTableTwo, '3': BookTableThree}
+
+
+STATUS_CHOICES = (
+    ('1', '连载中'),
+    ('2', '已完结'),
+)
+
+
+class FormTest(models.Model):
+    author = models.CharField(max_length=20)
+    title = models.CharField(max_length=50)
+    chapter = models.CharField(max_length=50)
+    content = models.CharField(max_length=200)
+    update_time = models.DateField()
+    status = models.CharField(max_length=3, choices=STATUS_CHOICES)
+
+    def __str__(self):
+        return self.title
