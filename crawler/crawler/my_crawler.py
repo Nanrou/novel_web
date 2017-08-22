@@ -75,7 +75,7 @@ info表的表头为
 
 HEADERS = {'user-agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:51.0) Gecko/20100101 Firefox/51.0 '}
 
-LOGGER = MyLogger('crawler')
+LOGGER = MyLogger('__name__')
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -275,14 +275,40 @@ class XpathCrawler(AsyncCrawlerBase):
         assert isinstance(parse_rule, dict) is True, 'must input dict'
         self._parse_rule = parse_rule
 
-    def fetch(self, body):  # 分析页面抓取
+    # def fetch(self, body):  # 分析页面抓取
+    #     page_body = etree.HTML(body)
+    #     res = {}
+    #     for k, v in self._parse_rule.items():
+    #         try:
+    #             res[k] = page_body.xpath(v)[0]
+    #         except XPathError or IndexError:  # 抛出剥取异常
+    #             raise FetchError('wrong xpath syntax [{}]'.format(k))
+    #     return res
+        
+    def fetch(self, body):
+        """
+        抓取的逻辑，负责报异常
+        :param body:
+        :return:
+        """
         page_body = etree.HTML(body)
         res = {}
+        wrong_times = 0
         for k, v in self._parse_rule.items():
             try:
-                res[k] = page_body.xpath(v)[0]
-            except XPathError or IndexError:  # 抛出剥取异常
-                raise FetchError('wrong xpath syntax [{}]'.format(k))
+                res.update(self.fetch_detail(page_body, k, v))
+            except IndexError:  # 抛出剥取异常
+                res[k] = 'miss {}'.format(k)
+                wrong_times += 1
+            except XPathError:
+                res[k] = 'other wrong xpath'
+        if wrong_times > 3:
+            raise FetchError('{} items miss, so retry again'.format(wrong_times))
+        return res
+        
+    def fetch_detail(self, page_body, k, v):
+        res = {}
+        res[k] = page_body.xpath(v)[0]
         return res
 
 
