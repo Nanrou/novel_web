@@ -140,8 +140,8 @@ table.grid td { background-color: #FFFFFF !important; border: 1px solid #C3DFEA;
 .novellist li{float:left; color:#B3B3B3; padding:5px 0px 0px 0px; border-bottom:solid 1px #DDDDDD; height:25px; width:20%;  line-height:25px; overflow:hidden; display:inline-block; }
 .novellist li a:link { color:#6F78A7; TEXT-DECORATION: none;}
 .novellist li a:visited { COLOR: red; }
-.pagelink{margin:0px 10px;padding-top:7px;}
-.page_b{background-color:#fff;border:1px solid #DDDDDD;margin:0px 10px;margin-bottom:10px;}
+.pagelink{margin:0 10px;padding-top:7px;}
+.page_b{background-color:#fff;border:1px solid #DDDDDD;margin:0 10px;margin-bottom:10px;}
 .page_b2{line-height:40px;text-align:center}
 .pagelink a,.pagelink em,.pagelink strong,.pagelink input{display:block;float:left;}
 .pagelink a,.pagelink strong,.pagelink em{padding:2px 7px;padding-top:3px\9; background-color:#fff;margin:2px 3px 9px 3px;border:1px solid #88C6E5;}
@@ -160,7 +160,7 @@ table.grid td { background-color: #FFFFFF !important; border: 1px solid #C3DFEA;
 #fmimg span{top:8px;right:8px;width:88px;height:88px;position:absolute;display:block;z-index:999;}
 #fmimg .a {background-position:0 -206px;}
 #fmimg .b {background-position:0 -294px;} 
-.con_ad{width:935px;height:265px;margin:15 auto;}
+.con_ad{width:935px;height:265px;margin:15px auto;}
 .con_ad .ad_1{width:300px;padding:2px;border:#88C6E5 1px dotted;float:left;margin-left:5px;}
 .con_ad .ad_2{width:300px;padding:2px;border:#88C6E5 1px dotted;float:left;margin-left:5px;}
 .con_ad .ad_3{width:300px;padding:2px;border:#88C6E5 1px dotted;float:left;margin-left:5px;}
@@ -214,3 +214,9 @@ table.grid td { background-color: #FFFFFF !important; border: 1px solid #C3DFEA;
 #shang:hover{background-position:right 0;}
 #xia:hover{background-position:right -68px ;}
 #myrss {background:url(rss.png) no-repeat;height:128px;width:128px;margin:5px 0 0 -50px;position:relative;cursor:pointer;}
+
+.local_item {width: 100%;border: solid 1px #ddd;height: 18px;margin: 5px 0;}
+.local_item label {float: left}
+.local_item input {float: right}
+.local_item select {float: right}
+

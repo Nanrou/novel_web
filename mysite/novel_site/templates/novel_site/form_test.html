@@ -2,30 +2,21 @@
 {% load staticfiles %}
 
 {% block main %}
-    <div style="width: 970px">
-        <div style="margin-top: 2%; margin-left: -15px; margin-right: 15px;">
-            <div style="float: left; position: relative; padding-left: 85px; padding-right: 15px; padding-bottom: 15px">
-                {% comment %}
-                {% block field_sets %}
-                    {% for fieldset in form %}
-                    {% include "admin/includes/fieldset.html" %}
-                    {% endfor %}
-                {% endblock %}
-                {% endcomment %}
+    <div style="width: 970px;margin-top: 2%">
+        <div style="height: 230px; width: 40%">
+            <div style="width: 280px; background-color: #fff;height: 180px;padding: 10px 5px;" >
                 <form action="" method="post">
                     {% csrf_token %}
-                    {{ form }}
-                    <input type="submit" value="Submit" />
+                    {% for field in form %}
+                      <div class="local_item">
+                        {{ field.label_tag }}
+                        {{ field }}
+                      </div>
+                    {% endfor %}
+                  <div style="width: 100%;">
+                    <input style="float: right" type="submit" value="Submit" />
+                  </div>
                 </form>
-            </div>
-            <div style="float: left; position: relative; padding-left: 15px; padding-right: 15px; padding-top: 15px">
-                <h2 style="font-size: 46px;" >页面找不到啦</h2>
-                <p style="font-size: 36px; margin-top: 15px">
-                    就是找不到啊，我也很绝望啊
-                    <br/>
-                    <a href="/" style="color: #6F78A7">回到首页</a>
-                    <a href="javascript:history.go(-1);">回到上一页</a>
-                </p>
             </div>
         </div>
     </div>

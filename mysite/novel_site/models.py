@@ -1,8 +1,13 @@
 # -*- coding:utf-8 -*-
 
 from random import sample
+
+from django.contrib.auth.models import User as Build_in_User
+from django.conf import settings
 from django.db import models
 from django.urls import reverse, reverse_lazy
+from django.db.models import Q
+
 from django_hosts.resolvers import reverse as hosts_reverse
 
 
@@ -75,7 +80,8 @@ class InfoTable(models.Model):
 
     # @property
     # def latest_chapter(self):
-    #     return MAP_DICT[str(self.store_des)].objects.filter(title=self.pk).defer('content', 'need_confirm').latest('id')
+    #     return MAP_DICT[str(self.store_des)].objects.filter(title=self.pk)
+    #       .defer('content', 'need_confirm').latest('id')
 
     @property
     def all_chapters(self):  # 看是否要放到view中去
@@ -131,8 +137,8 @@ MAP_DICT = {'1': BookTableOne, '2': BookTableTwo, '3': BookTableThree}
 
 
 STATUS_CHOICES = (
-    ('1', '连载中'),
-    ('2', '已完结'),
+    ('0', '连载中'),
+    ('1', '已完结'),
 )
 
 
@@ -146,3 +152,28 @@ class FormTest(models.Model):
 
     def __str__(self):
         return self.title
+
+
+class Profile(models.Model):
+    owner = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='profile')
+    _fav_books = models.CharField(max_length=200, blank=True)
+
+    def __str__(self):
+        return self.owner.name + "'s profile"
+
+    def add_book(self, book_id):
+        try:
+            int(book_id)
+        except ValueError:
+            return
+        tmp = self._fav_books.split(',')
+        tmp.append(book_id)
+        self._fav_books = ','.join(tmp)
+        self.save()
+
+    def get_books(self):
+        book_num_list = self._fav_books.split(',')
+        q = Q()
+        for i in book_num_list:
+            q.add(Q(**{'id': i}), Q.OR)  # 动态赋值
+        return InfoTable.objects.filter(q)
