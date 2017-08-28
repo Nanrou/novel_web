@@ -1,50 +1,36 @@
-{% extends 'mobile/base.html' %}
+{% extends 'mobile/home.html' %}
 {% load staticfiles %}
+  
+{% block main %}
+  <div id="search_result" style="font-size: 20px;margin: 5px 5px;">
+    <script type="text/javascript" src = "http://zhannei.baidu.com/api/customsearch/apiaccept?sid=17984966288940832957&v=2.0"></script>
+    <script>
+    
+        cse = new BCse.Search("17984966288940832957");    //参数为您的API引擎ID，已自动填写，必需。
 
-{% block script %}
-<script type="text/javascript">
-    var cse;
-    var _tmp = window.location.search;
-    var keyword = decodeURI(_tmp.substring(3, _tmp.length));
+        var _tmp = window.location.search;
+        var keyword = decodeURI(_tmp.substring(3, _tmp.length));
 
     //处理结果回调函数示例
     function display (data) {
-        var content = document.getElementById('search_result');
-        console.log(data);
-        if (!data) { content.write('not found~'); }
+        var content = '';
+        if (!data) { content='not found~'; }
         else {
-            content.write('<ul>');
+            content = '<ul>';
             for (var i=0; i<data.length; i++){
-                content.write('<li><a href="' + data.linkUrl + '">' + data.title + '</a></li>' );
+                content = content + '<li><a href=\'' + data[i].linkUrl + '\'>' + data[i].title + '</a></li>' ;
             }
-            content.write('</ul>');
+            content = content + '</ul>';
         }
+        console.log(content);
+        console.log(data);
+        document.getElementById('search_result').innerHTML=content;
     }
 
-    //初始化回调函数示例
-    function init () {
-        cse = new BCse.Search("17984966288940832957");    //参数为您的API引擎ID，已自动填写，必需。
 
         cse.setResultType(2);
         cse.closeHiLight();
         cse.getResult(keyword, display);    //此方法获取搜索结果，参数1为搜索词，参数2为您获取到结果后想要执行的回调函数。
-    }
-
-    function loadScript () {
-        var script = document.createElement("script");
-        script.type = "text/javascript";
-        script.charset = "utf-8";
-        script.src = "http://zhannei.baidu.com/api/customsearch/apiaccept?sid=17984966288940832957&v=2.0&callback=init";
-        var s = document.getElementsByTagName('script')[0];
-        s.parentNode.insertBefore(script, s);
-    }
-
-    loadScript();
-</script>
-{% endblock %}
-
-{% block main %}
-  <script>Show_search_result();</script>
-  <div id="search_result"></div>
-
+    </script>
+  </div>
 {% endblock %}
