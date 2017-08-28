@@ -5,17 +5,28 @@
 <script type="text/javascript">
     var cse;
     var _tmp = window.location.search;
-    var keyword = _tmp.substring(3, _tmp.length);
+    var keyword = decodeURI(_tmp.substring(3, _tmp.length));
 
     //处理结果回调函数示例
     function display (data) {
+        var content = document.getElementById('search_result');
         console.log(data);
+        if (!data) { content.write('not found~'); }
+        else {
+            content.write('<ul>');
+            for (var i=0; i<data.length; i++){
+                content.write('<li><a href="' + data.linkUrl + '">' + data.title + '</a></li>' );
+            }
+            content.write('</ul>');
+        }
     }
 
     //初始化回调函数示例
     function init () {
         cse = new BCse.Search("17984966288940832957");    //参数为您的API引擎ID，已自动填写，必需。
 
+        cse.setResultType(2);
+        cse.closeHiLight();
         cse.getResult(keyword, display);    //此方法获取搜索结果，参数1为搜索词，参数2为您获取到结果后想要执行的回调函数。
     }
 
@@ -30,4 +41,10 @@
 
     loadScript();
 </script>
+{% endblock %}
+
+{% block main %}
+  <script>Show_search_result();</script>
+  <div id="search_result"></div>
+
 {% endblock %}
