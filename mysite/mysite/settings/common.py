@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'mobile',
 
     'django_hosts',
+    'captcha',
 
     'django.contrib.admin',
     'django.contrib.auth',
