@@ -148,6 +148,8 @@ STATICFILES_FINDERS = (
     "django.contrib.staticfiles.finders.AppDirectoriesFinder",
 )
 
+# Logger settings
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': True,
@@ -214,3 +216,7 @@ LOGGING = {
     }
 }
 
+# Captcha settings
+
+CAPTCHA_TIMEOUT = 1
+CAPTCHA_LENGTH = 5

@@ -10,7 +10,6 @@ ALLOWED_HOSTS = [
 ]
 
 
-
 DEBUG = True
 
 # CACHES = {

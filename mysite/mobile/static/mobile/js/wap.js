@@ -41,7 +41,7 @@ function show_lastread() {
 	var url = $.cookie('lastread_url');
 	if (!title) {
 		return '';
-	};
+	}
 	var tmp = '<div class="last_read"><div>你上次看到这里了： <a href="{u}">{t}</a></div></div>'.format({t:title, u:url});
 	document.write(tmp);
 }

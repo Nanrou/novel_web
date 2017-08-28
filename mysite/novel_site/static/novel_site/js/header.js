@@ -108,7 +108,7 @@ function show_lastread() {
 	var url = $.cookie('lastread_url');
 	if (!title) {
 		return '';
-	};
+	}
 	var tmp = '<div class="nav_lastread"><div>你上次看到这里了： <a href="{u}">{t}</a></div></div>'.format({t:title, u:url});
 	document.write(tmp);
 }
@@ -135,8 +135,31 @@ jQuery(document).ready(function($) {
 function up() {  //一旦启动就进入自调用模式了
     $wd = $(window);
     $wd.scrollTop($wd.scrollTop() - 1);
-    fq = setTimeout("up()", 50)}; //每隔50ms就会调用自身
+    fq = setTimeout("up()", 50)} //每隔50ms就会调用自身
 function dn() {
     $wd = $(window);
     $wd.scrollTop($wd.scrollTop() + 1);
-    fq = setTimeout("dn()", 50)}; 
+    fq = setTimeout("dn()", 50)}
+
+$('.js-captcha-refresh').click(function(){
+    $form = $(this).parents('form');
+
+    $.getJSON($(this).data('url'), {}, function(json) {
+        // This should update your captcha image src and captcha hidden input
+    });
+
+    return false;
+});
+
+$(document).ready(function(){
+    $('.captcha').click(function(){
+        $.ajax({
+            url: '/refresh_captcha',
+            success: function(result){
+                console.log(result);
+                $('.captcha').attr('src', result['new_cptch_image']);
+                $('#id_captcha_0').attr('value', result['new_cptch_key']);
+            }
+        });
+    });
+});

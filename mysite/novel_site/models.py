@@ -1,17 +1,20 @@
 # -*- coding:utf-8 -*-
 
 from random import sample
+import _datetime
 
 from django.contrib.auth.models import User as Build_in_User
 from django.conf import settings
 from django.db import models
 from django.urls import reverse, reverse_lazy
 from django.db.models import Q
+from django.utils.timezone import now as django_now
 
 from django_hosts.resolvers import reverse as hosts_reverse
-
+from captcha.fields import CaptchaField
 
 # Create your models here.
+
 
 class AuthorTable(models.Model):
     author = models.CharField(max_length=20, unique=True)
@@ -147,7 +150,7 @@ class FormTest(models.Model):
     title = models.CharField(max_length=50)
     chapter = models.CharField(max_length=50)
     content = models.CharField(max_length=200)
-    update_time = models.DateField()
+    update_time = models.DateField(default=django_now)
     status = models.CharField(max_length=3, choices=STATUS_CHOICES)
 
     def __str__(self):

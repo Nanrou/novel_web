@@ -1,7 +1,10 @@
 # -*- coding:utf-8 -*-
 
 from random import sample
-from django.http import HttpResponseRedirect
+import logging
+import json
+
+from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
@@ -9,10 +12,14 @@ from django.views.generic.base import TemplateView
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.urls import reverse
 from django_hosts import reverse as host_reverse
+from captcha.models import CaptchaStore
+from captcha.helpers import captcha_image_url
 
 from .models import CategoryTable, InfoTable
 from .form_test import TestForm, TestFormSet
 # Create your views here.
+
+logger = logging.getLogger(__name__)
 
 
 def get_book_from_cate():  # 返回每个分类下的书
@@ -166,10 +173,17 @@ def form_test(request):
         form = TestForm(request.POST)
         if form.is_valid():
             for data in form.cleaned_data:
-                print(data)
+                logger.info(data)
             return HttpResponseRedirect('/')
         else:
-            return HttpResponseRedirect('/')
+            return render(request, 'novel_site/form_test.html', {'form': form})
     else:
         form = TestForm()
         return render(request, 'novel_site/form_test.html', {'form': form})
+
+
+def refresh_captcha(request):
+    json_content = dict()
+    json_content['new_cptch_key'] = CaptchaStore.generate_key()
+    json_content['new_cptch_image'] = captcha_image_url(json_content['new_cptch_key'])
+    return HttpResponse(json.dumps(json_content), content_type='application/json')

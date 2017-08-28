@@ -215,8 +215,8 @@ table.grid td { background-color: #FFFFFF !important; border: 1px solid #C3DFEA;
 #xia:hover{background-position:right -68px ;}
 #myrss {background:url(rss.png) no-repeat;height:128px;width:128px;margin:5px 0 0 -50px;position:relative;cursor:pointer;}
 
-.local_item {width: 100%;border: solid 1px #ddd;height: 18px;margin: 5px 0;}
-.local_item label {float: left}
-.local_item input {float: right}
-.local_item select {float: right}
+.local_item {width: 100%;border: solid 1px #ddd;height: 35px;margin: 5px 0;}
+.local_item label {float: left; margin-left: 2%;}
+.local_item input {float: right; height: 35px; width: 45%;}
+.local_item select {float: right; height: 35px; margin-right: 5%}
 

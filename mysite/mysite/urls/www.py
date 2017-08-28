@@ -33,7 +33,8 @@ urlpatterns = [
             'sitemaps': sitemaps,
             'template_name': 'novel_site/sitemap.xml',
         }, name='sitemap'),
-    url(r'^admin', admin.site.urls)
+    url(r'^admin', admin.site.urls),
+    url(r'^captcha/', include('captcha.urls')),
 ]
 
 handler404 = 'novel_site.views.page_not_found'

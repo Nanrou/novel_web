@@ -3,9 +3,9 @@
 
 {% block main %}
     <div style="width: 970px;margin-top: 2%">
-        <div style="height: 230px; width: 40%">
-            <div style="width: 280px; background-color: #fff;height: 180px;padding: 10px 5px;" >
-                <form action="" method="post">
+        <div style="height: 380px; width: 60%">
+            <div style="width: 80%; background-color: #fff;height: 350px;padding: 10px 5px;" >
+                <form action="" method="post" style="font-size: 32px">
                     {% csrf_token %}
                     {% for field in form %}
                       <div class="local_item">
@@ -14,7 +14,7 @@
                       </div>
                     {% endfor %}
                   <div style="width: 100%;">
-                    <input style="float: right" type="submit" value="Submit" />
+                    <input style="float: right;width: 20%;height: 37px;font-size: 25px" type="submit" value="Submit" />
                   </div>
                 </form>
             </div>
