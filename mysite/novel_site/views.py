@@ -5,7 +5,7 @@ import logging
 import json
 
 from django.http import HttpResponseRedirect, HttpResponse
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
 from django.views.generic.base import TemplateView
@@ -14,9 +14,12 @@ from django.urls import reverse
 from django_hosts import reverse as host_reverse
 from captcha.models import CaptchaStore
 from captcha.helpers import captcha_image_url
+from django.contrib.auth.models import User
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 
 from .models import CategoryTable, InfoTable
-from .form_test import TestForm, TestFormSet
+from .form_test import TestForm, SignUpForm, SignInForm, SignInFormBase
 # Create your views here.
 
 logger = logging.getLogger(__name__)
@@ -174,7 +177,7 @@ def form_test(request):
         if form.is_valid():
             for data in form.cleaned_data:
                 logger.info(data)
-            return HttpResponseRedirect('/')
+            return redirect('/')
         else:
             return render(request, 'novel_site/form_test.html', {'form': form})
     else:
@@ -187,3 +190,55 @@ def refresh_captcha(request):
     json_content['new_cptch_key'] = CaptchaStore.generate_key()
     json_content['new_cptch_image'] = captcha_image_url(json_content['new_cptch_key'])
     return HttpResponse(json.dumps(json_content), content_type='application/json')
+
+
+def sign_up(request):
+    if request.method == 'POST':
+        form = SignUpForm(request.POST)
+        if form.is_valid():
+            # for data in form.cleaned_data:
+            #     logger.info(data)
+            username = form.cleaned_data['username']
+            password = form.cleaned_data['password']
+            email = 'test@test.com'
+            uu = User.objects.create_user(username=username, password=password, email=email)
+            # 要用create_user，不然会是明文密码
+            uu.save()
+            return redirect('/sign_in/')
+        else:
+            return render(request, 'novel_site/sign_up.html', {'form': form})
+    else:
+        form = SignUpForm()
+        return render(request, 'novel_site/sign_up.html', {'form': form})
+
+
+def sign_in(request):
+
+    error_msg = ''
+
+    if request.method == 'POST':
+        username = request.POST['username']
+        password = request.POST['password']
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            login(request, user)
+            return redirect('/profile/')
+        else:
+            form = SignInForm()
+            error_msg = 'wrong username or password, please try again'
+            return render(request, 'novel_site/sign_in.html', {'form': form, 'error_msg': error_msg})
+
+    else:
+        form = SignInForm()
+        return render(request, 'novel_site/sign_in.html', {'form': form, 'error_msg': error_msg})
+
+
+def logout_view(request):
+    logout(request)
+    return redirect('/')
+
+
+@login_required(login_url='/signin/')
+def show_profile(request):
+    user_id = request.session.get('_auth_user_id')
+    return render(request, 'novel_site/profile.html', {'content': user_id})

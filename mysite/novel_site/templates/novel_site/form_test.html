@@ -6,13 +6,15 @@
         <div style="height: 380px; width: 60%">
             <div style="width: 80%; background-color: #fff;height: 350px;padding: 10px 5px;" >
                 <form action="" method="post" style="font-size: 32px">
-                    {% csrf_token %}
+                  {% csrf_token %}
+                {% block form_part %}
                     {% for field in form %}
                       <div class="local_item">
                         {{ field.label_tag }}
                         {{ field }}
                       </div>
                     {% endfor %}
+                {% endblock %}
                   <div style="width: 100%;">
                     <input style="float: right;width: 20%;height: 37px;font-size: 25px" type="submit" value="Submit" />
                   </div>

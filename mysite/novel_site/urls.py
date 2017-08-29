@@ -16,6 +16,11 @@ urlpatterns = [
     url(r'^book/(?P<pk>[0-9]+)/(?P<index>[0-9]+)/$', cache_page(60 * 60)(views.BookView.as_view()), name='detail'),
     url(r'^search', views.SearchView.as_view(), name='search'),
     url(r'^submit', views.form_test, name='form_test'),
+    url(r'^signup/$', views.sign_up, name='sign_up'),
+    url(r'^signin/$', views.sign_in, name='sign_in'),
+    url(r'^profile', views.show_profile),
+    # api
     url(r'^refresh_captcha', views.refresh_captcha),
+    url(r'^logout', views.logout_view),
 ]
 

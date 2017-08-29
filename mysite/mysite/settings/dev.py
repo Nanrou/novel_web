@@ -12,12 +12,17 @@ ALLOWED_HOSTS = [
 
 DEBUG = True
 
-# CACHES = {
-#     'default': {
-#         'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
-#         'LOCATION': 'lolololol',
-#     },
-# }
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        'LOCATION': 'lolololol',
+    },
+}
+
+# Session
+SESSION_ENGINE = "django.contrib.sessions.backends.cache"
+SESSION_CACHE_ALIAS = "default"
+
 
 CSRF_COOKIE_SECURE = False
 
