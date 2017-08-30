@@ -157,26 +157,42 @@ class FormTest(models.Model):
         return self.title
 
 
-class Profile(models.Model):
+class ProfileTable(models.Model):
     owner = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='profile')
     _fav_books = models.CharField(max_length=200, blank=True)
 
     def __str__(self):
-        return self.owner.name + "'s profile"
+        return self.owner.username + "'s profile"
 
     def add_book(self, book_id):
-        try:
-            int(book_id)
-        except ValueError:
+        tmp = self._fav_books
+        if tmp:
+            tmp = tmp.split(',')
+        else:
+            tmp = []
+        if book_id in tmp:
             return
-        tmp = self._fav_books.split(',')
         tmp.append(book_id)
         self._fav_books = ','.join(tmp)
         self.save()
+        return True
 
     def get_books(self):
-        book_num_list = self._fav_books.split(',')
+        book_num_list = self._fav_books
         q = Q()
-        for i in book_num_list:
-            q.add(Q(**{'id': i}), Q.OR)  # 动态赋值
-        return InfoTable.objects.filter(q)
+        if bool(book_num_list):
+            for i in book_num_list.split(','):
+                q.add(Q(**{'id': int(i)}), Q.OR)  # 动态赋值查询
+            return InfoTable.objects.filter(q).only('title', 'id')
+        else:
+            return
+
+    def remove_book(self, book_id):
+        tmp = self._fav_books.split(',')
+        assert book_id in tmp
+        for i, k in enumerate(tmp):
+            if k is book_id:
+                tmp.pop(i)
+                break
+        self._fav_books = ','.join(tmp)
+        self.save()

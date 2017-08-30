@@ -141,15 +141,6 @@ function dn() {
     $wd.scrollTop($wd.scrollTop() + 1);
     fq = setTimeout("dn()", 50)}
 
-$('.js-captcha-refresh').click(function(){
-    $form = $(this).parents('form');
-
-    $.getJSON($(this).data('url'), {}, function(json) {
-        // This should update your captcha image src and captcha hidden input
-    });
-
-    return false;
-});
 
 $(document).ready(function(){
     $('.captcha').click(function(){
@@ -163,3 +154,17 @@ $(document).ready(function(){
         });
     });
 });
+
+function add_book(){
+    $.ajax({
+        url: '/add_book',
+        success: function(result){
+            console.log(result);
+            if (result['status'] == 'success'){
+                $('#collect_book').attr({'value': '取消收藏', 'onclick': 'remove_book()'});
+            } else {
+                $(location).attr('pathname', result['uri'])
+            }
+        }
+    });
+}

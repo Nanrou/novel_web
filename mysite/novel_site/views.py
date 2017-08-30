@@ -11,14 +11,16 @@ from django.views.generic.list import ListView
 from django.views.generic.base import TemplateView
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.urls import reverse
-from django_hosts import reverse as host_reverse
-from captcha.models import CaptchaStore
-from captcha.helpers import captcha_image_url
+from django.utils.cache import patch_vary_headers
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 
-from .models import CategoryTable, InfoTable
+from django_hosts import reverse as host_reverse
+from captcha.models import CaptchaStore
+from captcha.helpers import captcha_image_url
+
+from .models import CategoryTable, InfoTable, ProfileTable
 from .form_test import TestForm, SignUpForm, SignInForm, SignInFormBase
 # Create your views here.
 
@@ -49,6 +51,11 @@ def get_book_from_cate():  # 返回每个分类下的书
 
 class HomeView(TemplateView):
     template_name = 'novel_site/home.html'
+
+    def get(self, request, *args, **kwargs):
+        response = super(HomeView, self).get(request, *args, **kwargs)
+        patch_vary_headers(response, ['cookie'])
+        return response
 
     def get_context_data(self, **kwargs):
         context = dict()
@@ -126,18 +133,14 @@ class BookView(DetailView):
         if _tmp.has_next():
             next_page_url = host_reverse('novel_site:detail', host='www',
                                          kwargs={'pk': self.kwargs['pk'], 'index': str(int(self.kwargs['index']) + 1)})
-            # next_page_url = reverse('novel_site:detail', kwargs={'pk': self.kwargs['pk'], 'index': str(_tmp.next_page_number())})
         else:
             next_page_url = host_reverse('novel_site:info', host='www', kwargs={'pk': self.kwargs['pk']})
-            # next_page_url = reverse('novel_site:info', kwargs={'pk': self.kwargs['pk']})
 
         if _tmp.has_previous():
             previous_page_url = host_reverse('novel_site:detail', host='www',
                                              kwargs={'pk': self.kwargs['pk'], 'index': str(int(self.kwargs['index']) - 1)})
-            # previous_page_url = reverse('novel_site:detail', kwargs={'pk': self.kwargs['pk'], 'index': str(_tmp.next_page_number())})
         else:
             previous_page_url = host_reverse('novel_site:info', host='www', kwargs={'pk': self.kwargs['pk']})
-            # previous_page_url = reverse('novel_site:info', kwargs={'pk': self.kwargs['pk']})
         return previous_page_url, next_page_url
 
     def get_queryset(self):
@@ -215,14 +218,16 @@ def sign_up(request):
 def sign_in(request):
 
     error_msg = ''
-
+    _sign_in_uri = request.get_host() + '/signin/'
+    if request.META.get('HTTP_REFERER') is not _sign_in_uri:
+        raise Exception
     if request.method == 'POST':
         username = request.POST['username']
         password = request.POST['password']
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
-            return redirect('/profile/')
+            return redirect(request.META.get('HTTP_REFERER') or '/profile/')
         else:
             form = SignInForm()
             error_msg = 'wrong username or password, please try again'
@@ -241,4 +246,33 @@ def logout_view(request):
 @login_required(login_url='/signin/')
 def show_profile(request):
     user_id = request.session.get('_auth_user_id')
-    return render(request, 'novel_site/profile.html', {'content': user_id})
+    profile_instance, _ = ProfileTable.objects.get_or_create(owner_id=int(user_id))
+    fav_books = profile_instance.get_books()
+    return render(request, 'novel_site/profile.html', {'fav_books': fav_books})
+
+
+# @login_required(login_url='/signin/')
+def add_book(request):
+    if request.user.is_authenticated:
+        user_id = request.session.get('_auth_user_id')
+        profile_instance, _ = ProfileTable.objects.get_or_create(owner_id=int(user_id))
+        book_id = request.path.split('/')[-2]
+        profile_instance.add_book(book_id)
+        json_content = {'status': 'success'}
+    else:
+        json_content = {'status': 'fail', 'uri': '/signin/'}
+    return HttpResponse(json.dumps(json_content), content_type='application/json')
+
+
+@login_required(login_url='/signin/')
+def remove_book(request):
+    user_id = request.session.get('_auth_user_id')
+    profile_instance, _ = ProfileTable.objects.get_or_create(owner_id=int(user_id))
+    book_id = request.path.split('/')[-2]
+    profile_instance.remove_book(book_id)
+    json_content = {'status': 'success'}
+    return HttpResponse(json.dumps(json_content), content_type='application/json')
+
+
+def just_test(request):
+    return render(request, 'novel_site/just_for_test.html', {'content': request.META.get('Host')})

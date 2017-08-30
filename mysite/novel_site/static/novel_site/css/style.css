@@ -7,9 +7,10 @@ a:hover {text-decoration:underline; top:-1px;}
 .ywtop_sethome,.ywtop_addfavorite,.frii .int,.reader_mark0 a,.reader_mark1 a,#fmimg span{scroll: 0 0 transparent;}
 .ywtop{background-color:#E1ECED;border-bottom:1px solid #A6D3E8;color:gray;height:28px;min-width:960px;width:100%;}
 .ywtop_con{line-height:28px;text-indent:16px;vertical-align:middle;width:960px;margin:0 auto;}
-.ywtop_sethome{background-position:0 8px;display:inline;float:left;margin-right:20px;}
+.ywtop_sethome{display:inline;float:left;margin-right:20px;}
 .ywtop a{color:gray;}
-.ywtop_addfavorite{background-position:0 -12px;display:inline;float:left;}
+.ywtop_addfavorite{display:inline;float:left;}
+.ywtop_one, .ywtop_two{display:inline;float:right;margin-right:20px;color:gray;}
 .nri{float:right;font-size:13px;}
 .nri .cc{float:left;overflow:hidden;width:155px;}
 .cc .txt{color:gray;float:left;text-align:right;}

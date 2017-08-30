@@ -9,6 +9,7 @@ from . import views
 app_name = 'novel_site'
 urlpatterns = [
     url(r'^$', cache_page(60 * 20)(views.HomeView.as_view()), name='home'),
+    # url(r'^$', views.HomeView.as_view(), name='home'),
     url(r'^cate/quanben/$', views.QuanbenView.as_view(), name='quanben'),
     # url(r'^cate/(?P<cate>[a-z]+)/$', cache_page(60 * 60)(views.CategoryView.as_view()), name='category'),
     url(r'^cate/(?P<cate>[a-z]+)/$', views.CategoryView.as_view(), name='category'),
@@ -22,5 +23,8 @@ urlpatterns = [
     # api
     url(r'^refresh_captcha', views.refresh_captcha),
     url(r'^logout', views.logout_view),
+    url(r'^add_book', views.add_book),
+    url(r'^remove_book', views.remove_book),
+    url(r'^test/$', views.just_test),
 ]
 
