@@ -8,7 +8,7 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render, redirect
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
-from django.views.generic.base import TemplateView
+from django.views.generic.base import TemplateView, ContextMixin
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.urls import reverse
 from django.utils.cache import patch_vary_headers
@@ -47,6 +47,8 @@ def get_book_from_cate():  # 返回每个分类下的书
 
     cate_list.append(finished_books)
     return cate_list
+
+class SetVaryMixin():
 
 
 class HomeView(TemplateView):
@@ -218,16 +220,15 @@ def sign_up(request):
 def sign_in(request):
 
     error_msg = ''
-    _sign_in_uri = request.get_host() + '/signin/'
-    if request.META.get('HTTP_REFERER') is not _sign_in_uri:
-        raise Exception
+    if not request.META.get('HTTP_REFERER').endswith('/signin/'):
+        request.session['referer_uri'] = request.META.get('HTTP_REFERER')
     if request.method == 'POST':
         username = request.POST['username']
         password = request.POST['password']
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
-            return redirect(request.META.get('HTTP_REFERER') or '/profile/')
+            return redirect(request.session.get('referer_uri') or '/profile/')
         else:
             form = SignInForm()
             error_msg = 'wrong username or password, please try again'

@@ -66,6 +66,7 @@ USE_TZ = False
 
 MIDDLEWARE = [
     'django_hosts.middleware.HostsRequestMiddleware',
+    'django.middleware.http.ConditionalGetMiddleware',
 
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
