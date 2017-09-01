@@ -3,10 +3,10 @@
 {% load cache %}
 
 {% block meta_description %}
-<title>超级小说_{{ book.title }}最新章节</title>
-<meta name="keywords" content="{{ book.title }},{{ book.latest_chapter }},{{ book.title }}txt下载，{{ book.title }}最新章节,{{ book.title }}无弹窗广告全文阅读,{{ book.title }}超级小说。">
-<meta name="description" content="《{{ book.title }}》是{{ book.author }}的作品,超级小说提供{{ book.title }}最新章节列表全文阅读,超级小说保证比同类网站更新更快,绝无弹窗广告保证无章节错误100%正确保证无广告,《{{ book.title }}》无弹窗广告全文阅读就在超级小说。">
-<link rel="alternate" href="http://m.superxiaoshuo.com/info/{{ book.id }}">
+    <title>超级小说_{{ book.title }}最新章节</title>
+    <meta name="keywords" content="{{ book.title }},{{ book.latest_chapter }},{{ book.title }}txt下载，{{ book.title }}最新章节,{{ book.title }}无弹窗广告全文阅读,{{ book.title }}超级小说。">
+    <meta name="description" content="《{{ book.title }}》是{{ book.author }}的作品,超级小说提供{{ book.title }}最新章节列表全文阅读,超级小说保证比同类网站更新更快,绝无弹窗广告保证无章节错误100%正确保证无广告,《{{ book.title }}》无弹窗广告全文阅读就在超级小说。">
+    <link rel="alternate" href="http://m.superxiaoshuo.com/info/{{ book.id }}">
 {% endblock meta_description %}
 
 {%  block main %}
@@ -36,39 +36,38 @@
     <div id="sidebar">
         <div id="fmimg"><img alt="{{ book.title }}" src="{% static book.image %}" onerror="this.src={% static 'novel_site/images/miss.jpg' %}" width="120" height="150"/></div>
     </div>
+
     <div id="listtj">推荐阅读：
         {% comment %} 还没想好这里怎么推荐，这里也可以和下面合并 {% endcomment %}
-            <a href="http://www.superxiaoshuo.com" target="_blank">重生完美时代</a>
-            <a href="http://www.superxiaoshuo.com" target="_blank">系统之乡土懒人</a>
-            <a href="http://www.superxiaoshuo.com" target="_blank">纯阳武神</a>
-            <a href="http://www.superxiaoshuo.com" target="_blank">寒门状元</a>
-            <a href="http://www.superxiaoshuo.com" target="_blank">狂武战帝</a>
-            <a href="http://www.superxiaoshuo.com" target="_blank">仙路至尊</a>
-            <a href="http://www.superxiaoshuo.com" target="_blank">超级指环王</a>
-            <a href="http://www.superxiaoshuo.com" target="_blank">我要做首辅</a>
-            <a href="http://www.superxiaoshuo.com" target="_blank">近身兵王</a>
-            <a href="http://www.superxiaoshuo.com" target="_blank">三国之召唤猛将</a>
+      {% for book in recommend_books %}
+            <a href="{{ book.get_absolute_url }}" target="_blank">{{ book.title }}</a>
+      {% endfor %}
     </div>
 </div>
 
-<div class="box_con">
-    <div id="list">
-        <dl>
-            <dt>《{{ book.title }}》最新章节</dt>
-            {%  for n_chapter in latest_eight_chapters %}
-                <dd><a href="{{ n_chapter.get_absolute_url }}">{{ n_chapter.chapter}}</a></dd>
-            {% endfor %}
-        </dl>
-    </div>
-</div>
-<div class="box_con">
-    <div id="list">
-        <dl>
-            <dt>《{{ book.title }}》正文</dt>
-            {%  for chapter in all_chapters %}
+  <div class="box_con">
+      <div id="list">
+          <dl>
+              <dt>《{{ book.title }}》最新章节</dt>
+              {%  for n_chapter in latest_eight_chapters %}
+                  <dd><a href="{{ n_chapter.get_absolute_url }}">{{ n_chapter.chapter}}</a></dd>
+              {% endfor %}
+          {% comment %}
+              {% for chapter in all_chapters|slice:":8" reversed %}
                 <dd><a href="{{ chapter.get_absolute_url }}">{{ chapter.chapter}}</a></dd>
-            {% endfor %}
-        </dl>
-    </div>
-</div>
+              {% endfor %}
+          {% endcomment %}
+          </dl>
+      </div>
+  </div>
+  <div class="box_con">
+      <div id="list">
+          <dl>
+              <dt>《{{ book.title }}》正文</dt>
+              {%  for chapter in all_chapters %}
+                  <dd><a href="{{ chapter.get_absolute_url }}">{{ chapter.chapter}}</a></dd>
+              {% endfor %}
+          </dl>
+      </div>
+  </div>
 {% endblock main %}

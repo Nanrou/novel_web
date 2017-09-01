@@ -1,6 +1,7 @@
 # -*- coding:utf-8 -*-
 
 from random import sample
+import _datetime
 import logging
 import json
 
@@ -9,12 +10,15 @@ from django.shortcuts import render, redirect
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
 from django.views.generic.base import TemplateView, ContextMixin
+from django.views.decorators.http import condition
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.urls import reverse
 from django.utils.cache import patch_vary_headers
+from django.core.cache import cache
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.db.models import Q
 
 from django_hosts import reverse as host_reverse
 from captcha.models import CaptchaStore
@@ -29,12 +33,6 @@ logger = logging.getLogger(__name__)
 
 def get_book_from_cate():  # 返回每个分类下的书
     cate_list = []
-    # for index in range(1, 6):
-    #     books = CategoryTable.objects.filter(id=index)[:1].cate_books.\
-    #         select_related('author', 'category').all()[:6].\
-    #         only('author', 'category', 'image', 'resume', 'id', 'title')
-    # for books in books_list:
-    #     cate_list.append([books[0], books])
     for index in range(1, 6):
         books = InfoTable.objects.filter(category_id=index)\
             .select_related('author', 'category').all()[:6]\
@@ -48,7 +46,18 @@ def get_book_from_cate():  # 返回每个分类下的书
     cate_list.append(finished_books)
     return cate_list
 
-class SetVaryMixin():
+
+def get_recommend_books():
+    recommend_books = cache.get('recommend_books')
+    if recommend_books:
+        return recommend_books
+    book_ids = sample(range(1, InfoTable.objects.count() + 1), 10)
+    q = Q()
+    for book_id in book_ids:
+        q.add(Q(**{'id': book_id}), Q.OR)
+    recommend_books = InfoTable.objects.filter(q).only('id', 'title')
+    cache.add('recommend_books', recommend_books, 3600)
+    return recommend_books
 
 
 class HomeView(TemplateView):
@@ -56,6 +65,8 @@ class HomeView(TemplateView):
 
     def get(self, request, *args, **kwargs):
         response = super(HomeView, self).get(request, *args, **kwargs)
+        # response['Last-Modified'] = \
+        #     _datetime.datetime.now(tz=_datetime.timezone.utc).strftime('%a, %d %b %Y %H:%M:%S %Z')
         patch_vary_headers(response, ['cookie'])
         return response
 
@@ -83,9 +94,13 @@ class CategoryView(DetailView):
     template_name = 'novel_site/category.html'
     context_object_name = 'cate'
 
-    def get_object(self, queryset=None):
-        self.object = CategoryTable.objects.get(cate=self.kwargs['cate'])
-        return self.object
+    slug_url_kwarg = 'cate'
+    slug_field = 'cate'
+    model = CategoryTable
+
+    # def get_object(self, queryset=None):
+    #     self.object = CategoryTable.objects.get(cate=self.kwargs['cate'])
+    #     return self.object
 
     def get_context_data(self, **kwargs):
         context = super(CategoryView, self).get_context_data(**kwargs)
@@ -104,18 +119,23 @@ class InfoView(DetailView):
 
     template_name = 'novel_site/info.html'
     context_object_name = 'book'
-
-    def get_queryset(self):
-        return InfoTable.objects.select_related('author', 'category')  # 返回所有的书
+    queryset = InfoTable.objects.select_related('author', 'category')
 
     def get_context_data(self, **kwargs):
         context = super(InfoView, self).get_context_data(**kwargs)  # 这里面已经将infotable的get(id=n)赋给self.object了
-        all_chapters = list(self.object.all_chapters)
+
+        all_chapters = cache.get('info_' + self.kwargs['pk'])  # 如果用get_or_set会执行查询
+
+        if not all_chapters:
+            all_chapters = list(self.object.all_chapters)
+            cache.add('info_' + self.kwargs['pk'], all_chapters, 3600)
+
         context['all_chapters'] = all_chapters
         try:
             context['latest_eight_chapters'] = reversed(all_chapters[-8:])
         except IndexError:
             pass
+        context['recommend_books'] = get_recommend_books()
         return context
 
 
@@ -144,6 +164,28 @@ class BookView(DetailView):
         else:
             previous_page_url = host_reverse('novel_site:info', host='www', kwargs={'pk': self.kwargs['pk']})
         return previous_page_url, next_page_url
+
+    def get(self, request, *args, **kwargs):
+
+        last_modified = InfoTable.objects.only('id', 'update_time')\
+            .get(pk=self.kwargs['pk']).update_time
+
+        if request.user.is_authenticated:
+            if request.META.get('HTTP_IF_MODIFIED_SINCE'):  # 要用keys去看META里面的关键字
+                _req_modified_time = _datetime.datetime.\
+                    strptime(request.META.get('HTTP_IF_MODIFIED_SINCE'), '%a, %d %b %Y %H:%M:%S')
+                if not bool(last_modified - _req_modified_time):
+                    return HttpResponse(status=304)
+        else:
+            if request.META.get('HTTP_IF_MODIFIED_SINCE'):
+                _req_modified_time = _datetime.datetime.\
+                    strptime(request.META.get('HTTP_IF_MODIFIED_SINCE'), '%a, %d %b %Y %H:%M:%S')
+                if not bool(last_modified - _req_modified_time):
+                    return HttpResponse(status=304)
+        response = super(BookView, self).get(request, *args, **kwargs)
+        response['Last-Modified'] = last_modified.strftime('%a, %d %b %Y %H:%M:%S %Z')
+
+        return response
 
     def get_queryset(self):
         self.book_info = InfoTable.objects.select_related('category')\

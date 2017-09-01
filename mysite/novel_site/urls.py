@@ -9,13 +9,12 @@ from . import views
 app_name = 'novel_site'
 urlpatterns = [
 
-    url(r'^$', cache_page(60 * 20)(views.HomeView.as_view()), name='home'),
-    # url(r'^$', views.HomeView.as_view(), name='home'),
+    url(r'^$', cache_page(60 * 20)(views.HomeView.as_view()), name='home'),  # 整页缓存，并在view中根据cookie来识别
     url(r'^cate/quanben/$', views.QuanbenView.as_view(), name='quanben'),
-    url(r'^cate/(?P<cate>[a-z]+)/$', views.CategoryView.as_view(), name='category'),
-    url(r'^info/(?P<pk>[0-9]+)/$', cache_page(60 * 60)(views.InfoView.as_view()), name='info'),
-    url(r'^book/(?P<pk>[0-9]+)/(?P<index>[0-9]+)/$', cache_page(60 * 60)(views.BookView.as_view()), name='detail'),
-    
+    url(r'^cate/(?P<cate>[a-z]+)/$', views.CategoryView.as_view(), name='category'),  # 在模版文件用标签缓存
+    url(r'^info/(?P<pk>[0-9]+)/$', views.InfoView.as_view(), name='info'),  # 在视图文件用cache的api缓存
+    url(r'^book/(?P<pk>[0-9]+)/(?P<index>[0-9]+)/$', views.BookView.as_view(), name='detail'),  # 检验头部的last-modified
+
     
     url(r'^search', views.SearchView.as_view(), name='search'),
     url(r'^submit', views.form_test, name='form_test'),

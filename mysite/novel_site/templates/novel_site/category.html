@@ -3,10 +3,12 @@
 {% load cache %}
 
 {% block meta_description %}
-<title>{{ cate }}小说 好看的{{ cate }}小说_2017{{ cate }}小说排行榜_超级小说</title>
-<meta name="keywords" content="超级小说,{{ cate }}小说,小说阅读网,小说">
-<meta name="description" content="超级小说是广大书友最值得收藏的{{ cate }}小说阅读网，网站收录了当前最火热的{{ cate }}小说，免费提供高质量的小说最新章节，是广大网络小说爱好者必备的小说阅读网。">
-<link rel="alternate" href="http://m.superxiaoshuo/{{ cate.cate }}">
+{% cache 3600 cate_part0 cate.cate %}
+  <title>{{ cate }}小说 好看的{{ cate }}小说_2017{{ cate }}小说排行榜_超级小说</title>
+  <meta name="keywords" content="超级小说,{{ cate }}小说,小说阅读网,小说">
+  <meta name="description" content="超级小说是广大书友最值得收藏的{{ cate }}小说阅读网，网站收录了当前最火热的{{ cate }}小说，免费提供高质量的小说最新章节，是广大网络小说爱好者必备的小说阅读网。">
+  <link rel="alternate" href="http://m.superxiaoshuo/{{ cate.cate }}">
+{% endcache %}
 {% endblock meta_description %}
 
 {% block main %}
@@ -28,7 +30,7 @@
         </div>
     </div>
     {% endcache %}
-    {% cache 60 cate_part2 cate.cate %}
+    {% cache 300 cate_part2 cate.cate %}
     <div id="newscontent">
         <div class="l">
             <h2>更新列表</h2>

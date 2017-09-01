@@ -66,7 +66,7 @@ USE_TZ = False
 
 MIDDLEWARE = [
     'django_hosts.middleware.HostsRequestMiddleware',
-    'django.middleware.http.ConditionalGetMiddleware',
+    # 'django.middleware.http.ConditionalGetMiddleware',  # 检查请求头的ETag和Last-modified，并在响应头加上ETag
 
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
