@@ -153,7 +153,7 @@ STATICFILES_FINDERS = (
 
 LOGGING = {
     'version': 1,
-    'disable_existing_loggers': True,
+    # 'disable_existing_loggers': True,
 
     "formatters": {
         "simple": {"format": "[%(name)s] %(levelname)s: %(message)s"},
@@ -205,7 +205,7 @@ LOGGING = {
             'propagate': False,
         },
         "django.request": {
-            "handlers": [],
+            "handlers": ['default'],
             "level": "ERROR",
             "propagate": False,
         },

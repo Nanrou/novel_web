@@ -36,6 +36,7 @@ urlpatterns = [
 ]
 
 handler404 = 'mobile.views.page_not_found'
+handler403 = 'mobile.views.forbidden'
 
 if settings.DEBUG:
     import debug_toolbar

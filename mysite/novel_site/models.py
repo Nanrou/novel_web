@@ -28,7 +28,8 @@ class CategoryTable(models.Model):
     category = models.CharField(max_length=20)
 
     def get_absolute_url(self):
-        return reverse('novel_site:category', kwargs={'cate': self.cate})
+        # return reverse('novel_site:category', kwargs={'cate': self.cate})
+        return hosts_reverse('novel_site:category', host='www', kwargs={'cate': self.cate})
 
     def get_mobile_url(self):
         return hosts_reverse('mobile:category', host='mobile', kwargs={'cate': self.cate})
@@ -111,7 +112,8 @@ class Book(models.Model):
     book_id = models.IntegerField(verbose_name='book_id', null=True)
 
     def get_absolute_url(self):
-        return reverse('novel_site:detail', kwargs={'pk': self.book_id, 'index': self.pk})
+        # return reverse('novel_site:detail', kwargs={'pk': self.book_id, 'index': self.pk})
+        return hosts_reverse('novel_site:detail', host='www', kwargs={'pk': self.book_id, 'index': self.pk})
 
     def get_mobile_url(self):
         # return reverse('novel_site:m_detail', kwargs={'pk': self.book_id, 'index': self.pk})

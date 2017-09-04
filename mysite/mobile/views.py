@@ -5,6 +5,7 @@ from django.urls import reverse
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.shortcuts import redirect, render
 from django.views.decorators.cache import cache_page
+from django.views.decorators.vary import vary_on_cookie
 # from django_hosts.resolvers import reverse
 
 from novel_site.views import CategoryView, InfoView, BookView
@@ -79,6 +80,7 @@ class MobileInfoView(InfoView):
 
 
 @cache_page(60 * 120)
+@vary_on_cookie
 def info_paginator(request, pk, page):
     template_name = 'mobile/info_paginator.html'
 
@@ -117,4 +119,10 @@ class MobileSearchView(TemplateView):
 
 
 def page_not_found(request):
+    """    handler 404    """
     return render(request, 'mobile/404.html')
+
+
+def forbidden(request):
+    """    handler 403    """
+    return render(request, 'mobile/403.html')

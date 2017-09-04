@@ -62,7 +62,7 @@ function SetHome(obj,vrl)
     {
         try
         {
-			obj.style.behavior='url(#default#homepage)';obj.setHomePage(vrl);
+            obj.style.behavior='url(#default#homepage)';obj.setHomePage(vrl);
         }
         catch(e){
                 if(window.netscape) {
@@ -147,7 +147,6 @@ $(document).ready(function(){
         $.ajax({
             url: '/refresh_captcha',
             success: function(result){
-                console.log(result);
                 $('.captcha').attr('src', result['new_cptch_image']);
                 $('#id_captcha_0').attr('value', result['new_cptch_key']);
             }
@@ -156,15 +155,46 @@ $(document).ready(function(){
 });
 
 function add_book(){
+    var ll = window.location.href.split('/');
+    var book_id = ll[ll.length - 2];
+
     $.ajax({
-        url: '/add_book',
+        url: '/add_book/' + book_id + '/',
         success: function(result){
-            console.log(result);
             if (result['status'] == 'success'){
-                $('#collect_book').attr({'value': '取消收藏', 'onclick': 'remove_book()'});
+                $('#collect_book').attr('onclick', 'remove_book()').text('取消收藏');
+                alert('已成功添加到书架')
             } else {
                 $(location).attr('pathname', result['uri'])
             }
         }
     });
 }
+
+
+function remove_book(){
+    var ll = window.location.href.split('/');
+    var book_id = ll[ll.length - 2];
+
+    $.ajax({
+        url: '/remove_book/' + book_id + '/',
+        success: function(result) {
+            if (result['status'] == 'success') {
+                $('#collect_book').attr('onclick', 'add_book()').text('加入收藏');
+                alert('已移除出书架')
+            }
+        }})
+}
+
+
+$(document).ready(function(){     检测两次输入是否相同
+    $('#submit_button').click(function(){
+        $.ajax({
+            url: '/refresh_captcha',
+            success: function(result){
+                $('.captcha').attr('src', result['new_cptch_image']);
+                $('#id_captcha_0').attr('value', result['new_cptch_key']);
+            }
+        });
+    });
+});

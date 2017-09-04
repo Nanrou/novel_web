@@ -19,8 +19,13 @@
         </div>
             <div class="reg">
                 <div id="login_top">
-                    <a class="box" href="">登录</a>
-                    <a class="box" href="">注册</a>
+                  {% if user.id %}
+                    <a class="box" href="/profile/">我的书架</a>
+                    <a class="box" href="/logout/">登出</a>
+                  {% else %}
+                    <a class="box" href="/signin/">登录</a>
+                    <a class="box" href="/signup/">注册</a>
+                  {% endif %}
                 </div>
             </div>
     </div>

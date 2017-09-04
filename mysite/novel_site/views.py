@@ -5,7 +5,7 @@ import _datetime
 import logging
 import json
 
-from django.http import HttpResponseRedirect, HttpResponse
+from django.http import HttpResponse, HttpResponseForbidden
 from django.shortcuts import render, redirect
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
@@ -33,11 +33,22 @@ logger = logging.getLogger(__name__)
 
 def get_book_from_cate():  # 返回每个分类下的书
     cate_list = []
+
     for index in range(1, 6):
         books = InfoTable.objects.filter(category_id=index)\
             .select_related('author', 'category').all()[:6]\
             .only('author', 'category', 'image', 'resume', 'id', 'title')
         cate_list.append(books)
+
+    # q = Q()
+    # for index in range(1, 6):
+    #     q.add(Q(**{'id': index}), Q.OR)
+    #
+    # for cate in CategoryTable.objects.filter(q):
+    #     books = cate.cate_books.select_related('author', 'category').all()[:6]\
+    #         .only('author', 'category', 'image', 'resume', 'id', 'title')
+    #
+    #     cate_list.append(books)
 
     finished_books = InfoTable.objects.filter(_status=1)\
         .select_related('author', 'category').all()[:6] \
@@ -218,13 +229,17 @@ def page_not_found(request):
     return render(request, 'novel_site/404.html')
 
 
+def forbidden(request):
+    return render(request, 'novel_site/403.html')
+
+
 def form_test(request):
     if request.method == 'POST':
         form = TestForm(request.POST)
         if form.is_valid():
             for data in form.cleaned_data:
                 logger.info(data)
-            return redirect('/')
+            return HttpResponseForbidden()
         else:
             return render(request, 'novel_site/form_test.html', {'form': form})
     else:
@@ -239,7 +254,7 @@ def refresh_captcha(request):
     return HttpResponse(json.dumps(json_content), content_type='application/json')
 
 
-def sign_up(request):
+def sign_up(request, pattern='novel_site'):
     if request.method == 'POST':
         form = SignUpForm(request.POST)
         if form.is_valid():
@@ -253,13 +268,13 @@ def sign_up(request):
             uu.save()
             return redirect('/sign_in/')
         else:
-            return render(request, 'novel_site/sign_up.html', {'form': form})
+            return render(request, '{}/sign_up.html'.format(pattern), {'form': form})
     else:
         form = SignUpForm()
-        return render(request, 'novel_site/sign_up.html', {'form': form})
+        return render(request, '{}/sign_up.html'.format(pattern), {'form': form})
 
 
-def sign_in(request):
+def sign_in(request, pattern='novel_site'):
 
     error_msg = ''
     if not request.META.get('HTTP_REFERER').endswith('/signin/'):
@@ -274,11 +289,11 @@ def sign_in(request):
         else:
             form = SignInForm()
             error_msg = 'wrong username or password, please try again'
-            return render(request, 'novel_site/sign_in.html', {'form': form, 'error_msg': error_msg})
+            return render(request, '{}/sign_in.html'.format(pattern), {'form': form, 'error_msg': error_msg})
 
     else:
         form = SignInForm()
-        return render(request, 'novel_site/sign_in.html', {'form': form, 'error_msg': error_msg})
+        return render(request, '{}/sign_in.html'.format(pattern), {'form': form, 'error_msg': error_msg})
 
 
 def logout_view(request):
@@ -287,19 +302,19 @@ def logout_view(request):
 
 
 @login_required(login_url='/signin/')
-def show_profile(request):
+def show_profile(request, pattern='novel_site'):
     user_id = request.session.get('_auth_user_id')
     profile_instance, _ = ProfileTable.objects.get_or_create(owner_id=int(user_id))
     fav_books = profile_instance.get_books()
-    return render(request, 'novel_site/profile.html', {'fav_books': fav_books})
+    return render(request, '{}/profile.html'.format(pattern), {'fav_books': fav_books})
 
 
 # @login_required(login_url='/signin/')
-def add_book(request):
+def add_book(request, book_id):
     if request.user.is_authenticated:
         user_id = request.session.get('_auth_user_id')
         profile_instance, _ = ProfileTable.objects.get_or_create(owner_id=int(user_id))
-        book_id = request.path.split('/')[-2]
+        # book_id = request.META.get('HTTP_REFERER').split('/')[-2]
         profile_instance.add_book(book_id)
         json_content = {'status': 'success'}
     else:
@@ -308,10 +323,10 @@ def add_book(request):
 
 
 @login_required(login_url='/signin/')
-def remove_book(request):
+def remove_book(request, book_id):
     user_id = request.session.get('_auth_user_id')
     profile_instance, _ = ProfileTable.objects.get_or_create(owner_id=int(user_id))
-    book_id = request.path.split('/')[-2]
+    # book_id = request.META.get('HTTP_REFERER').split('/')[-2]
     profile_instance.remove_book(book_id)
     json_content = {'status': 'success'}
     return HttpResponse(json.dumps(json_content), content_type='application/json')

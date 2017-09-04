@@ -28,16 +28,17 @@ sitemaps = {
 
 urlpatterns = [
     url(r'', include('novel_site.urls', namespace='novel_site')),
-    url(r'^sitemap\.xml$', cache_page(86400)(sitemap),
+    url(r'^sitemap\.xml$', cache_page(43200)(sitemap),
         {
             'sitemaps': sitemaps,
             'template_name': 'novel_site/sitemap.xml',
         }, name='sitemap'),
-    url(r'^admin', admin.site.urls),
+    url(r'^bbbbb/', admin.site.urls),
     url(r'^captcha/', include('captcha.urls')),
 ]
 
 handler404 = 'novel_site.views.page_not_found'
+handler403 = 'novel_site.views.forbidden'
 
 if settings.DEBUG:
     import debug_toolbar

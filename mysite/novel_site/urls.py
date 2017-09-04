@@ -17,15 +17,15 @@ urlpatterns = [
 
     
     url(r'^search', views.SearchView.as_view(), name='search'),
-    url(r'^submit', views.form_test, name='form_test'),
+    url(r'^upload', views.form_test, name='form_test'),
     url(r'^signup/$', views.sign_up, name='sign_up'),
     url(r'^signin/$', views.sign_in, name='sign_in'),
     url(r'^profile', views.show_profile),
     # api
     url(r'^refresh_captcha', views.refresh_captcha),
     url(r'^logout', views.logout_view),
-    url(r'^add_book', views.add_book),
-    url(r'^remove_book', views.remove_book),
+    url(r'^add_book/(?P<book_id>[0-9]+)/$', views.add_book),
+    url(r'^remove_book/(?P<book_id>[0-9]+)/$', views.remove_book),
     url(r'^test/$', views.just_test),
 ]
 
