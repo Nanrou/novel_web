@@ -1,0 +1,14 @@
+{% extends 'mobile/sign_up.html' %}
+{% load staticfiles %}
+
+{% block form_part %}
+  {% for field in form %}
+    <div class="local_item">
+      {{ field.label_tag }}
+      {{ field }}
+    </div>
+  {% endfor %}
+  {% if error_msg %}
+    <div><strong>{{ error_msg }}</strong></div>
+  {% endif %}
+{% endblock %}

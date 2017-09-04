@@ -255,8 +255,10 @@ def refresh_captcha(request):
 
 
 def sign_up(request, pattern='novel_site'):
+    error_msg = ''
     if request.method == 'POST':
-        form = SignUpForm(request.POST)
+        # form = SignUpForm(request.POST)
+        form = SignInForm(request.POST)
         if form.is_valid():
             # for data in form.cleaned_data:
             #     logger.info(data)
@@ -266,12 +268,13 @@ def sign_up(request, pattern='novel_site'):
             uu = User.objects.create_user(username=username, password=password, email=email)
             # 要用create_user，不然会是明文密码
             uu.save()
-            return redirect('/sign_in/')
+            return redirect('/signin/')
         else:
-            return render(request, '{}/sign_up.html'.format(pattern), {'form': form})
+            error_msg = 'wrong data'
+            return render(request, '{}/sign_up.html'.format(pattern), {'form': form, 'error_msg': error_msg})
     else:
         form = SignUpForm()
-        return render(request, '{}/sign_up.html'.format(pattern), {'form': form})
+        return render(request, '{}/sign_up.html'.format(pattern), {'form': form, 'error_msg': error_msg})
 
 
 def sign_in(request, pattern='novel_site'):
