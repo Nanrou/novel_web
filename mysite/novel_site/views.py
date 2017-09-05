@@ -268,7 +268,8 @@ def sign_up(request, pattern='novel_site'):
             uu.save()
             return redirect('/sign_in/')
         else:
-            return render(request, '{}/sign_up.html'.format(pattern), {'form': form})
+            # return render(request, '{}/sign_up.html'.format(pattern), {'form': form})
+            return redirect('/sign_up/', {'form': form})
     else:
         form = SignUpForm()
         return render(request, '{}/sign_up.html'.format(pattern), {'form': form})
@@ -289,7 +290,8 @@ def sign_in(request, pattern='novel_site'):
         else:
             form = SignInForm()
             error_msg = 'wrong username or password, please try again'
-            return render(request, '{}/sign_in.html'.format(pattern), {'form': form, 'error_msg': error_msg})
+            # return render(request, '{}/sign_in.html'.format(pattern), {'form': form, 'error_msg': error_msg})
+            return redirect('/signin/', {'form': form, 'error_msg': error_msg})
 
     else:
         form = SignInForm()
