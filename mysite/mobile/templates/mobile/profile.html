@@ -1,0 +1,15 @@
+{% extends 'mobile/home.html' %}
+{% load staticfiles %}
+
+
+{% block main%}
+  {% for book in fav_books %}
+    <div><a href="{{ book.get_absolute_url }}">{{ book.title }}</a></div>
+  {% empty %}
+    <div>none</div>
+  {% endfor %}
+  <br/>
+  <a href="/logout/">Log out</a>
+  <div>{{ user }}</div>
+  <a href="/">Home</a>
+{% endblock %}

@@ -1,27 +1,27 @@
 
 //添加字符串格式化功能
 String.prototype.format = function(args) {
-	var result = this;
-	if (arguments.length > 0) {    
-		if (arguments.length == 1 && typeof (args) == "object") {
-			for (var key in args) {
-				if(args[key]!=undefined){
-					var reg = new RegExp("({" + key + "})", "g");
-					result = result.replace(reg, args[key]);
-				}
-			}
-		}
-		else {
-			for (var i = 0; i < arguments.length; i++) {
-				if (arguments[i] != undefined) {
-					var reg = new RegExp("({[" + i + "]})", "g");
-					result = result.replace(reg, arguments[i]);
-				}
-			}
-		}
-	}
-	return result;
-}
+    var result = this;
+    if (arguments.length > 0) {
+        if (arguments.length == 1 && typeof (args) == "object") {
+            for (var key in args) {
+                if(args[key]!=undefined){
+                    var reg = new RegExp("({" + key + "})", "g");
+                    result = result.replace(reg, args[key]);
+                }
+            }
+        }
+        else {
+            for (var i = 0; i < arguments.length; i++) {
+                if (arguments[i] != undefined) {
+                    var reg = new RegExp("({[" + i + "]})", "g");
+                    result = result.replace(reg, arguments[i]);
+                }
+            }
+        }
+    }
+    return result;
+};
 
 
 function setCookie(c_name,value,expiredays)//设置cookie
@@ -31,12 +31,12 @@ function setCookie(c_name,value,expiredays)//设置cookie
     //exdate.setDate(exdate.getDate()+expiredays); //时间加上30天 
     //document.cookie=c_name+ "=" +escape(value)+";expires="+exdate.toUTCString()+";";
     //escape是编码字符串（编码URL有专门的encodeURL），toGMTString已经弃用，改成UTC，paths的默认位置就是/
-	$.cookie(c_name, value, {expires: expiredays, path:'/'})
+    $.cookie(c_name, value, {expires: expiredays, path:'/'})
 }
 
 function getCookie(c_name)//拿到某个name的值
 {
-	/*
+    /*
     if (document.cookie.length>0){//若没有cookie则直接返回空
         c_start=document.cookie.indexOf(c_name + "=");//找到目标name的起始位置
         if (c_start!=-1){ 
@@ -47,8 +47,8 @@ function getCookie(c_name)//拿到某个name的值
         } 
     }
     return "";
-	*/
-	return $.cookie(c_name);
+    */
+    return $.cookie(c_name);
 }
 
 function delCookie(name){//只需要设置 expires 参数为以前的时间即可
@@ -89,28 +89,28 @@ function addFavorite() {
         window.external.AddToFavoritesBar(url, title); //IE8
     }
     else if (document.all) {
-		try{
-			window.external.addFavorite(url, title);
-		}catch(e){
-			alert('您的浏览器不支持,请按 Ctrl+D 手动收藏!');
-		}
-	}
-	else if (window.sidebar) {
-		window.sidebar.addPanel(title, url, "");
-	}
-	else {
-	alert('您的浏览器不支持,请按 Ctrl+D 手动收藏!');
-	}
+        try{
+            window.external.addFavorite(url, title);
+        }catch(e){
+            alert('您的浏览器不支持,请按 Ctrl+D 手动收藏!');
+        }
+    }
+    else if (window.sidebar) {
+        window.sidebar.addPanel(title, url, "");
+    }
+    else {
+    alert('您的浏览器不支持,请按 Ctrl+D 手动收藏!');
+    }
 }
 //lastread
 function show_lastread() {
-	var title = $.cookie('lastread_title');
-	var url = $.cookie('lastread_url');
-	if (!title) {
-		return '';
-	}
-	var tmp = '<div class="nav_lastread"><div>你上次看到这里了： <a href="{u}">{t}</a></div></div>'.format({t:title, u:url});
-	document.write(tmp);
+    var title = $.cookie('lastread_title');
+    var url = $.cookie('lastread_url');
+    if (!title) {
+        return '';
+    }
+    var tmp = '<div class="nav_lastread"><div>你上次看到这里了： <a href="{u}">{t}</a></div></div>'.format({t:title, u:url});
+    document.write(tmp);
 }
 
 //updown，就是那个滑动插件的
@@ -187,14 +187,13 @@ function remove_book(){
 }
 
 
-$(document).ready(function(){     检测两次输入是否相同
-    $('#submit_button').click(function(){
-        $.ajax({
-            url: '/refresh_captcha',
-            success: function(result){
-                $('.captcha').attr('src', result['new_cptch_image']);
-                $('#id_captcha_0').attr('value', result['new_cptch_key']);
-            }
-        });
+$(document).ready(function(){
+    $('#id_affirm_password').blur(function(){
+        if ($('#id_affirm_password').val() == $('#id_password').val()){
+            $('#submit_button').removeAttr('disabled');
+        } else{
+            alert('两次密码不一致');
+            $('#submit_button').attr('disabled', 'disabled');
+        }
     });
 });

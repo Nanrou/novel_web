@@ -26,6 +26,7 @@ app_name = 'mobile'
 
 urlpatterns = [
     url(r'^$', views.MobileHomeView.as_view(), name='home'),
+    url(r'^$', views.top_view, name='top'),
     url(r'^cate/quanben/$', views.MobileQuanbenView.as_view(), name='quanben'),
     url(r'^cate/(?P<cate>[a-z]+)/$', views.MobileCategoryView.as_view(), name='category'),
     url(r'^info/(?P<pk>[0-9]+)/$', views.MobileInfoView.as_view(), name='info'),
@@ -33,9 +34,9 @@ urlpatterns = [
     url(r'^book/(?P<pk>[0-9]+)/(?P<index>[0-9]+)/$', views.MobileBookView.as_view(), name='detail'),
     url(r'^search', views.MobileSearchView.as_view(), name='search'),
 
-    url(r'^signup/$', sign_up, {'pattern': 'moblie'}, name='sign_up'),
-    url(r'^signin/$', sign_in, {'pattern': 'moblie'}, name='sign_in'),
-    url(r'^profile', show_profile, {'pattern': 'moblie'}),
+    url(r'^signup/$', sign_up, {'pattern': 'mobile'}, name='sign_up'),
+    url(r'^signin/$', sign_in, {'pattern': 'mobile'}, name='sign_in'),
+    url(r'^profile', show_profile, {'pattern': 'mobile'}),
 
     # api
     url(r'^refresh_captcha', refresh_captcha),

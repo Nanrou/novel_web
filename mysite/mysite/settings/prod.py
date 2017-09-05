@@ -60,3 +60,6 @@ LOGGING["loggers"]["django.request"]["handlers"].append("syslog")
 
 PARENT_HOST = 'superxiaoshuo.com'
 
+# Captcha settings
+
+CAPTCHA_LENGTH = 4

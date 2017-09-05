@@ -1,3 +1,4 @@
+from django.http import HttpResponseBadRequest
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
 from django.views.generic.base import TemplateView
@@ -22,6 +23,10 @@ class MobileHomeView(TemplateView):
         # context['cate_book'] = get_book_from_cate()
         # return context
         return {'cate_book': get_book_from_cate()}
+
+
+def top_view(request):
+    return HttpResponseBadRequest
 
 
 class MobileCategoryView(ListView):

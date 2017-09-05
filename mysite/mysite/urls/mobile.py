@@ -28,11 +28,12 @@ sitemaps = {
 
 urlpatterns = [
     url(r'', include('mobile.urls', namespace='mobile')),
-    url(r'^sitemap\.xml$', cache_page(86400)(sitemap),
+    url(r'^sitemap\.xml$', cache_page(43200)(sitemap),
         {
             'sitemaps': sitemaps,
             'template_name': 'mobile/sitemap.xml',
         }, name='sitemap'),
+    url(r'^captcha/', include('captcha.urls')),
 ]
 
 handler404 = 'mobile.views.page_not_found'

@@ -695,3 +695,8 @@ h4.bookname a {color: #007BB1;}
 .nr_page .mulu{text-align:center;}
 .nr_page .next{text-align:right;margin-right:7px;}
 .nr_nr{margin:15px;line-height:150%;font-size:22px;color:#000;overflow:hidden;}
+
+.local_item {width: 100%;border: solid 1px #ddd;height: 35px;margin: 12px 0;}
+.local_item label {float: left; margin-left: 2%;margin-right: 5px;}
+.local_item input {float: right; height: 30px; width: 45%;}
+.local_item select {float: right; height: 35px; margin-right: 5%}

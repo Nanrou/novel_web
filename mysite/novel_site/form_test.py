@@ -30,5 +30,7 @@ class SignInForm(SignInFormBase):
     captcha = CaptchaField(error_messages={"invalid": "验证码错误"})
 
 
-class SignUpForm(SignInForm):
+class SignUpForm(SignInFormBase):
+    affirm_password = CharField(max_length=32, widget=PasswordInput)
     email = EmailField()
+    captcha = CaptchaField(error_messages={"invalid": "验证码错误"})
