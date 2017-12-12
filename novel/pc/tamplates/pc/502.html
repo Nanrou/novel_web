@@ -1,0 +1,22 @@
+{% extends 'novel_site/base.html' %}
+{% load staticfiles %}
+
+
+{% block main %}
+<div style="width: 970px">
+    <div style="margin-top: 2%; margin-left: -15px; margin-right: 15px;">
+       <div style="float: left; position: relative; padding-left: 85px; padding-right: 15px; padding-bottom: 15px">
+            <img src="{% static 'pc/images/404.jpg' %}" width="317" height="345"/>
+        </div>
+        <div style="float: left; position: relative; padding-left: 15px; padding-right: 15px; padding-top: 15px">
+            <h2 style="font-size: 46px;" >我要去打怪兽了</h2>
+            <p style="font-size: 36px; margin-top: 15px">
+                等下再来吧
+            <br/>
+                <a href="/" style="color: #6F78A7">回到首页</a>
+                <a href="javascript:history.go(-1);">回到上一页</a>
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock main %}
