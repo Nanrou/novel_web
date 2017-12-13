@@ -104,3 +104,6 @@ ENV/
 *.exe
 phantomjs
 2017*/
+tmp/
+crawler/novel/
+*.txt
