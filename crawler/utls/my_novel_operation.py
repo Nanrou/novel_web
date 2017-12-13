@@ -18,7 +18,6 @@ from crawler.db.operateDB import get_infotable_count, get_title_id
 from crawler.utls.my_logger import MyLogger
 from crawler.db.operateDB import insert_to_detail, insert_to_info, get_infotable_count
 
-
 Logger = MyLogger('novel_operation')
 
 MODIFIED_TEXT = [r'一秒记住.*?。', r'(看书.*?)', r'纯文字.*?问', r'热门.*?>', r'最新章节.*?新',
@@ -123,7 +122,7 @@ def split_book(txt_path, title, chapter_index, store_path, chapter_split=' ', ch
                         'id': chapter_index,
                         'title': title,
                         'chapter': chapter_title,
-                        'content': _txt.replace('\r\n\r\n', '<br/>').replace('  ', '　'),
+                        'content': _txt.replace('\r\n\r\n', '<br/>'),
                     }
                     with open(os.path.join(store_path, str(chapter_index)), 'wb') as wf:
                         pickle.dump(res, wf)
@@ -143,10 +142,38 @@ def split_book(txt_path, title, chapter_index, store_path, chapter_split=' ', ch
                 'id': chapter_index,
                 'title': title,
                 'chapter': chapter_title,
-                'content': _txt.replace('\r\n\r\n', '<br/>').replace('  ', '　'),
+                'content': _txt.replace('\r\n\r\n', '<br/>')
             }
             with open(os.path.join(store_path, str(chapter_index)), 'wb') as wf:
                 pickle.dump(res, wf)
+
+
+def new_split_book(file):
+    with open(file, 'r', encoding='utf-8') as rf:
+        txt = list(rf.readlines())
+    title = txt[0].strip()
+    start_index = None
+    chapter_title = ''
+    one_chapter = []
+    for index, row in enumerate(txt[1:]):
+        if '\u4e00' <= row[0] <= '\u9fff':
+            if chapter_title:
+                res = {
+                    'title': title,
+                    'chapter': chapter_title,
+                    'content': '<br/>'.join(one_chapter)
+                }
+                yield res
+            chapter_title = row.strip()
+        else:
+            one_chapter.append(row.strip())
+    last_res = {
+        'title': title,
+        'chapter': chapter_title,
+        'content': '<br/>'.join(one_chapter)
+    }
+    yield last_res
+
 
 
 def filter_content(txt):  # 这个文本过滤放到章节中去，不要对章节名判断
@@ -186,7 +213,7 @@ def bbb(file):
 
 @time_clock
 def insert_info(start, store_path='./info/'):  # 要指明从第几本开始输入
-    info_list = (store_path + str(i) for i in sorted(map(int, os.listdir(store_path)))[start-1:])
+    info_list = (store_path + str(i) for i in sorted(map(int, os.listdir(store_path)))[start - 1:])
     for index, info in enumerate(info_list, start=start):  # 这里的逻辑是一次插入一个info
         insert_to_info(info)
 
@@ -210,10 +237,9 @@ def start_insert_detail(start, path='./book/chapter/'):
     :param path:
     :return:
     """
-    book_paths = [path + str(i) for i in sorted(map(int, os.listdir('./book/chapter/')))[start-1:]]
+    book_paths = [path + str(i) for i in sorted(map(int, os.listdir('./book/chapter/')))[start - 1:]]
     for book_path in book_paths:
         insert_detail(book_path)
-
 
 
 @time_clock

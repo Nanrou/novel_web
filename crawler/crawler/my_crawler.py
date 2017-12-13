@@ -43,17 +43,15 @@ from async_timeout import timeout
 import codecs
 import time
 
-
 import aiohttp
 from aiohttp.web_exceptions import HTTPError
 from lxml import etree
 from lxml.etree import XPathError
 import requests
 
-from crawler.utls.my_logger import MyLogger
-from crawler.crawler.my_exception import FetchError
-from crawler.utls.my_decorate import time_clock
-
+from utls.my_logger import MyLogger
+from .my_exception import FetchError
+from utls.my_decorate import time_clock
 
 """
 约定
@@ -75,7 +73,7 @@ info表的表头为
 
 HEADERS = {'user-agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:51.0) Gecko/20100101 Firefox/51.0 '}
 
-LOGGER = MyLogger('__name__')
+LOGGER = MyLogger(__name__)
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -86,10 +84,9 @@ class AsyncCrawlerBase(object):
     """
     异步下载主逻辑
     接收urls，然后就安排工人下载
-    要求传入的urls必须是list,['name', 'url']
     """
 
-    def __init__(self, urls, name=None, loop=None, max_tasks=5, store_path='./', headers=None, waiting_time=3):
+    def __init__(self, urls, name=None, loop=None, max_tasks=5, store_path='./tmp', headers=HEADERS, waiting_time=3):
         """
 
         :param urls:
@@ -107,8 +104,6 @@ class AsyncCrawlerBase(object):
         if name is None:
             name = 'tmp'
         self._name = name
-        if headers is None:
-            headers = HEADERS
         self._session = aiohttp.ClientSession(loop=self._loop, headers=headers)
         self._q = Queue(loop=self._loop)
         self._lock = Lock()  # 增加了锁的功能
@@ -207,11 +202,11 @@ class AsyncCrawlerBase(object):
                                     res = self.fetch(body)
                                 except FetchError as e:  # 捕捉异常
                                     LOGGER.warning('[fetch error] {} in [{}]'.format(e.__str__(), u))  # 抛出什么值好呢
-                                    self.add_url((u, r_times-1))  # 重试
+                                    self.add_url((u, r_times - 1))  # 重试
                                 except Exception as e:  # 捕捉异常
                                     LOGGER.warning('[unknown error] {} in [{}]'.format(e, u))
                                 else:
-                                    self.store(res)
+                                    self.store(res, u)
                                     LOGGER.debug('done with {}'.format(u))
                                     self._success_times += 1
                                 finally:
@@ -232,7 +227,7 @@ class AsyncCrawlerBase(object):
                         self._lock.release()
             except asyncio.TimeoutError:  # 注意捕捉的类别
                 LOGGER.warning('timeout in {}'.format(u))
-                self.add_url((u, r_times-1))  # 超时后重试
+                self.add_url((u, r_times - 1))  # 超时后重试
             finally:
                 return  # 这个return应该是可以不要的啊
         else:
@@ -243,8 +238,9 @@ class AsyncCrawlerBase(object):
             self._lock.release()
         return
 
-    def store(self, res):
-        _file_name = os.path.join(self._store_path, self._name)
+    def store(self, res, u):
+        # _file_name = os.path.join(self._store_path, self._name)
+        _file_name = os.path.join(self._store_path, res.get('name'))
         with open(_file_name, 'wb') as wf:
             pickle.dump(res, wf)
 
@@ -263,6 +259,7 @@ class XpathCrawler(AsyncCrawlerBase):
     """
     加了根据xpath规则来剥取的方法
     """
+
     def __init__(self, urls, parse_rule, *args, **kwargs):
         """
 
@@ -284,7 +281,7 @@ class XpathCrawler(AsyncCrawlerBase):
     #         except XPathError or IndexError:  # 抛出剥取异常
     #             raise FetchError('wrong xpath syntax [{}]'.format(k))
     #     return res
-        
+
     def fetch(self, body):
         """
         抓取的逻辑，负责报异常
@@ -305,10 +302,9 @@ class XpathCrawler(AsyncCrawlerBase):
         if wrong_times > 3:
             raise FetchError('{} items miss, so retry again'.format(wrong_times))
         return res
-        
+
     def fetch_detail(self, page_body, k, v):
-        res = {}
-        res[k] = page_body.xpath(v)[0]
+        res = {k: page_body.xpath(v)[0]}
         return res
 
 
@@ -324,8 +320,8 @@ class ImageDownload(DownloadCrawler):  # 图片下载模块
     def __init__(self, urls, store_path='./image/', *args, **kwargs):
         super(ImageDownload, self).__init__(urls, store_path=store_path, *args, **kwargs)
 
-    def store(self, res):
-        _file_name = os.path.join(self._store_path, self._name+'.jpg')
+    def store(self, res, u):
+        _file_name = os.path.join(self._store_path, self._name + '.jpg')
         with open(_file_name, 'wb') as wf:
             wf.write(res)
 
@@ -334,11 +330,11 @@ class NovelDownload(DownloadCrawler):  # 小说下载模块
     def __init__(self, urls, store_path='./novel/', *args, **kwargs):
         super(NovelDownload, self).__init__(urls, store_path=store_path, *args, **kwargs)
 
-    def store(self, res):
-        _file_name = os.path.join(self._store_path, self._name+'.txt')
+    def store(self, res, u):
+        _file_name = os.path.join(self._store_path, u.split('/')[-1])
         with codecs.open(_file_name, 'w', encoding='utf-8') as wf:
             wf.write(res)
-
+        LOGGER.info('done {}'.format(u))
 
 # def run_crawler(crawler, *args, **kwargs):
 #     loop = asyncio.get_event_loop()
@@ -355,7 +351,7 @@ def run_crawler(crawler, url, *args, **kwargs):  # 运行爬虫函数
     loop.close()
 
 
-def my_search(title, url, parse_rule, key_word=None, data=None, store_path='./', cookie=None):
+def my_search(title, url, parse_rule, key_word=None, data=None, store_path='./', headers=HEADERS, cookie=None):
     """
     :param title: 小说名字
     :param url: 目标搜索网址
@@ -363,6 +359,7 @@ def my_search(title, url, parse_rule, key_word=None, data=None, store_path='./',
     :param key_word: 关键字在data中的键名
     :param data: 请求中带的data
     :param store_path: 存放生成文件的地址
+    :param headers: 请求头部
     :param cookie: 请求中带的cookie
     :return:
     """
@@ -376,7 +373,7 @@ def my_search(title, url, parse_rule, key_word=None, data=None, store_path='./',
         data[key_word] = title
     ans = ''
     try:  # 构造请求去找书
-        response = requests.get(url, data=data, headers=HEADERS, cookies=cookie)
+        response = requests.get(url, data=data, headers=headers, cookies=cookie)
     except requests.exceptions.ConnectionError:
         msg = 'failure, request fail in {}'.format(title)
     else:
