@@ -1,0 +1,20 @@
+{% extends 'pc/base.html' %}
+{% load staticfiles %}
+
+{% block main %}
+<div style="width: 980px; background-color:rgb(234,241,234)">
+    <div id="bdcs-frame-box" style="margin-left: 25px"></div>
+    <script type="text/javascript">
+        var bdcsFrameSid="13024648538113669062";
+        var bdcsFrameWidth = 552;
+        var bdcsFrameWt = 1;
+        var bdcsFrameHt = 1;
+        var bdcsFrameResultNum = 10;
+{% comment %}
+        var bdcsFrameBgColor = "#CCFFCC";
+{% endcomment %}
+    </script>
+    <script type="text/javascript" src="http://zhannei.baidu.com/static/js/iframe.js">
+    </script>
+</div>
+{% endblock main %}

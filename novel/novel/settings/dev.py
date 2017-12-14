@@ -32,6 +32,8 @@ CSRF_COOKIE_SECURE = False
 
 PARENT_HOST = 'superxiaoshuo.dev:8000'
 
+# 邀请码
+INVITE_CODE = ['lulu', 'Amao']
 
 if DEBUG:
     try:

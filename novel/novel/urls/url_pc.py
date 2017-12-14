@@ -23,6 +23,14 @@ urlpatterns = [
     path('', include('pc.urls', namespace='pc')),
     path('captcha', include('captcha.urls')),
 ]
+
+
+# exception handler
+handler404 = 'pc.views.page_not_found'
+handler403 = 'pc.views.page_forbidden'
+handler500 = 'pc.views.server_wrong'
+
+
 if settings.DEBUG:
     import debug_toolbar
 
