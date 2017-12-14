@@ -79,14 +79,14 @@ function Paginator() {
     if(cur_url.indexOf('-') > -1){
         location.href = cur_url.substring(0, cur_url.indexOf('-')+1) + page + '/';
     }else{
-        location.href = cur_url.substring(0, cur_url.length-1) + "-" + page + '/';
+        location.href = cur_url.substring(0, cur_url.length-1) + "/page-" + page + '/';
     }
 }
 
 
 function goToPaginator() {
     var cur_url = window.location.href;
-    location.href = cur_url.substring(0, cur_url.length-1) + "-1/";
+    location.href = cur_url.substring(0, cur_url.length-1) + "/page-1/";
 }
 
 $(document).ready(function(){

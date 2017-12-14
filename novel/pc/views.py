@@ -40,7 +40,7 @@ class HomeView(TemplateView):
         for index in range(1, 7):
             books = BookTable.objects.filter(category_id=index) \
                         .select_related('author', 'category').all()[:14] \
-                .only('author', 'category', 'image', 'resume', 'id', 'title')
+                        .only('author', 'category', 'image', 'resume', 'id', 'title')
             cate_list.append(books)
         return cate_list
 
@@ -53,10 +53,10 @@ class HomeView(TemplateView):
         context['cate_list2'] = cate_list[3:]
 
         context['latest_books'] = BookTable.objects.select_related('author', 'category') \
-                                      .defer('image', 'resume').order_by('update_time').all()[:20]
+                                           .defer('image', 'resume').order_by('update_time').all()[:20]
         context['newest_books'] = BookTable.objects.select_related('author', 'category') \
-                                      .only('author', 'title', 'id', 'category', 'update_time') \
-                                      .order_by('-id').all()[:20]
+                                           .only('author', 'title', 'id', 'category', 'update_time') \
+                                           .order_by('-id').all()[:20]
         return context
 
 

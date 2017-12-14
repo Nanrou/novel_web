@@ -29,15 +29,14 @@
                 </div>
             </div>
     </div>
-
     <!-- 登陆之后显示的 -->
     <div id="info" class="login_top" style="display:none">
         <a rel="nofollow" href="" style="color:#fff;">我的书架</a>
         <a rel="nofollow" href="" style="color:#fff;">查看资料</a>
         <a rel="nofollow" href="" style="color:#fff">退出</a>
     </div>
-
 {% endblock header %}
+
 {% block main %}
     {% for books in cate_book %}
         {% for book in books %}
@@ -52,7 +51,7 @@
                     <div class="block">
                         <div class="block_img">
                             <a href="{{ book.get_mobile_url }}">
-                                <img src="{% static book.image %}" alt="{{ book.title }}" onerror="{% static 'novel_site/images/miss.jpg' %}" width="80" height="100">
+                                <img src="{% static book.image %}" alt="{{ book.title }}" onerror="{% static 'pc/images/snfoi30zsd.jpg' %}" width="80" height="100">
                             </a>
                         </div>
                         <div class="block_txt">
@@ -60,7 +59,7 @@
                                 <a href="{{ book.get_mobile_url }}" style="color: #007BB1;">{{ book.title }}</a>
                             </h2>
                             <p>{{ book.author }}</p>
-                            <p><a href="{{ book.get_mobile_url }}">{{ book.resume }}</a></p>
+                            <p><a href="{{ book.get_mobile_url }}">{{ book.pure_resume }}</a></p>
                         </div>
                         <div style="clear:both"></div>
                         <ul>

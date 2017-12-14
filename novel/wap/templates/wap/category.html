@@ -2,9 +2,9 @@
 {% load staticfiles %}
 
 {% block meta_description %}
-    <title>{{ cate }}小说小说排行榜-超级小说移动版</title>
-    <meta name="keywords" content="{{ cate }}小说小说排行榜,{{ cate }}小说小说txt下载">
-    <meta name="description" content="超级小说移动版提供免费、热门的{{ cate }}小说小说排行榜、最新{{ cate }}小说小说及TXT下载。">
+    <title>{{ cate.category }}小说小说排行榜-超级小说移动版</title>
+    <meta name="keywords" content="{{ cate.category }}小说小说排行榜,{{ cate.category }}小说小说txt下载">
+    <meta name="description" content="超级小说移动版提供免费、热门的{{ cate.category }}小说小说排行榜、最新{{ cate.category }}小说小说及TXT下载。">
     <link rel="canonical" href="http://www.superxiaoshuo.com/cate/{{ cate.cate }}">
 {% endblock meta_description %}
 
@@ -30,11 +30,11 @@
             <ul>
                 <li class="prev"><a href="/cate/jiakong/">架空历史</a></li>
                 <li class="prev"><a href="/cate/wuxia/">武侠世界</a></li>
-                <li class="prev"><a href="/cate/xuanyi/">经典悬疑</a></li>
+                <li class="prev"><a href="/cate/lingyi/">灵异悬疑</a></li>
             </ul>
         </div>
 
-        <div class="toptab"><span class="active">{{ cate }}小说</span></div>
+        <div class="toptab"><span class="active">{{ cate.category }}小说</span></div>
 
         {% for book in cate_books %}
         <div class="bookbox">
@@ -48,20 +48,21 @@
                 <div class="author">作者：{{ book.author }}</div>
                 <div class="update"><span>更新至：</span><a href="{{ book.latest_chapter_url }}">{{ book.latest_chapter }}</a></div>
                 <div class="intro_line">
-                    <span>简介：</span>{{ book.resume|truncatechars:30 }}
+                    <span>简介：</span>{{ book.pure_resume|truncatechars:30 }}
                 </div>
             </div>
         </div>
         {% endfor %}
     {% endblock content_part %}
+
     {% block paginator_part %}
         <div class="page">
             <div style="font-size: 18px;">
                 <form action="">
                     请选择页数
                     <select id="page_num" style="width: 75px; height: 30px; font-size: 20px; margin-top: 5px;"  onchange="Paginator()">
-                        {% for page in page_range %}
-                            {% if page == cate_books.number %}
+                        {% for page in paginator.page_range %}
+                            {% if page == page_obj.number %}
                                 <option value="{{ page }}"  selected="selected">{{ page }}</option>
                             {% else %}
                                 <option value="{{ page }}">{{ page }}</option>
@@ -72,7 +73,7 @@
                 </form>
             </div>
             <br/>
-            第{{ cate_books.number }}/{{ num_pages }}页
+            第{{ page_obj.number }}/{{ paginator.num_pages }}页
         </div>
     {% endblock paginator_part %}
 {% endblock main %}

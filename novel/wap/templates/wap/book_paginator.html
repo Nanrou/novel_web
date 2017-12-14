@@ -1,36 +1,36 @@
-{% extends 'wap/info.html' %}
+{% extends 'wap/book.html' %}
 {% load staticfiles %}
 
 
 {% block main %}
     <div class="intro" style="font-size: 20px">{{ info.title }}</div>
     <ul class="chapter">
-        {% for contact in contacts %}
+        {% for chapter in chapters %}
             <li><span></span>
-                <a href="{{ contact.get_mobile_url }}">{{ contact.chapter }}</a>
+                <a href="{{ chapter.get_mobile_url }}">{{ chapter.chapter }}</a>
             </li>
         {% endfor %}
     </ul>
     <div class="page">
-        <a href="http://superxiaoshuo.com/info/{{ info.id }}-1">首页</a>
+        <a href="{{ url }}page-1">首页</a>
 
-        {% if contacts.has_previous %}
-            <a href="http://superxiaoshuo.com/info/{{ info.id }}-{{ contacts.previous_page_number }}">上一页</a>
+        {% if page_obj.has_previous %}
+            <a href="{{ url }}page-{{ page_obj.previous_page_number }}">上一页</a>
         {% endif %}
 
-        {% if contacts.has_next %}
-        <a href="http://superxiaoshuo.com/info/{{ info.id }}-{{ contacts.next_page_number }}">下一页</a>
+        {% if page_obj.has_next %}
+        <a href="{{ url }}page-{{ page_obj.next_page_number }}">下一页</a>
         {% endif %}
 
-        <a href="http://superxiaoshuo.com/info/{{ info.id }}-{{ num_pages }}">尾页</a>
+        <a href="{{ url }}page-{{ num_pages }}">尾页</a>
     </div>
     <div class="page">
         <div style="font-size: 18px;">
             <form action="">
                 请选择页数
                 <select id="page_num" style="width: 75px; height: 30px; font-size: 20px; margin-top: 5px;"  onchange="Paginator()">
-                    {% for page in page_range %}
-                        {% if page == contacts.number %}
+                    {% for page in paginator.page_range %}
+                        {% if page == page_obj.number %}
                         <option value="{{ page }}"  selected="selected">{{ page }}</option>
                         {% else %}
                         <option value="{{ page }}">{{ page }}</option>
@@ -41,6 +41,6 @@
             </form>
         </div>
             <br/>
-            第{{ contacts.number }}/{{ num_pages }}页
+            第{{ page_obj.number }}/{{ paginator.num_pages }}页
     </div>
 {% endblock main %}

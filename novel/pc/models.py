@@ -24,6 +24,9 @@ class CategoryTable(models.Model):
     def get_absolute_url(self):
         return reverse('pc:category', kwargs={'cate': self.cate})
 
+    def get_mobile_url(self):
+        return reverse('wap:category', host='wap', kwargs={'cate': self.cate})
+
 
 class BookTable(models.Model):
     title = models.CharField(max_length=70, unique=True)
@@ -64,6 +67,9 @@ class BookTable(models.Model):
     def get_absolute_url(self):
         return reverse('pc:book', kwargs={'pk': self.id})
 
+    def get_mobile_url(self):
+        return reverse('wap:book', host='wap', kwargs={'pk': self.id})
+
 
 class ChapterTable(models.Model):
     title = models.ForeignKey(BookTable, verbose_name='title', on_delete=models.CASCADE, related_name='all_chapters')
@@ -75,9 +81,12 @@ class ChapterTable(models.Model):
     book_id = models.IntegerField(verbose_name='book_id')
     next_chapter_id = models.IntegerField(verbose_name='next_chapter_id', default=0)
     prev_chapter_id = models.IntegerField(verbose_name='prev_chapter_id', default=0)
-
+    # TODO 跳转的判断要做好，这里只是章节的id而已
     def __str__(self):
         return self.chapter
 
     def get_absolute_url(self):
         return reverse('pc:chapter', kwargs={'book_id': self.book_id, 'pk': self.id})
+
+    def get_mobile_url(self):
+        return reverse('wap:chapter', host='wap', kwargs={'book_id': self.book_id, 'pk': self.id})
