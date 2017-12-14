@@ -1,0 +1,143 @@
+{% extends 'pc/base.html' %}
+{% load staticfiles %}
+
+{% block meta_description %}
+<title>超级小说_书友最值得收藏的网络小说阅读网</title>
+<meta name="keywords" content="超级小说网,小说阅读网,superxiaoshuo.com">
+<meta name="description" content="超级小说是广大书友最值得收藏的网络小说阅读网,网站收录了当前最火热的网络小说,免费提供高质量的小说最新章节,是广大网络小说爱好者必备的小说阅读网。">
+<link rel="alternate" href="http://m.superxiaoshuo.com">
+{% endblock meta_description %}
+{# 主页是可以写死的 #}
+{% block main %}
+<div id="main">
+        <div id="hotcontent">
+            <div class="l">
+                {% for book in top_four %}
+                <div class="item">
+                    <div class="image"><a href="{{ book.get_absolute_url }}" target="_blank"><img src="{% static book.image %}" alt="{{ book.title }}" width="120" height="150"></a></div>
+                    <dl>
+                        <dt><span>{{ book.author }}</span><a href="{{ book.get_absolute_url }}" target="_blank">{{ book.title }}</a></dt>
+                        <dd>{{ book.pure_resume }}</dd>
+                    </dl>
+                    <div class="clear"></div>
+                </div>
+                {% endfor %}
+            </div>
+            <div class="r">
+                <h2>公告牌</h2>
+                <ul>
+                  <li>
+                      <span class="">[公告]  超级小说 </span>
+                      <span style="float: right; margin-right: 10%"><a href="http://superxiaoshuo.com">superxiaoshuo.com</a></span>
+                  </li>
+                  <li>
+                    <span style="float: right; margin-right: 10%"><a href="/submit">欢迎上传小说</a></span>
+                  </li>
+                </ul>
+                <h2>上期强推</h2>
+                <ul>
+                    {# 这里可以考虑写死 #}
+                    <li><span class="">[玄幻修仙]</span><span class="s2"><a href="http://superxiaoshuo.com" target="_blank">择天记</a></span><span class="s5">猫腻</span></li>
+                    <li><span class="">[玄幻修仙]</span><span class="s2"><a href="http://superxiaoshuo.com" target="_blank">雪鹰领主</a></span><span class="s5">我吃西红柿</span></li>
+                    <li><span class="">[玄幻修仙]</span><span class="s2"><a href="http://superxiaoshuo.com" target="_blank">永夜君王</a></span><span class="s5">烟雨江南</span></li>
+                    <li><span class="">[玄幻修仙]</span><span class="s2"><a href="http://superxiaoshuo.com" target="_blank">武炼巅峰</a></span><span class="s5">莫默</span></li>
+                    <li><span class="">[玄幻修仙]</span><span class="s2"><a href="http://superxiaoshuo.com" target="_blank">天域苍穹</a></span><span class="s5">风凌天下</span></li>
+                </ul>
+            </div>
+            <div class="clear"></div>
+        </div>
+
+        <div class="novelslist">
+        {% for books in cate_list1 %}
+            <div class="content">
+                {% for book in books %}
+                    {% if forloop.first %}
+                <h2><a href="{{ book.category.get_absolute_url }}">{{ book.category }}</a></h2>
+                <div class="top">
+                    <div class="image"><a href="{{ book.get_absolute_url }}" target="_blank"><img src="{% static book.image %}" alt="{{ book.title }}" width="67" height="82"></a></div>
+                    <dl>
+                        <dt><a href="{{ book.get_absolute_url }}" target="_blank">{{ book.title }}</a></dt>
+                        <dd>{{ book.pure_resume }}</dd>
+                    </dl>
+                    <div class="clear"></div>
+                </div>
+                <ul>
+                    {% endif %}
+                        <li><a href="{{ book.get_absolute_url }}" target="_blank">{{ book.title }}</a>/{{ book.author }}</li>
+                    {% empty %}
+                        <li><p>sorry, not found any book</p></li>
+                    {% if forloop.last %}
+                </ul>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        {% endfor %}
+        </div>
+        <div class="novelslist">
+            {% for books in cate_list2 %}
+                <div class="content">
+                    {% for book in books %}
+                        {% if forloop.first %}
+                            {% if forloop.parentloop.last %}
+                                <h2><a href="/cate/quanben/">全本小说</a></h2>
+                            {% else %}
+                                <h2><a href="{{ book.category.get_absolute_url }}">{{ book.category }}</a></h2>
+                            {% endif %}
+                            <div class="top">
+                                <div class="image"><a href="{{ book.get_absolute_url }}" target="_blank"><img src="{% static book.image %}" alt="{{ book.title }}" width="67" height="82"></a></div>
+                                <dl>
+                                    <dt><a href="{{ book.get_absolute_url }}" target="_blank">{{ book.title }}</a></dt>
+                                    <dd>{{ book.pure_resume }}</dd>
+                                </dl>
+                                <div class="clear"></div>
+                            </div>
+                            <ul>
+                        {% endif %}
+                    <li><a href="{{ book.get_absolute_url }}" target="_blank">{{ book.title }}</a>/{{ book.author }}</li>
+                    {% empty %}
+                    <li><p>sorry, not found any book</p></li>
+                    {% if forloop.last %}
+                        </ul>
+                    {% endif %}
+                    {% endfor %}
+                </div>
+            {% endfor %}
+        </div>
+        <div id="newscontent">
+            <div class="l">
+                <h2>最近更新小说</h2>
+                <ul>
+                {% for book in latest_books %}
+                    <li>
+                        <span class="s1" style="width: 12%">[ {{ book.category }} ]</span>
+                        <span class="s2" style="width: 18%"><a href="{{ book.get_absolute_url }}" target="_blank">{{ book.title }}</a></span>
+                        <span class="s3" style="width: 45%"><a href="{{ book.latest_chapter_url }}" target="_blank">{{ book.latest_chapter }}</a></span>
+                        <span class="s4" style="width: 15%">{{ book.author }}</span>
+                        <span class="s5" style="padding-right: 10px; color: #555555">{{ book.update_time|date:"H:i" }}</span>
+                    </li>
+                {% endfor %}
+                </ul>
+            </div>
+            <div class="r">
+                <h2>最新入库小说</h2>
+                <ul>
+                {% for book in newest_books %}
+                    <li>
+                        <span class="s1" style="width: 30%">[ {{ book.category }} ]</span>
+                        <span class="s2" style="width: 70%; text-align: right"><a href="{{ book.get_absolute_url }}" target="_blank">{{ book.title }}</a></span>
+                        {# <span class="s5">{{ book.update_time|date:"m-d" }}</span> #}
+                    </li>
+                {% endfor %}
+                </ul>
+            </div>
+        <div class="clear"></div>
+    </div>
+</div>
+<div id="firendlink">
+友情连接：
+    <a href="http://www.baidu.com/" target="_blank">百度</a>
+    <a href="http://superxiaoshuo.com.org/" target="_blank">超级小说</a>
+    <a href="https://githup.com/" target="_blank">全球最大同性交友平台</a>
+</div>
+{% endblock main %}
+

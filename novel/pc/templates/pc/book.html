@@ -1,0 +1,73 @@
+{% extends 'pc/base.html' %}
+{% load staticfiles %}
+{% load cache %}
+
+{% block meta_description %}
+    <title>超级小说_{{ book.title }}最新章节</title>
+    <meta name="keywords" content="{{ book.title }},{{ book.latest_chapter }},{{ book.title }}txt下载，{{ book.title }}最新章节,{{ book.title }}无弹窗广告全文阅读,{{ book.title }}超级小说。">
+    <meta name="description" content="《{{ book.title }}》是{{ book.author }}的作品,超级小说提供{{ book.title }}最新章节列表全文阅读,超级小说保证比同类网站更新更快,绝无弹窗广告保证无章节错误100%正确保证无广告,《{{ book.title }}》无弹窗广告全文阅读就在超级小说。">
+    <link rel="alternate" href="http://m.superxiaoshuo.com/info/{{ book.id }}">
+{% endblock meta_description %}
+
+{%  block main %}
+<div class="box_con">
+    <div class="con_top">
+    <a href="/">超级小说</a>
+    &gt;
+    <a href="{{ book.category.get_absolute_url }}">{{ book.category }}</a>
+    &gt;
+    {{ book.title }}
+    </div>
+    <div id="maininfo">
+        <div id="info">
+            <h1>{{ book.title }}</h1>
+            <p>作者：{{ book.author }}</p>
+            {# 这个加入收藏和到底部要重写 #}
+            <p>状态：{{ book.status }},  <a id="collect_book" rel="nofollow" onclick="add_book()" href="javascript:void(0);">加入收藏</a>, <a href="#footer">直达底部</a></p>
+            <p>最后更新：{{ book.update_time|date:'Y-m-d H:i:s' }}</p>
+            <p>最新章节：<a href="{{ book.latest_chapter_url }}" target="_blank">{{ book.latest_chapter }}</a></p>
+
+        </div>
+        <div id="intro">
+            <p>{{ book.resume|safe }}</p>
+            <p>各位书友要是觉得《{{ book.title }}》还不错的话请不要忘记向您QQ群和微博里的朋友推荐哦！</p>
+        </div>
+    </div>
+    <div id="sidebar">
+        <div id="fmimg"><img alt="{{ book.title }}" src="{% static book.image %}" onerror="this.src={% static 'novel_site/images/miss.jpg' %}" width="120" height="150"/></div>
+    </div>
+
+    <div id="listtj">推荐阅读：
+        {% comment %} 还没想好这里怎么推荐，这里也可以和下面合并 {% endcomment %}
+      {% for book in recommend_books %}
+            <a href="{{ book.get_absolute_url }}" target="_blank">{{ book.title }}</a>
+      {% endfor %}
+    </div>
+</div>
+
+  <div class="box_con">
+      <div id="list">
+          <dl>
+              <dt>《{{ book.title }}》最新章节</dt>
+              {%  for n_chapter in latest_eight_chapters %}
+                  <dd><a href="{{ n_chapter.get_absolute_url }}">{{ n_chapter.chapter}}</a></dd>
+              {% endfor %}
+          {% comment %}
+              {% for chapter in all_chapters|slice:":8" reversed %}
+                <dd><a href="{{ chapter.get_absolute_url }}">{{ chapter.chapter}}</a></dd>
+              {% endfor %}
+          {% endcomment %}
+          </dl>
+      </div>
+  </div>
+  <div class="box_con">
+      <div id="list">
+          <dl>
+              <dt>《{{ book.title }}》正文</dt>
+              {%  for chapter in all_chapters %}
+                  <dd><a href="{{ chapter.get_absolute_url }}">{{ chapter.chapter}}</a></dd>
+              {% endfor %}
+          </dl>
+      </div>
+  </div>
+{% endblock main %}

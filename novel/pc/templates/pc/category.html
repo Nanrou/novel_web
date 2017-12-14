@@ -1,0 +1,65 @@
+{% extends 'pc/base.html' %}
+{% load staticfiles %}
+{% load cache %}
+
+{% block meta_description %}
+  <title>{{ cate.category|slice:':2' }}小说 {{ cate.category|slice:'2:' }}小说 好看的{{ cate.category }}小说_2017{{ cate.category }}小说排行榜_超级小说</title>
+  <meta name="keywords" content="超级小说,{{ cate.category|slice:':2' }}小说,{{ cate.category|slice:'2:' }}小说,小说阅读网,小说">
+  <meta name="description" content="超级小说是广大书友最值得收藏的{{ cate.category }}小说阅读网，网站收录了当前最火热的{{ cate.category }}小说，免费提供高质量的小说最新章节，是广大网络小说爱好者必备的小说阅读网。">
+  <link rel="alternate" href="http://m.superxiaoshuo/cate/{{ cate.cate }}">
+{% endblock meta_description %}
+
+{% block main %}
+<div id="main">
+
+    <div id="hotcontent">
+        <div class="ll">
+            {% for book in cate_books %}
+            <div class="item">
+                <div class="image"><a href="{{ book.get_absolute_url }}" target="_blank"><img src="{% static book.image %}" alt="{{ book.title }}" width="120" height="150"></a></div>
+                <dl>
+                    <dt><span>{{ book.author }}</span><a href="{{ book.get_absolute_url }}" target="_blank">{{ book.title }}</a></dt>
+                    <dd><a href="{{ book.get_absolute_url }}">{{ book.pure_resume|truncatechars:90 }}</a></dd>
+                </dl>
+                <div class="clear"></div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    <div id="newscontent">
+        <div class="l">
+            <h2>更新列表</h2>
+            <ul>
+                {% for book in latest_books %}
+                    <li>
+                        <span class="s2"><a href="{{ book.get_absolute_url }}" target="_blank">《{{ book.title }}》</a></span>
+                        <span class="s3"><a href="{{ book.latest_chapter_url }}" target="_blank">{{ book.latest_chapter }}</a>{# {{ book.update_time|date:"Y-m-d H:i" }} #}</span>
+                        <span class="s5">{{ book.author }}</span>
+                    </li>
+                {% empty %}
+                    <li>
+                        <span class="s2"><a href="/" target="_blank">那你摸奶</a></span>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+        <div class="r">
+            <h2>好看的{{ cate }}小说</h2>
+            <ul>
+                {% for book in recommend_books %}
+                    <li>
+                        <span class="s2"><a href="{{ book.get_absolute_url }}" target="_blank">{{ book.title }}</a></span>
+                        <span class="s5">{{ book.author }}</span>
+                    </li>
+                {% empty %}
+                    <li>
+                        <span class="s2"><a href="/" target="_blank">那你摸奶</a></span>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+        <div class="clear"></div>
+    </div>
+</div>
+{% endblock main %}
+

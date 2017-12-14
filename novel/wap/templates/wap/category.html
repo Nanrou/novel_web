@@ -1,0 +1,79 @@
+{% extends 'wap/base.html' %}
+{% load staticfiles %}
+
+{% block meta_description %}
+    <title>{{ cate }}小说小说排行榜-超级小说移动版</title>
+    <meta name="keywords" content="{{ cate }}小说小说排行榜,{{ cate }}小说小说txt下载">
+    <meta name="description" content="超级小说移动版提供免费、热门的{{ cate }}小说小说排行榜、最新{{ cate }}小说小说及TXT下载。">
+    <link rel="canonical" href="http://www.superxiaoshuo.com/cate/{{ cate.cate }}">
+{% endblock meta_description %}
+
+{% block header %}
+    <div class="header">
+        <a href="javascript:history.go(-1);" class="return">返回</a>
+        <a href="/" class="home">首页</a>
+        <a href='/'>
+        <h2>超级小说</h2>
+        <p>m.superxiaoshuo.com</p>
+        </a>
+    </div>
+{% endblock header %}
+
+{% block main %}
+    {% block content_part %}
+        <div class="content">
+            <ul>
+                <li class="prev"><a href="/cate/xuanhuan/">玄幻修真</a></li>
+                <li class="prev"><a href="/cate/kehuan/">科幻网游</a></li>
+                <li class="prev"><a href="/cate/dushi/">都市重生</a></li>
+            </ul>
+            <ul>
+                <li class="prev"><a href="/cate/jiakong/">架空历史</a></li>
+                <li class="prev"><a href="/cate/wuxia/">武侠世界</a></li>
+                <li class="prev"><a href="/cate/xuanyi/">经典悬疑</a></li>
+            </ul>
+        </div>
+
+        <div class="toptab"><span class="active">{{ cate }}小说</span></div>
+
+        {% for book in cate_books %}
+        <div class="bookbox">
+            <div class="bookimg">
+                <a href="{{ book.get_mobile_url }}">
+                    <img src="{% static book.image %}" onerror="this.src='{% static book.miss_img_path %}'">
+                </a>
+            </div>
+            <div class="bookinfo">
+                <h4 class="bookname"><a href="{{ book.get_mobile_url }}">{{ book.title }}</a></h4>
+                <div class="author">作者：{{ book.author }}</div>
+                <div class="update"><span>更新至：</span><a href="{{ book.latest_chapter_url }}">{{ book.latest_chapter }}</a></div>
+                <div class="intro_line">
+                    <span>简介：</span>{{ book.resume|truncatechars:30 }}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    {% endblock content_part %}
+    {% block paginator_part %}
+        <div class="page">
+            <div style="font-size: 18px;">
+                <form action="">
+                    请选择页数
+                    <select id="page_num" style="width: 75px; height: 30px; font-size: 20px; margin-top: 5px;"  onchange="Paginator()">
+                        {% for page in page_range %}
+                            {% if page == cate_books.number %}
+                                <option value="{{ page }}"  selected="selected">{{ page }}</option>
+                            {% else %}
+                                <option value="{{ page }}">{{ page }}</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                    <button type="button" style="margin-left: 10px; padding: 2px 15px;"  onclick="Paginator()">GO</button>
+                </form>
+            </div>
+            <br/>
+            第{{ cate_books.number }}/{{ num_pages }}页
+        </div>
+    {% endblock paginator_part %}
+{% endblock main %}
+

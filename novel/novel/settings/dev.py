@@ -18,6 +18,8 @@ CACHES = {
         'LOCATION': 'lolololol',
     },
 }
+# DB timeout
+CONN_MAX_AGE = 300
 
 # Session
 SESSION_ENGINE = "django.contrib.sessions.backends.cache"

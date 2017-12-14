@@ -15,14 +15,14 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-
-from django.conf import settings
 from django.conf.urls import include, url
+from django.conf import settings
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    # path('admin/', admin.site.urls),
+    path('', include('pc.urls', namespace='pc')),
+    path('captcha', include('captcha.urls')),
 ]
-
 if settings.DEBUG:
     import debug_toolbar
 

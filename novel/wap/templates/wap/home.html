@@ -1,0 +1,78 @@
+{% extends 'wap/base.html' %}
+{% load staticfiles %}
+
+{% block meta_description %}
+    <title>超级小说移动版_书友最值得收藏的网络小说阅读网</title>
+    <meta name="keywords" content="超级小说网移动版,小说阅读网,m.superxiaoshuo.com">
+    <meta name="description" content="超级小说移动版是广大书友最值得收藏的网络小说阅读网,网站收录了当前最火热的网络小说,免费提供高质量的小说最新章节,是广大网络小说爱好者必备的小说阅读网。">
+    <link rel="canonical" href="http://www.superxiaoshuo.com/">
+{% endblock meta_description %}
+<body>
+
+{% block header %}
+    <div class="header">
+        <div class="logo" >
+        <a href="/">
+            <h2>超级小说</h2>
+            <p>m.superxiaoshuo.com</p>
+        </a>
+        </div>
+            <div class="reg">
+                <div id="login_top">
+                  {% if user.id %}
+                    <a class="box" href="/profile/">我的书架</a>
+                    <a class="box" href="/logout/">登出</a>
+                  {% else %}
+                    <a class="box" href="/signin/">登录</a>
+                    <a class="box" href="/signup/">注册</a>
+                  {% endif %}
+                </div>
+            </div>
+    </div>
+
+    <!-- 登陆之后显示的 -->
+    <div id="info" class="login_top" style="display:none">
+        <a rel="nofollow" href="" style="color:#fff;">我的书架</a>
+        <a rel="nofollow" href="" style="color:#fff;">查看资料</a>
+        <a rel="nofollow" href="" style="color:#fff">退出</a>
+    </div>
+
+{% endblock header %}
+{% block main %}
+    {% for books in cate_book %}
+        {% for book in books %}
+            {% if forloop.first %}
+                <div class="article">
+                    <h2 class="title">
+                        <span>
+                            <a href="{{ book.category.get_mobile_url }}">{{ book.category }}</a>
+                        </span>
+                            <a href="{{ book.category.get_mobile_url }}">更多...</a>
+                    </h2>
+                    <div class="block">
+                        <div class="block_img">
+                            <a href="{{ book.get_mobile_url }}">
+                                <img src="{% static book.image %}" alt="{{ book.title }}" onerror="{% static 'novel_site/images/miss.jpg' %}" width="80" height="100">
+                            </a>
+                        </div>
+                        <div class="block_txt">
+                            <h2>
+                                <a href="{{ book.get_mobile_url }}" style="color: #007BB1;">{{ book.title }}</a>
+                            </h2>
+                            <p>{{ book.author }}</p>
+                            <p><a href="{{ book.get_mobile_url }}">{{ book.resume }}</a></p>
+                        </div>
+                        <div style="clear:both"></div>
+                        <ul>
+            {% endif %}
+            <li><a href="{{ book.get_mobile_url }}" class="blue">{{ book.title }}</a>/{{ book.author }}</li>
+        {% empty %}
+            <li><p>sorry, not found any book</p></li>
+            {% if forloop.last %}
+                </ul>
+            {% endif %}
+        {% endfor %}
+        </div>
+    </div>
+    {% endfor %}
+{% endblock main %}

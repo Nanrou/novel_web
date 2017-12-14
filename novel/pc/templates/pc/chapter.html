@@ -1,0 +1,138 @@
+{% extends 'pc/base.html' %}
+{% load staticfiles %}
+
+{% block meta_description %}
+<title>{{ object.chapter }} 正文 {{ book_info }}全文免费阅读 - 超级小说</title>
+<meta name="keywords" content="{{ object.chapter }}全文阅读。">
+<meta name="description" content="超级小说免费为大家提供{{ object.chapter }}全文阅读,如果你想第一时间观看下一章节,请留意以及收藏超级小说,方便你下次阅读择天记最新章节。">
+<link rel="alternate" href="http://m.superxiaoshuo.com/book/{{ object.book_id }}/{{ object.id }}">
+{% endblock meta_description %}
+
+{% block optional_script %}
+<script src="{% static 'pc/js/reader.js' %}"></script>
+{% endblock optional_script %}
+
+{% block main %}
+<div class="content_read">
+<!-- 正文 -->
+    <div class="box_con" id="main_body">
+        <div class="con_top">
+            <a href="/">超级小说</a>
+            &gt; 
+            <a href="{{ book.category.get_absolute_url }}">{{ book.category }}</a>
+            &gt; 
+            <a href="{{ book.get_absolute_url }}" id="book_name">{{ book }}</a>
+            &gt;{{ object.chapter|truncatechars:18 }}
+            <div id="page_set">
+                <select onchange="javascript:setFont(this.options[this.selectedIndex].value);" id="bcolor" name="bcolor">
+                    <option value="宋体" selected="selected">字体</option>
+                    <option value="方正启体简体">默认</option>
+                    <option value="黑体">黑体</option>
+                    <option value="楷体_GB2312">楷体</option>
+                    <option value="微软雅黑">雅黑</option>
+                </select>
+                <select onchange="javascript:setColor(this.options[this.selectedIndex].value);" id="bcolor" name="bcolor">
+                    <option value="#000" selected="selected">颜色</option>
+                    <option value="#9370DB">暗紫</option>
+                    <option value="#2E8B57">藻绿</option>
+                    <option value="#2F4F4F">深灰</option>
+                    <option value="#778899">青灰</option>
+                    <option value="#800000">栗色</option>
+                    <option value="#6A5ACD">青蓝</option>
+                    <option value="#BC8F8F">玫褐</option>
+                    <option value="#F4A460">黄褐</option>
+                    <option value="#F5F5DC">米色</option>
+                    <option value="#F5F5F5">雾白</option>
+                </select>
+                <select onchange="javascript:setSize(this.options[this.selectedIndex].value);" id="bcolor" name="bcolor">
+                    <option value="19pt" selected="selected">大小</option>
+                    <option value="10pt">10pt</option>
+                    <option value="12pt">12pt</option>
+                    <option value="14pt">14pt</option>
+                    <option value="16pt">16pt</option>
+                    <option value="18pt">18pt</option>
+                    <option value="20pt">20pt</option>
+                    <option value="22pt">22pt</option>
+                    <option value="25pt">25pt</option>
+                    <option value="30pt">30pt</option>
+                </select>
+                <select onchange="javascript:setSpeed(this.options[this.selectedIndex].value);" name="scrollspeed" id="scrollspeed">
+                    <option value=6 selected="selected">滚屏</option>
+                    <option value=1>最慢</option>
+                    <option value=3>慢</option>
+                    <option value=5>中</option>
+                    <option value=8>快</option>
+                    <option value=10>最快</option>
+                </select>
+                <select onchange="javascript:setBGColor(this.options[this.selectedIndex].value);" id="bcolor" name="bcolor">
+                    <option value="#CCFFCC" style="background-color: #CCFFCC;" selected="selected">背景</option>
+                    <option value="#E9FAFF" style="background-color: #E9FAFF;">默认</option>
+                    <option value="#FFFFFF" style="background-color: #FFFFFF;">白雪</option>
+                    <option value="#000000" style="background-color: #000000;color:#FFFFFF;">漆黑</option>
+                    <option value="#FFFFED" style="background-color: #FFFFED;">明黄</option>
+                    <option value="#EEFAEE" style="background-color: #EEFAEE;">淡绿</option>
+                    <option value="#CCE8CF" style="background-color: #CCE8CF;">草绿</option>
+                    <option value="#FCEFFF" style="background-color: #FCEFFF;">红粉</option>
+                    <option value="#EFEFEF" style="background-color: #EFEFEF;">深灰</option>
+                    <option value="#F5F5DC" style="background-color: #F5F5DC;">米色</option>
+                    <option value="#D2B48C" style="background-color: #D2B48C;">茶色</option>
+                    <option value="#C0C0C0" style="background-color: #E7F4FE;">银色</option>
+                </select>
+                <select onchange="javascript:setWidth(this.options[this.selectedIndex].value);" id="bcolor" name="bcolor">
+                    <option value="95%" selected="selected">宽度</option>
+                    <option value="95%">默认</option>
+                    <option value="85%">85%</option>
+                    <option value="76%">75%</option>
+                    <option value="67%">65%</option>
+                    <option value="53%">50%</option>
+                    <option value="41%">40%</option>
+                </select>
+                <label>自动滚屏</label><input type="checkbox" name="autopage" id="autopage" onchange="javascript:setAutopage();" value="" />
+                <label>夜间</label><input type="checkbox" name="night" id="night" onchange="javascript:setNight();" value="" />
+            </div>
+        </div>
+        <div class="bookname">
+            <h1 id="chapter_name">{{ object.chapter }}</h1>
+            <div class="bottem1">
+                <a href="{{ object.prev_chapter_id }}">上一章</a>
+                ← 
+                <a href="{{ book.get_absolute_url }}">章节列表</a>
+                →
+                <a href="{{ object.next_chapter_id }}">下一章</a>
+                <a rel="nofollow" href="" target="_blank">加入书签</a> 
+                <a rel="nofollow" href="" target="_blank" style="color:red">错误举报</a>
+            </div>
+            <div class="lm">热门小说：
+            <!-- 还没想好这里怎么推荐，这里也可以和下面合并 -->
+                {% for book in recommend_books %}
+                <a href="{{ book.get_absolute_url }}" target="_blank">{{ book.title }}</a>
+                {% endfor %}
+                <a href="http://www.superxiaoshuo.com/" target="_blank">咸湿女婿贱岳父</a>
+            </div>
+        </div>
+        <div id="content">
+        {{ object.content|safe }}
+        </div>
+        <div class="bottem1">
+        <!-- 这里看怎么复用 -->
+            <a href="{{ previous_page }}">上一章</a>
+            ← 
+            <a href="{{ book.get_absolute_url }}">章节列表</a>
+            → 
+            <a href="{{ next_page }}">下一章</a>
+            <a rel="nofollow" href="" target="_blank">加入书签</a> 
+            <a rel="nofollow" href="" target="_blank" style="color:red">错误举报</a>
+        </div>
+    </div>
+</div>
+{% endblock main %}
+
+{% block footer_link %}
+<div class="footer_link">完本推荐：
+        <!-- 这里看一下怎么改 -->
+          {% for book in recommend_books %}
+          <a href="{{ book.get_absolute_url }}" target="_blank">{{ book.title }}</a>
+          {% endfor %}
+          <a href="http://www.superxiaoshuo.com/" target="_blank">咸湿女婿贱岳父</a>
+        </div>
+{% endblock footer_link %}

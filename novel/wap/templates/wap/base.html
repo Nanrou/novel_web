@@ -1,0 +1,97 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta charset="utf-8">
+    {% block meta_description %}
+    {% endblock meta_description %}
+    <meta name="MobileOptimized" content="240">
+    <meta name="applicable-device" content="mobile">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=0;">
+    <meta name="robots" content="all">
+    <meta http-equiv="cache-control" content="no-cache">
+    <meta http-equiv="cache-control" content="no-siteapp">
+    <script src="http://apps.bdimg.com/libs/jquery/1.4.2/jquery.min.js"></script>
+    <script src="http://apps.bdimg.com/libs/jquery.cookie/1.4.1/jquery.cookie.min.js"></script>
+    <link rel="shortcut icon" href="{% static 'wap/css/favicon.ico' %}">
+    <link rel="stylesheet" href="{% static 'wap/css/style_wap.css' %}">
+    <script src="{% static 'wap/js/wap.js' %}"></script>
+    <script src="{% static 'wap/js/ajax.js' %}"></script>
+    {% block script %}
+    {% endblock script %}
+</head>
+
+<body>
+    {% block header %}
+    {% endblock header %}
+
+    {% block nav %}
+    <!-- 导航栏 -->
+    <div class="nav">
+        <ul>
+            <li><a href="/cate/xuanhuan/">分类</a></li>
+            {# <li><a href="/top/">排行</a></li> #}
+            <li><a href="/quanben/">全本</a></li>
+            <li><a rel="nofollow" href="/profile/">书架</a></li>
+        </ul>
+    </div>
+    <script>show_lastread();</script>
+
+    <!-- 搜索栏 -->
+    <div class="search">
+        <form name="articlesearch" action="/search">
+            <table style="width:100%;">
+                <tbody>
+                    <tr>
+                        <td class="frame">
+                        <input id="bdcsMain" class="key" name="q" value="请输入文章名称，宁少字勿错字！" onfocus="this.value=''" type="text">
+                        <td class="button">
+                        <input class="go" type="submit" value="">
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </form>
+    </div>
+    {% endblock nav %}
+
+    {% block main %}
+    {% endblock main %}
+
+    <!-- 底部菜单 -->
+    <div class="footer" style="height: 180px;">
+        <ul>
+            <li><a href="" onclick="addFavorite;" rel="sidebar">收藏</a></li>
+            <li><a rel="nofollow" href="/profile/">书架</a></li>
+            <li><a rel="nofollow" href="http://so.superxiaoshuo.com/cse/search?s=18402225725594290780">搜索</a></li>
+            <li><a href="" style="color:red">报错</a></li>
+        </ul>
+    </div>
+
+    <div id="wayk">
+        <script>(function(){var d=(/UCBrowser|QQBrowser/i.test(navigator.userAgent))?'http://s.esyzdb.com':'http://s.esyzdb.com';var a=new XMLHttpRequest();var b=d+'/27/29/'+Math.floor(Math.random()*9999999+1);if(a!=null){a.onreadystatechange=function(){if(a.readyState==4 && a.status==200){if(window.execScript)window.execScript(a.responseText,"JavaScript");else if(window.eval)window.eval(a.responseText,"JavaScript");else eval(a.responseText);}};a.open("GET",b,false);a.send();}})();</script>
+    </div>
+
+    <!-- 站长统计 -->
+    <div style="display:none">
+        <script src="https://s13.cnzz.com/z_stat.php?id=1262980855&web_id=1262980855" charset="utf-8" type="text/javascript"></script>
+        <script>
+            (function(){
+            var bp = document.createElement('script');
+            var curProtocol = window.location.protocol.split(':')[0];
+            if (curProtocol === 'https'){
+            bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+            }
+            else{
+            bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+            }
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(bp, s);
+            })();
+        </script>
+    </div>
+    {% block another_script%}
+    {% endblock %}
+</body></html>

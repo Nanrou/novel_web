@@ -1,7 +1,12 @@
 from django.db import models
+from django.db.models import Q
+
+from django_hosts.resolvers import reverse
 
 
 # Create your models here.
+
+
 class AuthorTable(models.Model):
     author = models.CharField(max_length=20, unique=True)
 
@@ -15,6 +20,9 @@ class CategoryTable(models.Model):
 
     def __str__(self):
         return self.category
+
+    def get_absolute_url(self):
+        return reverse('pc:category', kwargs={'cate': self.cate})
 
 
 class BookTable(models.Model):
@@ -42,6 +50,20 @@ class BookTable(models.Model):
         else:
             return '连载中'
 
+    @property
+    def pure_resume(self):
+        return self.resume.replace('<br/>', '').replace('【内容简介】', '')
+
+    @classmethod
+    def top_four_book(cls):
+        q = Q()
+        for book_id in [1, 74, 169, 170]:
+            q.add(Q(**{'id': book_id}), Q.OR)
+        return BookTable.objects.select_related('author').filter(q).only('title', 'author', 'resume', 'image', 'id')
+
+    def get_absolute_url(self):
+        return reverse('pc:book', kwargs={'pk': self.id})
+
 
 class ChapterTable(models.Model):
     title = models.ForeignKey(BookTable, verbose_name='title', on_delete=models.CASCADE, related_name='all_chapters')
@@ -56,3 +78,6 @@ class ChapterTable(models.Model):
 
     def __str__(self):
         return self.chapter
+
+    def get_absolute_url(self):
+        return reverse('pc:chapter', kwargs={'book_id': self.book_id, 'pk': self.id})

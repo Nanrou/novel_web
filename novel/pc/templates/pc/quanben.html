@@ -1,0 +1,25 @@
+{% extends 'pc/base.html' %}
+{% load staticfiles %}
+
+{% block meta_description %}
+<title>全本小说 好看的全本小说 2017全本小说排行榜 超级小说</title>
+<meta name="keywords" content="超级小说,全本小说,小说阅读网,小说">
+<meta name="description" content="超级小说是广大书友最值得收藏的全本小说阅读网，网站收录了当前最火热的全本小说，免费提供高质量的小说最新章节，是广大网络小说爱好者必备的小说阅读网。">
+{% endblock meta_description %}
+
+{% block main %}
+    <div id="main">
+        <div class="novelslist2">
+        <h2>全本小说列表</h2>
+        <ul>
+            <li><span class="s1"><b>作品分类</b></span><span class="s2"><b>作品名称</b></span><span class="s3"><b>作者</b></span>
+            <li><span class="s1"><b>作品分类</b></span><span class="s2"><b>作品名称</b></span><span class="s3"><b>作者</b></span>
+            {% for book in books %}
+            <li><span class="s1">[<a href="{{ book.category.get_absolute_url }}">{{ book.category }}</a>]</span><span class="s2"><a href="{{ book.get_absolute_url }}" target="_blank">{{ book.title }}</a></span><span class="s3">{{ book.author }}</span>
+            {% endfor %}
+        </ul>
+        </div>
+        <div class="clear"></div>
+    </div>
+{% endblock main %}
+

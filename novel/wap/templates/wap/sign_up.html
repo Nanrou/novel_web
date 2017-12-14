@@ -1,0 +1,26 @@
+{% extends 'wap/home.html' %}
+{% load staticfiles %}
+
+
+{% block main %}
+  <div style="width: 100%;margin-top: 2%">
+    <div style="height: 380px">
+      <div style="width: 90%;background-color: #fff;height: 350px;padding: 10px 5px;">
+        <form action="" method="post" style="font-size: 18px">
+          {% csrf_token %}
+          {% block form_part %}
+            {% for field in form %}
+              <div class="local_item">
+                {{ field.label_tag }}
+                {{ field }}
+              </div>
+            {% endfor %}
+          {% endblock %}
+          <div style="width: 100%;">
+            <input id="submit_button" style="float: right;height: 37px;font-size: 25px" type="submit" value="Submit" />
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+{% endblock main %}

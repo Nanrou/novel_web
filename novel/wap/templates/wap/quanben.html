@@ -1,0 +1,23 @@
+{% extends 'wap/category.html' %}
+{% load staticfiles %}
+
+{% block content_part %}
+    <div class="toptab"><span class="active">{{ cate }}</span></div>
+    {% for book in cate_books %}
+        <div class="bookbox">
+            <div class="bookinfo">
+                <a href="{{ book.get_mobile_url }}">
+                    <h4 class="bookname">{{ book.title }}</h4>
+                    <div class="author">作者：{{ book.author }}</div>
+                    <div class="author">分类：{{ book.category }}</div>
+                    <div class="author">状态：已完结</div>
+                    <div class="intro_line">
+                        <span>简介：</span>{{ book.resume|truncatechars:80 }}
+                    </div>
+                </a>
+            </div>
+        </div>
+    {% endfor %}
+{% endblock content_part %}
+
+

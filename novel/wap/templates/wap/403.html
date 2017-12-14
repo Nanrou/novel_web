@@ -1,0 +1,28 @@
+{% extends 'wap/category.html' %}
+{% load staticfiles %}
+
+{% block meta_description %}
+    <title>超级小说</title>
+    <meta name="keywords" content="超级小说小说排行榜,超级小说小说txt下载">
+    <meta name="description" content="超级小说移动版提供免费、热门的超级小说小说排行榜、最新超级小说小说及TXT下载。">
+    <link rel="canonical" href="http://www.superxiaoshuo.com/">
+{% endblock meta_description %}
+
+
+{% block main %}
+<div style="margin-top: 2%">
+   <div style="position: relative; height: 200px;">
+        <img style="position: absolute;top: 50%;left: 50%;transform: translate(-50%, -50%);" src="http://s9.rr.itc.cn/r/wapChange/20163_27_13/a1o2bu9197180108405.gif" width="340" height="191">
+    </div>
+    <div style="text-align:center;margin-bottom:15px; margin-top:5px;">
+        <h2 style="font-size: 24px;">嗯哼？</h2>
+        <p style="font-size: 20px;">
+            你好像没有这个权限喔~
+        <br>
+            <a href="http://m.superxiaoshuo.com/" style="color: #6F78A7;font-size: 22px;margin-left: 15px;">回到首页</a>
+            <a href="javascript:history.go(-1);" style="color: #6F78A7;font-size: 22px;margin-left: 15px;">回到上一页</a>
+        </p>
+    </div>
+</div>
+
+{% endblock main %}

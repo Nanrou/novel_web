@@ -1,0 +1,36 @@
+{% extends 'wap/home.html' %}
+{% load staticfiles %}
+  
+{% block main %}
+  <div id="search_result" style="font-size: 20px;margin: 5px 5px;">
+    <script type="text/javascript" src = "http://zhannei.baidu.com/api/customsearch/apiaccept?sid=17984966288940832957&v=2.0"></script>
+    <script>
+    
+        cse = new BCse.Search("17984966288940832957");    //参数为您的API引擎ID，已自动填写，必需。
+
+        var _tmp = window.location.search;
+        var keyword = decodeURI(_tmp.substring(3, _tmp.length));
+
+    //处理结果回调函数示例
+    function display (data) {
+        var content = '';
+        if (!data) { content='not found~'; }
+        else {
+            content = '<ul>';
+            for (var i=0; i<data.length; i++){
+                content = content + '<li><a href=\'' + data[i].linkUrl + '\'>' + data[i].title + '</a></li>' ;
+            }
+            content = content + '</ul>';
+        }
+        console.log(content);
+        console.log(data);
+        document.getElementById('search_result').innerHTML=content;
+    }
+
+
+        cse.setResultType(2);
+        cse.closeHiLight();
+        cse.getResult(keyword, display);    //此方法获取搜索结果，参数1为搜索词，参数2为您获取到结果后想要执行的回调函数。
+    </script>
+  </div>
+{% endblock %}
