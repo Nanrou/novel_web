@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     # third part
     'captcha',
     'django_hosts',
+    'bootstrap3',
 
     # my app
     'pc',
@@ -130,16 +131,6 @@ USE_L10N = False
 
 USE_TZ = False
 
-# django-host settings
-
-ROOT_HOSTCONF = 'novel.hosts'
-
-DEFAULT_HOST = 'pc'
-
-HOST_SCHEME = 'http'
-
-HOST_SITE_TIMEOUT = 3600
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
@@ -150,3 +141,20 @@ STATICFILES_FINDERS = (
     "django.contrib.staticfiles.finders.FileSystemFinder",
     "django.contrib.staticfiles.finders.AppDirectoriesFinder",
 )
+
+# django-host settings
+
+ROOT_HOSTCONF = 'novel.hosts'
+
+DEFAULT_HOST = 'pc'
+
+HOST_SCHEME = 'http'
+
+HOST_SITE_TIMEOUT = 3600
+
+# django-bootstrap3
+
+BOOTSTRAP3 = {
+    'jquery_url': 'https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js',
+    'base_url': 'https://cdn.bootcss.com/bootstrap/3.3.7/',
+}

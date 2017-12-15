@@ -1,24 +1,37 @@
 {% extends 'pc/base.html' %}
 {% load staticfiles %}
 
+{% load bootstrap3 %}
+
+{% block optional_css %}
+  {% bootstrap_css %}
+{% endblock optional_css %}
+
+{% block optional_script %}
+  {% bootstrap_javascript %}
+{% endblock optional_script %}
+
+
 {% block main %}
     <div style="width: 970px;margin-top: 2%">
         <div style="height: 380px; width: 80%">
-            <div style="width: 80%; background-color: #fff;height: 350px;padding: 10px 5px;" >
-                <form action="" method="post" style="font-size: 32px">
-                  {% csrf_token %}
-                {% block form_part %}
-                    {% for field in form %}
-                      <div class="local_item">
-                        {{ field.label_tag }}
-                        {{ field }}
-                      </div>
-                    {% endfor %}
-                {% endblock %}
-                  <div style="width: 100%;">
-                    <input id="submit_button" style="float: right;width: 20%;height: 37px;font-size: 25px" type="submit" value="Submit" />
-                  </div>
-                </form>
+            <div style="width: 80%; background-color: #fff;height: 105%;padding: 10px 5px;float: left" >
+              {% if messages %}
+                {% bootstrap_javascript jquery=1 %}
+                {% for message in messages %}
+                  {% bootstrap_messages message %}
+                {% endfor %}
+              {% endif %}
+              <form action="" method="post" class="form" style="width: 50%;float:left;margin-left: 3%;">
+                {% csrf_token %}
+                {% bootstrap_form form %}
+                {% buttons %}
+                  <button type="submit" class="btn btn-primary">
+                    {% bootstrap_icon "ok-sign" %} {% block button %}{% endblock %}
+                  </button>
+                {% endbuttons %}
+              </form>
+
             </div>
         </div>
     </div>

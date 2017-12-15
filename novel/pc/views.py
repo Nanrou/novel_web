@@ -3,10 +3,11 @@ from random import sample
 
 from django.shortcuts import render, redirect
 from django.db.models import Q
+from django.conf import settings
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from django.conf import settings
+from django.contrib import messages
 
 from django.http import HttpResponse, HttpResponseForbidden
 from django.views.generic.base import TemplateView
@@ -170,11 +171,13 @@ def sign_in(request):
                 login(request, user)
                 return redirect(request.content_params.get('next') or '/')
 
-        error_msg = '登陆失败喔'
+        messages.warning(request, '用户名或密码错误')
         form = SignInForm(request.POST)
-        return redirect('/sign_in', {'error_msg': error_msg, 'form': form})
+        return redirect('/sign_in', {'form': form})
     else:
         form = SignInForm()
+        if request.GET.get('next'):  # 如果是通过跳转进来的，就出提醒
+            messages.info(request, '请先登陆喔')
         return render(request, '{}/sign_in.html'.format(_app), {'form': form})
 
 

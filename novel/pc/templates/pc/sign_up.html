@@ -1,33 +1,3 @@
 {% extends 'pc/form.html' %}
-{% load staticfiles %}
 
-{% block form_part %}
-  {% comment %}
-  <div class="local_item">
-    <label for="{{ form.username.id_for_label }}">Username:</label>
-      {{ form.username }}
-  </div>
-  <div class="local_item">
-    <label for="{{ form.username.id_for_label }}">Password:</label>
-      {{ form.password }}
-  </div>
-  <div class="local_item">
-    <label for="id_affirm_password">Affirm:</label>
-      <input id="id_affirm_password" name="affirm_password" maxlength="128" required="" type="password">
-  </div>
-  <div class="local_item">
-    <label for="{{ form.captcha.id_for_label }}">Captcha:</label>
-    {{ form.captcha }}
-  </div>
-  {% endcomment %}
-  {% for field in form %}
-    <div class="local_item">
-      {{ field.label_tag }}
-      {{ field }}
-    </div>
-  {% endfor %}
-
-  {% if error_msg %}
-      <div><strong>{{ error_msg }}</strong></div>
-  {% endif %}
-{% endblock %}
+{% block button %}注册{% endblock %}

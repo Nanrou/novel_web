@@ -14,6 +14,8 @@
     <meta http-equiv="cache-control" content="no-siteapp">
     <script src="http://apps.bdimg.com/libs/jquery/1.4.2/jquery.min.js"></script>
     <script src="http://apps.bdimg.com/libs/jquery.cookie/1.4.1/jquery.cookie.min.js"></script>
+    {% block optional_css %}
+    {% endblock optional_css %}
     <link rel="shortcut icon" href="{% static 'wap/css/favicon.ico' %}">
     <link rel="stylesheet" href="{% static 'wap/css/style_wap.css' %}">
     <script src="{% static 'wap/js/wap.js' %}"></script>
@@ -31,7 +33,6 @@
     <div class="nav">
         <ul>
             <li><a href="/cate/xuanhuan/">分类</a></li>
-            <li><a href="/top/">推荐</a></li>
             <li><a href="/quanben/">全本</a></li>
             <li><a rel="nofollow" href="/profile/">书架</a></li>
         </ul>
@@ -62,9 +63,8 @@
     <!-- 底部菜单 -->
     <div class="footer" {# style="height: 180px;" #}>
         <ul>
-            <li><a href="" onclick="addFavorite;" rel="sidebar">收藏</a></li>
+            <li><a href="javascript:void(0);" onclick="addFavorite;" rel="sidebar">收藏</a></li>
             <li><a rel="nofollow" href="/profile/">书架</a></li>
-            <li><a rel="nofollow" href="http://so.superxiaoshuo.com/cse/search?s=18402225725594290780">搜索</a></li>
             <li><a href="/upload/" style="color:red">报错</a></li>
         </ul>
     </div>

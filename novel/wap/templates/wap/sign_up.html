@@ -1,26 +1,35 @@
 {% extends 'wap/home.html' %}
 {% load staticfiles %}
 
+{% load bootstrap3 %}
+
+{% block optional_css %}
+{% bootstrap_css %}
+{% endblock optional_css %}
+
+{% block script %}
+{% bootstrap_javascript %}
+{% endblock script %}
+
 
 {% block main %}
-  <div style="width: 100%;margin-top: 2%">
-    <div style="height: 380px">
-      <div style="width: 90%;background-color: #fff;height: 350px;padding: 10px 5px;">
-        <form action="" method="post" style="font-size: 18px">
+  <div style="width: 100%;margin-top: 2%;height: auto;min-height: 250px; border-top: 2px solid #666">  {# 设置min-height和auto就可以实现自适应高度了 #}
+      <div style="width: 90%;background-color: #fff;padding: 10px 5px;">
+        {% if messages %}
+        {% bootstrap_javascript jquery=1 %}
+        {% for message in messages %}
+        {% bootstrap_messages message %}
+        {% endfor %}
+        {% endif %}
+        <form action="" method="post" class="form" style="width: 80%;margin-left: 5%;">
           {% csrf_token %}
-          {% block form_part %}
-            {% for field in form %}
-              <div class="local_item">
-                {{ field.label_tag }}
-                {{ field }}
-              </div>
-            {% endfor %}
-          {% endblock %}
-          <div style="width: 100%;">
-            <input id="submit_button" style="float: right;height: 37px;font-size: 25px" type="submit" value="Submit" />
-          </div>
+          {% bootstrap_form form %}
+          {% buttons %}
+          <button type="submit" class="btn btn-primary">
+            {% bootstrap_icon "fire" %} {% block button %}注册{% endblock %}
+          </button>
+          {% endbuttons %}
         </form>
       </div>
-    </div>
   </div>
 {% endblock main %}
