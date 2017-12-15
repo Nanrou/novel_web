@@ -107,3 +107,5 @@ phantomjs
 tmp/
 crawler/novel/
 *.txt
+no_follow
+novel/static/
