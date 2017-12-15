@@ -1,18 +1,24 @@
 {% extends 'wap/category.html' %}
 {% load staticfiles %}
 
+{% block meta_description %}
+<title>全本小说 小说排行榜-超级小说移动版</title>
+<meta name="keywords" content="全本小说,小说排行榜,全本小说小说txt下载">
+<meta name="description" content="超级小说移动版提供免费、热门的全本小说、小说排行榜、最新小说、全本小说及TXT下载。">
+<link rel="canonical" href="http://www.superxiaoshuo.com/quanben">
+{% endblock meta_description %}
+
 {% block content_part %}
-    <div class="toptab"><span class="active">{{ cate }}</span></div>
-    {% for book in cate_books %}
+    <div class="toptab"><span class="active">完本推荐</span></div>
+    {% for book in books %}
         <div class="bookbox">
             <div class="bookinfo">
                 <a href="{{ book.get_mobile_url }}">
                     <h4 class="bookname">{{ book.title }}</h4>
                     <div class="author">作者：{{ book.author }}</div>
                     <div class="author">分类：{{ book.category }}</div>
-                    <div class="author">状态：已完结</div>
                     <div class="intro_line">
-                        <span>简介：</span>{{ book.resume|truncatechars:80 }}
+                        <span>简介：</span>{{ book.pure_resume|truncatechars:80 }}
                     </div>
                 </a>
             </div>

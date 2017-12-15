@@ -8,7 +8,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.conf import settings
 
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseForbidden
 from django.views.generic.base import TemplateView
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
@@ -40,7 +40,7 @@ class HomeView(TemplateView):
         for index in range(1, 7):
             books = BookTable.objects.filter(category_id=index) \
                         .select_related('author', 'category').all()[:14] \
-                        .only('author', 'category', 'image', 'resume', 'id', 'title')
+                .only('author', 'category', 'image', 'resume', 'id', 'title')
             cate_list.append(books)
         return cate_list
 
@@ -53,10 +53,10 @@ class HomeView(TemplateView):
         context['cate_list2'] = cate_list[3:]
 
         context['latest_books'] = BookTable.objects.select_related('author', 'category') \
-                                           .defer('image', 'resume').order_by('update_time').all()[:20]
+                                      .defer('image', 'resume').order_by('update_time').all()[:20]
         context['newest_books'] = BookTable.objects.select_related('author', 'category') \
-                                           .only('author', 'title', 'id', 'category', 'update_time') \
-                                           .order_by('-id').all()[:20]
+                                      .only('author', 'title', 'id', 'category', 'update_time') \
+                                      .order_by('-id').all()[:20]
         return context
 
 
@@ -137,6 +137,7 @@ def refresh_captcha(request):
 
 # 注册的处理函数
 def sign_up(request):
+    _app = 'wap' if request.META.get('HTTP_HOST').startswith('m') else 'pc'
     if request.method == 'POST':
         form = SignUpForm(request.POST)
         if form.is_valid():
@@ -153,11 +154,12 @@ def sign_up(request):
         return redirect('/sign_up', {'error_msg': error_msg, 'form': form})
     else:
         form = SignUpForm()
-        return render(request, 'pc/sign_up.html', {'form': form})
+        return render(request, '{}/sign_up.html'.format(_app), {'form': form})
 
 
 # 登陆的注册函数
 def sign_in(request):
+    _app = 'wap' if request.META.get('HTTP_HOST').startswith('m') else 'pc'
     if request.method == 'POST':
         form = SignInForm(request.POST)
         if form.is_valid():
@@ -173,7 +175,7 @@ def sign_in(request):
         return redirect('/sign_in', {'error_msg': error_msg, 'form': form})
     else:
         form = SignInForm()
-        return render(request, 'pc/sign_in.html', {'form': form})
+        return render(request, '{}/sign_in.html'.format(_app), {'form': form})
 
 
 def logout_handler(request):
@@ -183,7 +185,12 @@ def logout_handler(request):
 
 @login_required(login_url='/sign_in')
 def upload(request):
-    pass
+    return HttpResponseForbidden()
+
+
+@login_required(login_url='/sign_in')
+def profile(request):
+    return HttpResponseForbidden()
 
 
 def page_not_found(request):

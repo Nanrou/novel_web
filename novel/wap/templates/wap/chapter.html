@@ -36,9 +36,9 @@
             <table cellspacing="0" cellpadding="0">
                 <tbody>
                     <tr>
-                        <td class="prev"><a id="pt_prev" href="{{ book.prev_chapter_id }}">上一章</a></td>
+                        <td class="prev"><a id="pt_prev" href="{{ book.prev_chapter_wap }}">上一章</a></td>
                         <td class="mulu"><a id="pt_mulu" href="{{ book_info.get_absolute_url }}">返回目录</a></td>
-                        <td class="next"><a id="pt_next" href="{{ book.next_chapter_id }}">下一章</a></td>
+                        <td class="next"><a id="pt_next" href="{{ book.next_chapter_wap }}">下一章</a></td>
                         <td class="prev"><a rel="nofollow" href="" id="pt_shujia" style="color:red">书架</a></td>
                     </tr>
                 </tbody>
@@ -56,9 +56,9 @@
             <table cellspacing="0" cellpadding="0">
                 <tbody>
                     <tr>
-                        <td class="prev"><a id="pt_prev" href="{{ book.prev_chapter_id }}">上一章</a></td>
+                        <td class="prev"><a id="pt_prev" href="{{ book.prev_chapter_wap }}">上一章</a></td>
                         <td class="mulu"><a id="pt_mulu" href="{{ book_info.get_absolute_url }}">返回目录</a></td>
-                        <td class="next"><a id="pt_next" href="{{ book.next_chapter_id }}">下一章</a></td>
+                        <td class="next"><a id="pt_next" href="{{ book.next_chapter_wap }}">下一章</a></td>
                         <td class="prev"><a rel="nofollow" href="" id="pt_shujia" style="color:red">书架</a></td>
                     </tr>
                 </tbody>
@@ -68,7 +68,11 @@
         <div class="hot">
             <dl>
                 <dt>本站推荐</dt>
-                <dd><a href="http://m.superxiaoshuo.com/files/article/83/83270/" title="神灵诀">神灵诀</a></dd>
+                <dd>
+                    {% for book in recommend_books %}
+                    <a href="{{ book.get_absolute_url }}" target="_blank">{{ book.title }}</a>
+                    {% endfor %}
+                </dd>
             </dl>
         </div>
     </div>

@@ -81,7 +81,7 @@ class ChapterTable(models.Model):
     book_id = models.IntegerField(verbose_name='book_id')
     next_chapter_id = models.IntegerField(verbose_name='next_chapter_id', default=0)
     prev_chapter_id = models.IntegerField(verbose_name='prev_chapter_id', default=0)
-    # TODO 跳转的判断要做好，这里只是章节的id而已
+
     def __str__(self):
         return self.chapter
 
@@ -90,3 +90,31 @@ class ChapterTable(models.Model):
 
     def get_mobile_url(self):
         return reverse('wap:chapter', host='wap', kwargs={'book_id': self.book_id, 'pk': self.id})
+
+    @property
+    def next_chapter(self):
+        if self.next_chapter_id == 0:
+            return reverse('pc:book', kwargs={'pk': self.book_id})
+        else:
+            return reverse('pc:chapter', kwargs={'book_id': self.book_id, 'pk': self.next_chapter_id})
+
+    @property
+    def prev_chapter(self):
+        if self.prev_chapter_id == 0:
+            return reverse('pc:book', kwargs={'pk': self.book_id})
+        else:
+            return reverse('pc:chapter', kwargs={'book_id': self.book_id, 'pk': self.prev_chapter_id})
+
+    @property
+    def next_chapter_wap(self):
+        if self.next_chapter_id == 0:
+            return reverse('wap:book', host='wap', kwargs={'pk': self.book_id})
+        else:
+            return reverse('wap:chapter', host='wap', kwargs={'book_id': self.book_id, 'pk': self.next_chapter_id})
+
+    @property
+    def prev_chapter_wap(self):
+        if self.prev_chapter_id == 0:
+            return reverse('wap:book', host='wap', kwargs={'pk': self.book_id})
+        else:
+            return reverse('wap:chapter', host='wap', kwargs={'book_id': self.book_id, 'pk': self.prev_chapter_id})

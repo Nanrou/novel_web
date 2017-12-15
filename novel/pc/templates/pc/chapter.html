@@ -94,11 +94,11 @@
         <div class="bookname">
             <h1 id="chapter_name">{{ object.chapter }}</h1>
             <div class="bottem1">
-                <a href="{{ object.prev_chapter_id }}">上一章</a>
+                <a href="{{ object.prev_chapter }}">上一章</a>
                 ← 
                 <a href="{{ book.get_absolute_url }}">章节列表</a>
                 →
-                <a href="{{ object.next_chapter_id }}">下一章</a>
+                <a href="{{ object.next_chapter }}">下一章</a>
                 <a rel="nofollow" href="" target="_blank">加入书签</a> 
                 <a rel="nofollow" href="" target="_blank" style="color:red">错误举报</a>
             </div>
@@ -107,7 +107,6 @@
                 {% for book in recommend_books %}
                 <a href="{{ book.get_absolute_url }}" target="_blank">{{ book.title }}</a>
                 {% endfor %}
-                <a href="http://www.superxiaoshuo.com/" target="_blank">咸湿女婿贱岳父</a>
             </div>
         </div>
         <div id="content">
@@ -115,12 +114,12 @@
         </div>
         <div class="bottem1">
         <!-- 这里看怎么复用 -->
-            <a href="{{ previous_page }}">上一章</a>
-            ← 
+            <a href="{{ object.prev_chapter }}">上一章</a>
+            ←
             <a href="{{ book.get_absolute_url }}">章节列表</a>
-            → 
-            <a href="{{ next_page }}">下一章</a>
-            <a rel="nofollow" href="" target="_blank">加入书签</a> 
+            →
+            <a href="{{ object.next_chapter }}">下一章</a>
+            <a rel="nofollow" href="" target="_blank">加入书签</a>
             <a rel="nofollow" href="" target="_blank" style="color:red">错误举报</a>
         </div>
     </div>

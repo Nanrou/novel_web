@@ -23,8 +23,8 @@
                     <a class="box" href="/profile/">我的书架</a>
                     <a class="box" href="/logout/">登出</a>
                   {% else %}
-                    <a class="box" href="/signin/">登录</a>
-                    <a class="box" href="/signup/">注册</a>
+                    <a class="box" href="/sign_in/">登录</a>
+                    <a class="box" href="/sign_up/">注册</a>
                   {% endif %}
                 </div>
             </div>
@@ -63,10 +63,10 @@
                         </div>
                         <div style="clear:both"></div>
                         <ul>
-            {% endif %}
+            {% else %}
             <li><a href="{{ book.get_mobile_url }}" class="blue">{{ book.title }}</a>/{{ book.author }}</li>
-        {% empty %}
-            <li><p>sorry, not found any book</p></li>
+            {% endif %}
+
             {% if forloop.last %}
                 </ul>
             {% endif %}

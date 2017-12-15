@@ -15,9 +15,9 @@
         <img style="position: absolute;top: 50%;left: 50%;transform: translate(-50%, -50%);" src="http://s9.rr.itc.cn/r/wapChange/20163_27_13/a1o2bu9197180108405.gif" width="340" height="191">
     </div>
     <div style="text-align:center;margin-bottom:15px; margin-top:5px;">
-        <h2 style="font-size: 24px;">嗯哼？</h2>
+        <h2 style="font-size: 24px;">{% block title %}嗯哼？{% endblock %}</h2>
         <p style="font-size: 20px;">
-            你好像没有这个权限喔~
+          {% block content %}您好像没有这个权限喔~{% endblock %}
         <br>
             <a href="http://m.superxiaoshuo.com/" style="color: #6F78A7;font-size: 22px;margin-left: 15px;">回到首页</a>
             <a href="javascript:history.go(-1);" style="color: #6F78A7;font-size: 22px;margin-left: 15px;">回到上一页</a>

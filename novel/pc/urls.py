@@ -13,12 +13,12 @@ urlpatterns = [
     path('chapter/<int:book_id>/<int:pk>/', views.ChapterView.as_view(), name='chapter'),
     path('quanben/', views.QuanbenView.as_view(), name='quanben'),
 
-    # 功能类
+    # 功能视图
     path('search/', views.SearchView.as_view(), name='search'),
     path('upload/', views.upload, name='upload'),
     path('sign_up/', views.sign_up, name='sign_up'),
     path('sign_in/', views.sign_in, name='sign_in'),
-    # path('profile/'),
+    path('profile/', views.profile, name='profile'),
 
     # api
     path('refresh_captcha/', views.refresh_captcha, name='captcha'),

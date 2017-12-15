@@ -23,6 +23,11 @@ urlpatterns = [
     path(r'^captcha/', include('captcha.urls')),
 ]
 
+# exception handler
+handler404 = 'wap.views.page_not_found'
+handler403 = 'wap.views.page_forbidden'
+handler500 = 'wap.views.server_wrong'
+
 if settings.DEBUG:
     import debug_toolbar
 
