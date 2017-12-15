@@ -1,8 +1,9 @@
 import json
-from random import sample
+from random import sample, choices
 
 from django.shortcuts import render, redirect
 from django.db.models import Q
+from django.core.cache import cache
 from django.conf import settings
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
@@ -24,11 +25,16 @@ from .form import SignInForm, SignUpForm
 # Create your views here.
 
 def get_recommend_book():
+    recommend_books = cache.get('recommend_books')
+    if recommend_books:
+        return recommend_books
     book_ids = sample(range(1, BookTable.objects.count()), 10)
     q = Q()
     for book_id in book_ids:
         q.add(Q(**{'id': book_id}), Q.OR)
-    return BookTable.objects.filter(q).only('title', 'id')
+    recommend_books = BookTable.objects.filter(q).only('title', 'id').values()
+    cache.add('recommend_books', recommend_books, 60 * 60)
+    return recommend_books
 
 
 class HomeView(TemplateView):
@@ -58,6 +64,7 @@ class HomeView(TemplateView):
         context['newest_books'] = BookTable.objects.select_related('author', 'category') \
                                       .only('author', 'title', 'id', 'category', 'update_time') \
                                       .order_by('-id').all()[:20]
+        context['recommend_books'] = choices(context['latest_books'], k=5)
         return context
 
 

@@ -1,7 +1,13 @@
 {% extends 'pc/base.html' %}
 {% load staticfiles %}
-
 {% load bootstrap3 %}
+
+{% block meta_description %}
+<title>超级小说 书友最值得收藏的网络小说阅读网</title>
+<meta name="keywords" content="超级小说网,小说阅读网,superxiaoshuo.com">
+<meta name="description" content="超级小说是广大书友最值得收藏的网络小说阅读网,网站收录了当前最火热的网络小说,免费提供高质量的小说最新章节,是广大网络小说爱好者必备的小说阅读网。">
+<link rel="alternate" href="http://m.superxiaoshuo.com">
+{% endblock meta_description %}
 
 {% block optional_css %}
   {% bootstrap_css %}

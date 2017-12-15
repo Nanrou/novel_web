@@ -15,19 +15,6 @@ import os
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/2.0/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '#1z2ng)dpkfkhvu=g_t$$i$8+#%-0(d00gd!w7tsp$65h8fb$i'
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-ALLOWED_HOSTS = []
-
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -49,6 +36,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'middleware.my_middleware.MobileMiddleware',
     'django_hosts.middleware.HostsRequestMiddleware',
 
     'django.middleware.security.SecurityMiddleware',
@@ -59,7 +47,6 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 
-    'middleware.my_middleware.MobileMiddleware',
     'django_hosts.middleware.HostsResponseMiddleware',
 ]
 
@@ -96,6 +83,13 @@ DATABASES = {
         },
     },
 }
+
+
+# Cache Settings
+
+CACHES_MIDDLEWARE_ALIAS = 'novel'
+CACHES_MIDDLEWARE_SECONDS = 600
+CACHES_MIDDLEWARE_KEY_PREFIX = ''
 
 
 # Password validation
