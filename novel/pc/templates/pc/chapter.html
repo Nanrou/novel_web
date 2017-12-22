@@ -1,5 +1,6 @@
 {% extends 'pc/base.html' %}
 {% load staticfiles %}
+{% load pc_extras %}
 
 {% block meta_description %}
 <title>{{ object.chapter }} 正文 {{ book_info }}全文免费阅读 - 超级小说</title>
@@ -110,7 +111,7 @@
             </div>
         </div>
         <div id="content">
-        {{ object.content|safe }}
+        {{ object.content|insert_two_indentation|safe }}
         </div>
         <div class="bottem1">
         <!-- 这里看怎么复用 -->

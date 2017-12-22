@@ -23,7 +23,6 @@ DEBUG = False
 
 ALLOWED_HOSTS = [
     '127.0.0.1',
-    'localhost',
     'superxiaoshuo.com',
     'm.superxiaoshuo.com',
     'www.superxiaoshuo.com'
